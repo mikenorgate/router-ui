@@ -482,7 +482,8 @@ func flattenRule(r model.Policy, a *model.Application) model.Policy {
 }
 
 // PolicyViews filters qualified applications before pagination. Global definitions
-// are returned only in the global catalog; they never imply device applicability.
+// from v2 require applications. Legacy global definitions remain visible with
+// unknown device applicability for existing v1 producers.
 func (s *Store) PolicyViews(ctx context.Context, q Query) ([]model.Policy, error) {
 	if q.Limit <= 0 || q.Limit > 500 {
 		q.Limit = 100
@@ -494,7 +495,7 @@ func (s *Store) PolicyViews(ctx context.Context, q Query) ([]model.Policy, error
 		return nil, ErrCapacity
 	}
 	rows, err := s.history.QueryContext(ctx, `SELECT l.kind,l.body,COALESCE(r.body,'') FROM latest l LEFT JOIN latest r ON l.kind='application' AND r.kind='rule' AND r.source=l.source AND r.id=json_extract(l.body,'$.rule_id')
- WHERE l.kind IN ('policy','rule','application') AND (?='' OR json_extract(l.body,'$.device_id')=?) AND (?='' OR l.body LIKE ? ESCAPE '\') ORDER BY l.time DESC,l.kind,l.id LIMIT ? OFFSET ?`, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
+ WHERE l.kind IN ('policy','rule','application') AND (?='' OR json_extract(l.body,'$.device_id')=? OR (l.kind='policy' AND COALESCE(json_extract(l.body,'$.device_id'),'')='')) AND (?='' OR l.body LIKE ? ESCAPE '\') ORDER BY l.time DESC,l.kind,l.id LIMIT ? OFFSET ?`, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -522,7 +523,7 @@ func (s *Store) PolicyViews(ctx context.Context, q Query) ([]model.Policy, error
 			if err = json.Unmarshal([]byte(body), &p); err != nil {
 				return nil, err
 			}
-			if kind == "rule" {
+			if kind == "rule" || q.DeviceID != "" && p.DeviceID == "" {
 				p = flattenRule(p, nil)
 			}
 		}

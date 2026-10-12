@@ -208,3 +208,22 @@ func TestPolicyPaginationAndRemovalEvidence(t *testing.T) {
 		t.Fatal(p, e)
 	}
 }
+
+func TestLegacyGlobalPolicyRemainsVisibleWithoutDeviceClaims(t *testing.T) {
+	s := snapshotStore(t)
+	now := time.Now().UTC()
+	yes := true
+	policy := model.Policy{ID: "legacy-global", Name: "Inherited global definition", CountersScope: "shared", Installed: &yes, Applicable: &yes, ObservedMatch: &yes, ObservedAt: now}
+	body, err := json.Marshal(policy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	batch := model.Batch{Version: 1, SourceID: "legacy", BootID: "boot", Sequence: 1, Cursor: "1", SamplingRate: 1, Records: []model.Record{{ID: policy.ID, Kind: "policy", ObservedAt: now, Data: body}}}
+	if _, err := s.Ingest(t.Context(), batch, now); err != nil {
+		t.Fatal(err)
+	}
+	rows, err := s.PolicyViews(t.Context(), Query{DeviceID: "test:device", Limit: 1})
+	if err != nil || len(rows) != 1 || rows[0].RuleID != policy.ID || rows[0].Applicable != nil || rows[0].ObservedMatch != nil {
+		t.Fatal("legacy definition missing or implies a device claim", rows, err)
+	}
+}
