@@ -66,3 +66,47 @@ func TestEveryHistoryReaderConnectionRejectsWrites(t *testing.T) {
 		}
 	}
 }
+
+func TestHistoricalReadsRemainConsistentDuringRetention(t *testing.T) {
+	s := snapshotStore(t)
+	old := time.Now().UTC().AddDate(0, 0, -100)
+	done := make(chan error, 1)
+	go func() {
+		for sequence := uint64(1); sequence <= 20; sequence++ {
+			chunks, manifest := snapshot(t, sequence, "devices", []model.Record{deviceRecord(t, "test:old", old)}, old)
+			for _, chunk := range chunks {
+				if err := s.StageChunk(t.Context(), chunk, old); err != nil {
+					done <- err
+					return
+				}
+			}
+			if _, err := s.CommitSnapshot(t.Context(), manifest, old); err != nil {
+				done <- err
+				return
+			}
+			if err := s.Maintenance(t.Context(), time.Now().UTC()); err != nil {
+				done <- err
+				return
+			}
+		}
+		done <- nil
+	}()
+	for {
+		select {
+		case err := <-done:
+			if err != nil {
+				t.Fatal(err)
+			}
+			return
+		default:
+			ctx, cancel := context.WithTimeout(t.Context(), 2*time.Second)
+			rows, err := s.Query(ctx, "device", Query{History: true, From: old.Add(-time.Hour), Limit: 10})
+			cancel()
+			if err != nil || len(rows) > 1 {
+				t.Errorf("history during retention: %d, %v", len(rows), err)
+				<-done
+				return
+			}
+		}
+	}
+}

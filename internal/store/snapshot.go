@@ -251,6 +251,7 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 		return out, err
 	}
 	removed := []model.Record{}
+	formerDefinitions := map[string]any{}
 	for rows.Next() {
 		var kind, id, body string
 		if err = rows.Scan(&kind, &id, &body); err != nil {
@@ -266,13 +267,19 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 			if kind == "application" {
 				var a model.Application
 				_ = json.Unmarshal([]byte(body), &a)
-				var definition string
-				if err = tx.QueryRowContext(ctx, "SELECT body FROM latest WHERE kind='rule' AND source=? AND id=?", c.SourceID, a.RuleID).Scan(&definition); err != nil {
-					rows.Close()
-					return out, err
+				d, found := formerDefinitions[a.RuleID]
+				if !found {
+					var definition string
+					if err = tx.QueryRowContext(ctx, "SELECT body FROM latest WHERE kind='rule' AND source=? AND id=?", c.SourceID, a.RuleID).Scan(&definition); err != nil {
+						rows.Close()
+						return out, err
+					}
+					if err = json.Unmarshal([]byte(definition), &d); err != nil {
+						rows.Close()
+						return out, err
+					}
+					formerDefinitions[a.RuleID] = d
 				}
-				var d any
-				_ = json.Unmarshal([]byte(definition), &d)
 				data["rule_definition"] = d
 			}
 			data["observed_at"] = c.ObservedAt
@@ -432,44 +439,53 @@ func (s *Store) writeSnapshotHistory(ctx context.Context, tx *sql.Tx, c model.Sn
 		}
 		writes[table] = statement
 	}
-	var data map[string]any
-	if err := json.Unmarshal(r.Data, &data); err != nil {
-		return err
-	}
-	device, _ := data["device_id"].(string)
-	if r.Kind == "device" {
-		device = r.ID
-	}
-	if removed {
-		data["snapshot_removed"] = true
-	}
-	data["snapshot_generation"] = c.Generation
-	body, _ := json.Marshal(data)
-	kind := r.Kind
-	if r.Kind == "rule" {
-		var p model.Policy
-		_ = json.Unmarshal(r.Data, &p)
-		p = flattenRule(p, nil)
-		body, _ = json.Marshal(p)
-		kind = "policy"
-	}
-	if r.Kind == "application" {
-		var a model.Application
-		_ = json.Unmarshal(r.Data, &a)
-		var p model.Policy
-		if d, ok := data["rule_definition"]; ok {
-			b, _ := json.Marshal(d)
-			_ = json.Unmarshal(b, &p)
-		} else {
-			var found bool
-			p, found = definitions[a.RuleID]
-			if !found {
-				return ErrSnapshot
-			}
+	var body []byte
+	device, kind := "", r.Kind
+	switch r.Kind {
+	case "rule":
+		var policy model.Policy
+		if err := json.Unmarshal(r.Data, &policy); err != nil {
+			return err
 		}
-		p = flattenRule(p, &a)
-		body, _ = json.Marshal(p)
+		device = policy.DeviceID
+		policy = flattenRule(policy, nil)
+		body, _ = json.Marshal(policy)
 		kind = "policy"
+	case "application":
+		var application model.Application
+		if err := json.Unmarshal(r.Data, &application); err != nil {
+			return err
+		}
+		policy, found := definitions[application.RuleID]
+		if removed {
+			var former struct {
+				Rule model.Policy `json:"rule_definition"`
+			}
+			if err := json.Unmarshal(r.Data, &former); err != nil {
+				return err
+			}
+			policy, found = former.Rule, former.Rule.ID != ""
+		}
+		if !found {
+			return ErrSnapshot
+		}
+		policy = flattenRule(policy, &application)
+		body, _ = json.Marshal(policy)
+		device, kind = application.DeviceID, "policy"
+	default:
+		var data map[string]any
+		if err := json.Unmarshal(r.Data, &data); err != nil {
+			return err
+		}
+		device, _ = data["device_id"].(string)
+		if r.Kind == "device" {
+			device = r.ID
+		}
+		if removed {
+			data["snapshot_removed"] = true
+		}
+		data["snapshot_generation"] = c.Generation
+		body, _ = json.Marshal(data)
 	}
 	_, err := statement.ExecContext(ctx, c.SourceID, c.BootID, r.ID, kind, r.ObservedAt.UnixNano(), device, 0, string(body))
 	return err

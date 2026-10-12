@@ -364,8 +364,12 @@ func recordKinds(rs []model.Record) []string {
 	sort.Strings(out)
 	return out
 }
-func (s *Store) tables(ctx context.Context) ([]string, error) {
-	rows, err := s.read.QueryContext(ctx, "SELECT day FROM partitions ORDER BY day DESC")
+func (s *Store) tables(ctx context.Context, tx *sql.Tx) ([]string, error) {
+	query := s.read.QueryContext
+	if tx != nil {
+		query = tx.QueryContext
+	}
+	rows, err := query(ctx, "SELECT day FROM partitions ORDER BY day DESC")
 	if err != nil {
 		return nil, err
 	}
@@ -409,7 +413,14 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 		}
 		return out, rows.Err()
 	}
-	ts, err := s.tables(ctx)
+	// Pin the partition catalog and data to one read snapshot. Retention may
+	// drop an old partition between separate SQL statements otherwise.
+	tx, err := s.read.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	ts, err := s.tables(ctx, tx)
 	if err != nil {
 		return nil, err
 	}
@@ -435,7 +446,7 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 		args = append(args, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", from.UnixNano(), to.UnixNano(), q.RecordID, q.RecordID, q.Verdict, q.Verdict, q.Protocol, q.Protocol, q.Family, q.Family, q.Translation, q.Translation)
 	}
 	args = append(args, q.Limit, q.Offset)
-	rows, err := s.read.QueryContext(ctx, "SELECT body FROM ("+strings.Join(parts, " UNION ALL ")+") ORDER BY time DESC LIMIT ? OFFSET ?", args...)
+	rows, err := tx.QueryContext(ctx, "SELECT body FROM ("+strings.Join(parts, " UNION ALL ")+") ORDER BY time DESC LIMIT ? OFFSET ?", args...)
 	if err != nil {
 		return nil, err
 	}
@@ -519,7 +530,7 @@ func (s *Store) Maintenance(ctx context.Context, now time.Time) error {
 	if _, err := s.history.ExecContext(ctx, "DELETE FROM staged_snapshots WHERE created<?", now.Add(-5*time.Minute).UnixNano()); err != nil {
 		return err
 	}
-	ts, err := s.tables(ctx)
+	ts, err := s.tables(ctx, nil)
 	if err != nil {
 		return err
 	}

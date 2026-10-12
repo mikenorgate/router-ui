@@ -4,6 +4,7 @@ package store
 
 import (
 	"context"
+
 	"path/filepath"
 	"testing"
 	"time"
@@ -31,5 +32,24 @@ func TestCompletePolicyCapacityDeadline(t *testing.T) {
 	if result.Accepted != manifest.Records {
 		t.Fatalf("accepted=%d want=%d", result.Accepted, manifest.Records)
 	}
+	if elapsed := time.Since(start); elapsed > 8*time.Second {
+		t.Fatalf("initial commit exceeded budget: %s", elapsed)
+	}
 	t.Logf("committed %d records in %s", result.Accepted, time.Since(start))
+	cancel()
+	for _, operation := range []string{"shared-rule-revision", "complete-removal"} {
+		chunks, manifest = nextCapacitySnapshot(t, chunks, manifest, operation)
+		stageCapacity(t, s, chunks, manifest.ObservedAt)
+		ctx, cancel = context.WithTimeout(t.Context(), 8*time.Second)
+		start = time.Now()
+		result, err = s.CommitSnapshot(ctx, manifest, manifest.ObservedAt)
+		cancel()
+		if err != nil || result.Accepted != manifest.Records {
+			t.Fatalf("%s after %s: accepted=%d, %v", operation, time.Since(start), result.Accepted, err)
+		}
+		if elapsed := time.Since(start); elapsed > 8*time.Second {
+			t.Fatalf("%s exceeded budget: %s", operation, elapsed)
+		}
+		t.Logf("%s in %s", operation, time.Since(start))
+	}
 }
