@@ -213,7 +213,7 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 	}
 	sort.SliceStable(records, func(i, j int) bool { return records[i].Kind == "rule" && records[j].Kind != "rule" })
 	seen := map[string]bool{}
-	definitions := map[string]bool{}
+	definitions := map[string]model.Policy{}
 	deviceCount := 0
 	for _, r := range records {
 		if r.Kind == "device" {
@@ -228,14 +228,18 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 		}
 		seen[key] = true
 		if r.Kind == "rule" {
-			definitions[r.ID] = true
+			var definition model.Policy
+			if err = json.Unmarshal(r.Data, &definition); err != nil {
+				return out, err
+			}
+			definitions[r.ID] = definition
 		}
 	}
 	for _, r := range records {
 		if r.Kind == "application" {
 			var a model.Application
 			_ = json.Unmarshal(r.Data, &a)
-			if !definitions[a.RuleID] {
+			if _, ok := definitions[a.RuleID]; !ok {
 				return out, ErrSnapshot
 			}
 		}
@@ -291,33 +295,75 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 	if err != nil {
 		return out, err
 	}
+	// Prepare repeated operations once per transaction. Recompiling them and
+	// setting up the same partition for every application exceeded the ingest
+	// deadline at the declared device limit.
+	latestRead, err := tx.PrepareContext(ctx, "SELECT body FROM latest WHERE kind=? AND id=? AND source=?")
+	if err != nil {
+		return out, err
+	}
+	defer latestRead.Close()
+	latestWrite, err := tx.PrepareContext(ctx, "INSERT INTO latest VALUES(?,?,?,?,?) ON CONFLICT(kind,id,source) DO UPDATE SET time=excluded.time,body=excluded.body")
+	if err != nil {
+		return out, err
+	}
+	defer latestWrite.Close()
+	membershipWrite, err := tx.PrepareContext(ctx, "INSERT INTO scope_members VALUES(?,?,?,?)")
+	if err != nil {
+		return out, err
+	}
+	defer membershipWrite.Close()
+	latestDelete, err := tx.PrepareContext(ctx, "DELETE FROM latest WHERE kind=? AND id=? AND source=?")
+	if err != nil {
+		return out, err
+	}
+	defer latestDelete.Close()
+	historyWrites := map[string]*sql.Stmt{}
+	defer func() {
+		for _, statement := range historyWrites {
+			statement.Close()
+		}
+	}()
 	for _, r := range removed {
-		if err = s.writeSnapshotHistory(ctx, tx, c, r, true); err != nil {
+		if err = s.writeSnapshotHistory(ctx, tx, c, r, true, historyWrites, definitions); err != nil {
 			return out, err
 		}
-		if _, err = tx.ExecContext(ctx, "DELETE FROM latest WHERE kind=? AND id=? AND source=?", r.Kind, r.ID, c.SourceID); err != nil {
+		if _, err = latestDelete.ExecContext(ctx, r.Kind, r.ID, c.SourceID); err != nil {
 			return out, err
 		}
 	}
 	if _, err = tx.ExecContext(ctx, "DELETE FROM scope_members WHERE source=? AND scope=?", c.SourceID, c.Scope); err != nil {
 		return out, err
 	}
+	changedRules := map[string]bool{}
 	for _, r := range records {
 		var old string
-		e := tx.QueryRowContext(ctx, "SELECT body FROM latest WHERE kind=? AND id=? AND source=?", r.Kind, r.ID, c.SourceID).Scan(&old)
+		e := latestRead.QueryRowContext(ctx, r.Kind, r.ID, c.SourceID).Scan(&old)
 		if e != nil && !errors.Is(e, sql.ErrNoRows) {
 			return out, e
 		}
 		changed := e != nil || semantic(old) != semantic(string(r.Data))
+		if r.Kind == "rule" && changed {
+			changedRules[r.ID] = true
+		}
+		// A changed shared definition also changes the device's policy history,
+		// even when the application and binding themselves remain identical.
+		if r.Kind == "application" && !changed && len(changedRules) > 0 {
+			var application model.Application
+			if err = json.Unmarshal(r.Data, &application); err != nil {
+				return out, err
+			}
+			changed = changedRules[application.RuleID]
+		}
 		if changed {
-			if err = s.writeSnapshotHistory(ctx, tx, c, r, false); err != nil {
+			if err = s.writeSnapshotHistory(ctx, tx, c, r, false, historyWrites, definitions); err != nil {
 				return out, err
 			}
 		}
-		if _, err = tx.ExecContext(ctx, `INSERT INTO latest VALUES(?,?,?,?,?) ON CONFLICT(kind,id,source) DO UPDATE SET time=excluded.time,body=excluded.body`, r.Kind, r.ID, c.SourceID, r.ObservedAt.UnixNano(), string(r.Data)); err != nil {
+		if _, err = latestWrite.ExecContext(ctx, r.Kind, r.ID, c.SourceID, r.ObservedAt.UnixNano(), string(r.Data)); err != nil {
 			return out, err
 		}
-		if _, err = tx.ExecContext(ctx, "INSERT INTO scope_members VALUES(?,?,?,?)", c.SourceID, c.Scope, r.Kind, r.ID); err != nil {
+		if _, err = membershipWrite.ExecContext(ctx, c.SourceID, c.Scope, r.Kind, r.ID); err != nil {
 			return out, err
 		}
 		out.Accepted++
@@ -369,17 +415,25 @@ func semantic(body string) string {
 	b, _ := json.Marshal(data)
 	return string(b)
 }
-func (s *Store) writeSnapshotHistory(ctx context.Context, tx *sql.Tx, c model.SnapshotCommit, r model.Record, removed bool) error {
+func (s *Store) writeSnapshotHistory(ctx context.Context, tx *sql.Tx, c model.SnapshotCommit, r model.Record, removed bool, writes map[string]*sql.Stmt, definitions map[string]model.Policy) error {
 	table := partition(r.ObservedAt)
-	_, err := tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS `+table+`(source TEXT NOT NULL,boot TEXT NOT NULL,id TEXT NOT NULL,kind TEXT NOT NULL,time INTEGER NOT NULL,device TEXT NOT NULL,hash INTEGER NOT NULL,body TEXT NOT NULL,PRIMARY KEY(source,boot,id,kind,time)); CREATE INDEX IF NOT EXISTS `+table+`_time ON `+table+`(kind,time DESC);`)
-	if err != nil {
-		return err
-	}
-	if _, err = tx.ExecContext(ctx, "INSERT OR IGNORE INTO partitions(day) VALUES(?)", table); err != nil {
-		return err
+	statement, ok := writes[table]
+	if !ok {
+		if _, err := tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS `+table+`(source TEXT NOT NULL,boot TEXT NOT NULL,id TEXT NOT NULL,kind TEXT NOT NULL,time INTEGER NOT NULL,device TEXT NOT NULL,hash INTEGER NOT NULL,body TEXT NOT NULL,PRIMARY KEY(source,boot,id,kind,time)); CREATE INDEX IF NOT EXISTS `+table+`_time ON `+table+`(kind,time DESC);`); err != nil {
+			return err
+		}
+		if _, err := tx.ExecContext(ctx, "INSERT OR IGNORE INTO partitions(day) VALUES(?)", table); err != nil {
+			return err
+		}
+		var err error
+		statement, err = tx.PrepareContext(ctx, "INSERT OR IGNORE INTO "+table+" VALUES(?,?,?,?,?,?,?,?)")
+		if err != nil {
+			return err
+		}
+		writes[table] = statement
 	}
 	var data map[string]any
-	if err = json.Unmarshal(r.Data, &data); err != nil {
+	if err := json.Unmarshal(r.Data, &data); err != nil {
 		return err
 	}
 	device, _ := data["device_id"].(string)
@@ -407,19 +461,17 @@ func (s *Store) writeSnapshotHistory(ctx context.Context, tx *sql.Tx, c model.Sn
 			b, _ := json.Marshal(d)
 			_ = json.Unmarshal(b, &p)
 		} else {
-			var definition string
-			if err = tx.QueryRowContext(ctx, "SELECT body FROM latest WHERE kind='rule' AND source=? AND id=?", c.SourceID, a.RuleID).Scan(&definition); err != nil {
-				return err
-			}
-			if err = json.Unmarshal([]byte(definition), &p); err != nil {
-				return err
+			var found bool
+			p, found = definitions[a.RuleID]
+			if !found {
+				return ErrSnapshot
 			}
 		}
 		p = flattenRule(p, &a)
 		body, _ = json.Marshal(p)
 		kind = "policy"
 	}
-	_, err = tx.ExecContext(ctx, "INSERT OR IGNORE INTO "+table+" VALUES(?,?,?,?,?,?,?,?)", c.SourceID, c.BootID, r.ID, kind, r.ObservedAt.UnixNano(), device, 0, string(body))
+	_, err := statement.ExecContext(ctx, c.SourceID, c.BootID, r.ID, kind, r.ObservedAt.UnixNano(), device, 0, string(body))
 	return err
 }
 func (s *Store) ReportSourceStatus(ctx context.Context, status model.SourceStatus, now time.Time) error {
@@ -434,7 +486,7 @@ func (s *Store) ReportSourceStatus(ctx context.Context, status model.SourceStatu
 	return err
 }
 func (s *Store) sourceHealth(ctx context.Context) (map[string]model.Source, error) {
-	rows, err := s.history.QueryContext(ctx, "SELECT body,checked FROM source_health")
+	rows, err := s.read.QueryContext(ctx, "SELECT body,checked FROM source_health")
 	if err != nil {
 		return nil, err
 	}
@@ -494,7 +546,7 @@ func (s *Store) PolicyViews(ctx context.Context, q Query) ([]model.Policy, error
 	if len(q.Q) > 128 {
 		return nil, ErrCapacity
 	}
-	rows, err := s.history.QueryContext(ctx, `SELECT l.kind,l.body,COALESCE(r.body,'') FROM latest l LEFT JOIN latest r ON l.kind='application' AND r.kind='rule' AND r.source=l.source AND r.id=json_extract(l.body,'$.rule_id')
+	rows, err := s.read.QueryContext(ctx, `SELECT l.kind,l.body,COALESCE(r.body,'') FROM latest l LEFT JOIN latest r ON l.kind='application' AND r.kind='rule' AND r.source=l.source AND r.id=json_extract(l.body,'$.rule_id')
  WHERE l.kind IN ('policy','rule','application') AND (?='' OR json_extract(l.body,'$.device_id')=? OR (l.kind='policy' AND COALESCE(json_extract(l.body,'$.device_id'),'')='')) AND (?='' OR l.body LIKE ? ESCAPE '\') ORDER BY l.time DESC,l.kind,l.id LIMIT ? OFFSET ?`, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
 	if err != nil {
 		return nil, err

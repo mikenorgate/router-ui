@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
@@ -27,6 +28,7 @@ var ErrCapacity = errors.New("observation capacity reached")
 type Store struct {
 	State                  *sql.DB
 	history                *sql.DB
+	read                   *sql.DB
 	path                   string
 	budget                 int64
 	rawDays, historyDays   atomic.Int64
@@ -141,9 +143,30 @@ func Open(stateDir, historyDir string, budget, stateBudget int64, rawDays, histo
 		s.Close()
 		return nil, err
 	}
+	// WAL readers see the last committed generation while ingestion owns the
+	// single writer connection. Apply read-only settings to every connection.
+	options := url.Values{"mode": {"ro"}, "_pragma": {"query_only(1)", "busy_timeout(3000)"}}
+	uri := (&url.URL{Scheme: "file", Path: path, RawQuery: options.Encode()}).String()
+	s.read, err = sql.Open("sqlite", uri)
+	if err != nil {
+		s.Close()
+		return nil, err
+	}
+	s.read.SetMaxOpenConns(4)
+	s.read.SetMaxIdleConns(4)
+	if err = s.read.PingContext(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
 	return s, nil
 }
-func (s *Store) Close() error      { return errors.Join(s.State.Close(), s.history.Close()) }
+func (s *Store) Close() error {
+	var readErr error
+	if s.read != nil {
+		readErr = s.read.Close()
+	}
+	return errors.Join(readErr, s.State.Close(), s.history.Close())
+}
 func partition(t time.Time) string { return "records_" + t.UTC().Format("20060102") }
 func sampleKey(source, boot, id string) uint32 {
 	h := sha256.Sum256([]byte(source + "\x00" + boot + "\x00" + id))
@@ -342,7 +365,7 @@ func recordKinds(rs []model.Record) []string {
 	return out
 }
 func (s *Store) tables(ctx context.Context) ([]string, error) {
-	rows, err := s.history.QueryContext(ctx, "SELECT day FROM partitions ORDER BY day DESC")
+	rows, err := s.read.QueryContext(ctx, "SELECT day FROM partitions ORDER BY day DESC")
 	if err != nil {
 		return nil, err
 	}
@@ -372,7 +395,7 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 	}
 	out := []json.RawMessage{}
 	if !q.History && (kind == "device" || kind == "policy" || kind == "network" || kind == "appliance" || kind == "rule" || kind == "application") {
-		rows, err := s.history.QueryContext(ctx, `SELECT body FROM latest WHERE kind=? AND (?='' OR id=?) AND (?='' OR body LIKE ? ESCAPE '\') ORDER BY time DESC LIMIT ? OFFSET ?`, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
+		rows, err := s.read.QueryContext(ctx, `SELECT body FROM latest WHERE kind=? AND (?='' OR id=?) AND (?='' OR body LIKE ? ESCAPE '\') ORDER BY time DESC LIMIT ? OFFSET ?`, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
 		if err != nil {
 			return nil, err
 		}
@@ -412,7 +435,7 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 		args = append(args, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", from.UnixNano(), to.UnixNano(), q.RecordID, q.RecordID, q.Verdict, q.Verdict, q.Protocol, q.Protocol, q.Family, q.Family, q.Translation, q.Translation)
 	}
 	args = append(args, q.Limit, q.Offset)
-	rows, err := s.history.QueryContext(ctx, "SELECT body FROM ("+strings.Join(parts, " UNION ALL ")+") ORDER BY time DESC LIMIT ? OFFSET ?", args...)
+	rows, err := s.read.QueryContext(ctx, "SELECT body FROM ("+strings.Join(parts, " UNION ALL ")+") ORDER BY time DESC LIMIT ? OFFSET ?", args...)
 	if err != nil {
 		return nil, err
 	}
@@ -434,7 +457,7 @@ func (s *Store) Sources(ctx context.Context, now time.Time) ([]model.Source, err
 	if err != nil {
 		return nil, err
 	}
-	rows, err := s.history.QueryContext(ctx, "SELECT body FROM sources ORDER BY id")
+	rows, err := s.read.QueryContext(ctx, "SELECT body FROM sources ORDER BY id")
 	if err != nil {
 		return nil, err
 	}
@@ -487,7 +510,7 @@ func (s *Store) Stats(ctx context.Context) (Stats, error) {
 			return out, err
 		}
 	}
-	err := s.history.QueryRowContext(ctx, "SELECT value FROM settings WHERE key='sampling_rate'").Scan(&out.SamplingRate)
+	err := s.read.QueryRowContext(ctx, "SELECT value FROM settings WHERE key='sampling_rate'").Scan(&out.SamplingRate)
 	return out, err
 }
 func (s *Store) Maintenance(ctx context.Context, now time.Time) error {

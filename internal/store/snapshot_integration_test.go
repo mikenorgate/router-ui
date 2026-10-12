@@ -227,3 +227,50 @@ func TestLegacyGlobalPolicyRemainsVisibleWithoutDeviceClaims(t *testing.T) {
 		t.Fatal("legacy definition missing or implies a device claim", rows, err)
 	}
 }
+
+func TestPolicyRemovalKeepsFormerDefinitionAcrossRevisionAndDay(t *testing.T) {
+	s := snapshotStore(t)
+	first := time.Now().UTC().Truncate(24 * time.Hour).Add(-time.Hour)
+	yes := true
+	makeRecords := func(revision string, now time.Time, includeRemoved bool) []model.Record {
+		rule := model.Policy{ID: "test:shared", Name: "Shared rule", CountersScope: "shared", Installed: &yes, Origin: model.Origin{Revision: revision}, ObservedAt: now}
+		body, err := json.Marshal(rule)
+		if err != nil {
+			t.Fatal(err)
+		}
+		records := []model.Record{{ID: rule.ID, Kind: "rule", ObservedAt: now, Data: body}}
+		for _, id := range []string{"test:retained", "test:removed"} {
+			if id == "test:removed" && !includeRemoved {
+				continue
+			}
+			application := model.Application{ID: id, RuleID: rule.ID, DeviceID: "test:device", BindingRef: "test:binding", InstallationGeneration: revision, CountersScope: "shared", Lifecycle: "active", LifecycleAt: now, Installed: &yes, Applicable: &yes, ObservedAt: now}
+			body, err = json.Marshal(application)
+			if err != nil {
+				t.Fatal(err)
+			}
+			records = append(records, model.Record{ID: id, Kind: "application", ObservedAt: now, Data: body})
+		}
+		return records
+	}
+	chunks, manifest := snapshot(t, 1, "policies", makeRecords("former", first, true), first)
+	commit(t, s, chunks, manifest, first)
+	later := first.Add(2 * time.Hour)
+	chunks, manifest = snapshot(t, 2, "policies", makeRecords("current", later, false), later)
+	commit(t, s, chunks, manifest, later)
+	for _, test := range []struct{ id, revision, lifecycle string }{
+		{"test:removed", "former", "confirmed_removed"},
+		{"test:retained", "current", "active"},
+	} {
+		history, err := s.Query(t.Context(), "policy", Query{History: true, RecordID: test.id, Limit: 10})
+		if err != nil || len(history) != 2 {
+			t.Fatalf("%s history: %d, %v", test.id, len(history), err)
+		}
+		var policy model.Policy
+		if err = json.Unmarshal(history[0], &policy); err != nil {
+			t.Fatal(err)
+		}
+		if policy.Origin.Revision != test.revision || policy.Lifecycle != test.lifecycle {
+			t.Fatalf("%s: origin=%s lifecycle=%s", test.id, policy.Origin.Revision, policy.Lifecycle)
+		}
+	}
+}
