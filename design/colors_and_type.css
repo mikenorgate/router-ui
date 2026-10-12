@@ -1,0 +1,209 @@
+/* Colour/typography entry. Semantic tokens are the canonical shared palette. */
+@import url("tokens.css");
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); }
+
+/* Derived sRGB fallbacks for legacy consumers. These are the same four light semantic colours,
+   not additional palette entries. All specimen styles use the OKLCH semantic tokens. */
+:root { --srgb-bg: rgb(248 247 243); --srgb-surface: rgb(254 253 252); --srgb-fg: rgb(29 34 39); --srgb-accent: rgb(0 90 82); --font-ui: var(--font-body); --font-code: var(--font-mono); --font-weight-read: 400; --font-weight-code: 500; --font-weight-emphasis: 500; --font-weight-heading: 600; --font-size-default: var(--text-body); --line-height-default: var(--leading-body); }
+body { 
+  font-family: var(--font-body); 
+  color: var(--fg); 
+  background-color: var(--bg); 
+  background-image: radial-gradient(color-mix(in oklch, var(--fg) 10%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+  font-size: var(--text-body); 
+  line-height: var(--leading-body); 
+}
+code, kbd, samp, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; }
+
+/* --- Overhaul structural refinements --- */
+.metric-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  border-bottom: 0;
+  padding: 0;
+  margin-bottom: 32px;
+}
+.metric {
+  min-width: 0;
+  position: relative;
+  background: linear-gradient(180deg, var(--surface), var(--surface-raised));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.02);
+  transition: border-color var(--duration-enter) var(--ease-out), box-shadow var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out);
+  cursor: pointer;
+}
+.metric::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent), transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-enter) var(--ease-out);
+  pointer-events: none;
+}
+.metric:hover::after {
+  opacity: 1;
+}
+.metric:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.04), 0 0 16px var(--accent-soft);
+  border-color: transparent !important;
+}
+.metric .meta {
+  margin-top: 12px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.table th, .table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.table th {
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.table.responsive td {
+  vertical-align: middle;
+}
+.table tbody tr {
+  transition: background var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out);
+}
+.table tbody tr:hover {
+  background: var(--surface-raised);
+}
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  white-space: nowrap;
+}
+.panel {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.03);
+  transition: box-shadow var(--duration-enter) var(--ease-out);
+}
+.panel:hover {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.06);
+}
+.timeline li, .chain li {
+  transition: background var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out);
+  padding: 16px 12px !important;
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border) !important;
+}
+.timeline li:hover, .chain li:hover {
+  background: var(--surface-raised);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.04);
+}
+.chain li:before {
+  top: 24px;
+}
+.chain li:not(:last-child):after {
+  top: 34px;
+}
+.chart-wrap {
+  margin: 16px 0;
+}
+.devicehead {
+  align-items: center;
+}
+.devicehead .device-symbol {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+}
+.navitem {
+  transition: background var(--duration-enter) var(--ease-out), color var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out);
+}
+.navitem:hover {
+  transform: translateX(2px);
+}
+.navitem svg {
+  transition: transform var(--duration-enter) var(--ease-out);
+}
+.navitem:hover svg {
+  transform: scale(1.05);
+}
+.input {
+  transition: border-color var(--duration-enter) var(--ease-out), box-shadow var(--duration-enter) var(--ease-out);
+}
+.input:hover {
+  border-color: var(--muted);
+}
+.input:focus-visible {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none !important;
+}
+.navitem.active {
+  box-shadow: inset 4px 0 0 var(--accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: linear-gradient(90deg, var(--surface-raised), transparent) !important;
+  color: var(--accent);
+  font-weight: 500;
+}
+.btn {
+  transition: transform var(--duration-enter) var(--ease-out), box-shadow var(--duration-enter) var(--ease-out), background var(--duration-enter) var(--ease-out), filter var(--duration-enter) var(--ease-out) !important;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* --- Added Personality & Atmosphere --- */
+.topbar {
+  background: color-mix(in oklch, var(--surface) 80%, transparent) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  position: relative;
+}
+.brand span {
+  background: linear-gradient(90deg, var(--fg), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+.brand svg {
+  color: var(--accent);
+  filter: drop-shadow(0 0 8px var(--accent-soft));
+}
+
+.timeline li::before, .chain li::before {
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+@media (min-width: 851px) {
+  .no-wrap-desktop {
+    white-space: nowrap;
+  }
+}
+

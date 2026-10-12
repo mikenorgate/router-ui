@@ -1,0 +1,8 @@
+# Router build supplies the actual scrape jobs, namespaces and approved recording rules.
+# The console does not start another node exporter, journal collector or DPI engine.
+global:
+  scrape_interval: 30s
+  scrape_timeout: 5s
+  evaluation_interval: 30s
+scrape_configs: []
+rule_files: []

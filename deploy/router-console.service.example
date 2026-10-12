@@ -1,0 +1,46 @@
+[Unit]
+Description=Router Console observatory
+# Router build adds RequiresMountsFor and management-network ordering.
+# Core router services must never Require= or BindsTo= this service.
+After=local-fs.target
+
+[Service]
+Type=simple
+User=router-console
+Group=router-console-ingest
+UMask=0077
+ExecStart=/usr/libexec/router-console -config /etc/router-console/config.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=10s
+RuntimeDirectory=router-console
+RuntimeDirectoryMode=0750
+StateDirectory=router-console
+StateDirectoryMode=0700
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+ReadWritePaths=/var/lib/router-console /var/lib/router-telemetry/console /run/router-console
+# Example deployment profile; the router owns and qualifies these values.
+MemoryHigh=1536M
+MemoryMax=2G
+CPUWeight=10
+CPUQuota=100%
+IOWeight=10
+TasksMax=64
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target

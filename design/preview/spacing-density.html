@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compact does not mean cramped · Router Console</title><style>/* Router Console semantic tokens. Original values inferred from the supplied brief. */
+:root {
+  --bg: oklch(0.975 0.005 95);
+  --surface: oklch(0.995 0.002 95);
+  --surface-raised: oklch(0.955 0.006 95);
+  --fg: oklch(0.25 0.012 250);
+  --muted: oklch(0.49 0.013 245);
+  --border: oklch(0.85 0.010 245);
+  --control-border: oklch(0.57 0.012 245);
+  --accent: oklch(0.42 0.075 185);
+  --accent-soft: oklch(0.93 0.025 185);
+  --on-accent: oklch(0.99 0.002 185);
+  --success: oklch(0.41 0.095 155);
+  --success-soft: oklch(0.95 0.022 155);
+  --warn: oklch(0.44 0.090 75);
+  --warn-soft: oklch(0.96 0.025 85);
+  --danger: oklch(0.45 0.135 25);
+  --danger-soft: oklch(0.96 0.018 25);
+  --unknown: oklch(0.49 0.013 245);
+  --unknown-soft: oklch(0.94 0.008 245);
+  --chart-primary: oklch(0.40 0.035 245);
+  --chart-secondary: oklch(0.54 0.035 245);
+  --chart-fill: oklch(0.90 0.013 245);
+  --scrim: rgb(12 18 24 / 0.55);
+  --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-body: 0.9375rem;
+  --text-label: 0.875rem;
+  --text-section: 1.125rem;
+  --text-title: 1.625rem;
+  --text-metric: 1.875rem;
+  --leading-body: 1.5;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --sidebar-width: 208px;
+  --content-max: 1480px;
+  --row-height: 52px;
+  --control-height: 44px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --duration-enter: 200ms;
+  --duration-exit: 140ms;
+  --shadow-control: 0 1px 2px rgb(0 0 0 / 0.12);
+  --shadow-overlay: 0 16px 48px rgb(0 0 0 / 0.22);
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: oklch(0.205 0.009 250);
+  --surface: oklch(0.245 0.011 250);
+  --surface-raised: oklch(0.285 0.013 250);
+  --fg: oklch(0.925 0.005 95);
+  --muted: oklch(0.73 0.012 245);
+  --border: oklch(0.365 0.014 245);
+  --control-border: oklch(0.60 0.012 245);
+  --accent: oklch(0.78 0.090 185);
+  --accent-soft: oklch(0.315 0.026 185);
+  --on-accent: oklch(0.20 0.014 185);
+  --success: oklch(0.79 0.11 155);
+  --success-soft: oklch(0.29 0.025 155);
+  --warn: oklch(0.83 0.10 85);
+  --warn-soft: oklch(0.30 0.022 85);
+  --danger: oklch(0.79 0.11 25);
+  --danger-soft: oklch(0.30 0.025 25);
+  --unknown: oklch(0.73 0.012 245);
+  --unknown-soft: oklch(0.30 0.013 245);
+  --chart-primary: oklch(0.85 0.025 245);
+  --chart-secondary: oklch(0.66 0.028 245);
+  --chart-fill: oklch(0.33 0.018 245);
+  --scrim: rgb(8 12 16 / 0.72);
+  color-scheme: dark;
+}
+:root[data-density="compact"] { --row-height: 44px; }
+</style><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="../build/reference.css"><style>main { min-width: 0; }</style><script>try{document.documentElement.dataset.theme=localStorage.getItem('router-console-theme')||'light'}catch(e){}</script></head><body><main class="preview-main" data-od-id="preview-spacing-density"><header><div><p class="eyebrow">Router Console / foundations</p><h1 style="margin-top:8px">Compact does not mean cramped</h1><p>A 4px base rhythm. Controls keep a 44px target in either density.</p></div><button class="btn" data-theme-toggle>Switch to graphite</button></header><div class="two"><section class="panel"><h2>Spacing scale</h2><div class="space-demo"><code class="mono" style="width:100px">space-1</code><div class="space-bar" style="--size:4px"></div><span class="small muted">4px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-2</code><div class="space-bar" style="--size:8px"></div><span class="small muted">8px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-3</code><div class="space-bar" style="--size:12px"></div><span class="small muted">12px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-4</code><div class="space-bar" style="--size:16px"></div><span class="small muted">16px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-5</code><div class="space-bar" style="--size:24px"></div><span class="small muted">24px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-6</code><div class="space-bar" style="--size:32px"></div><span class="small muted">32px</span></div><div class="space-demo"><code class="mono" style="width:100px">space-7</code><div class="space-bar" style="--size:48px"></div><span class="small muted">48px</span></div></section><section class="panel"><h2>Device row density</h2><p class="small muted" style="margin:8px 0 16px">52px comfortable / 44px compact</p><select class="input" aria-label="Table density" data-density><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select><table class="table responsive" style="margin-top:16px"><caption>Fictional device examples</caption><thead><tr><th>Device</th><th>Observation</th></tr></thead><tbody><tr><td data-label="Device">Example device A</td><td data-label="Observation">Recently observed</td></tr><tr><td data-label="Device">Example device B</td><td data-label="Observation">Stale · 09:14 UTC</td></tr></tbody></table><div class="divider"></div><p class="small muted">6px controls · 8px panels<br>24px section grouping · 32px major separation</p></section></div><footer class="preview-footer"><a href="../router-console-system.html">System overview</a><a href="../components.html">Components</a><a href="../DESIGN.md">Design rules</a><span>Fictional examples · draft</span></footer></main><script src="../ui_kits/app/components/App.js"></script><script>RouterApp.bindInteractions(document.body);</script></body></html>

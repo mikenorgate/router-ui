@@ -1,0 +1,898 @@
+{
+  "schemaVersion": 1,
+  "format": "od-design-tokens/v1",
+  "source": {
+    "tokensCss": "tokens.css",
+    "evidence": "context/provenance.md"
+  },
+  "tokens": [
+    {
+      "name": "--bg",
+      "value": "oklch(0.975 0.005 95)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--surface",
+      "value": "oklch(0.995 0.002 95)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--surface-raised",
+      "value": "oklch(0.955 0.006 95)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--fg",
+      "value": "oklch(0.25 0.012 250)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--muted",
+      "value": "oklch(0.49 0.013 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--border",
+      "value": "oklch(0.85 0.010 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--control-border",
+      "value": "oklch(0.57 0.012 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--accent",
+      "value": "oklch(0.42 0.075 185)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--accent-soft",
+      "value": "oklch(0.93 0.025 185)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--on-accent",
+      "value": "oklch(0.99 0.002 185)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--success",
+      "value": "oklch(0.41 0.095 155)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--success-soft",
+      "value": "oklch(0.95 0.022 155)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--warn",
+      "value": "oklch(0.44 0.090 75)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--warn-soft",
+      "value": "oklch(0.96 0.025 85)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--danger",
+      "value": "oklch(0.45 0.135 25)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--danger-soft",
+      "value": "oklch(0.96 0.018 25)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--unknown",
+      "value": "oklch(0.49 0.013 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--unknown-soft",
+      "value": "oklch(0.94 0.008 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-primary",
+      "value": "oklch(0.40 0.035 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-secondary",
+      "value": "oklch(0.54 0.035 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-fill",
+      "value": "oklch(0.90 0.013 245)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--scrim",
+      "value": "rgb(12 18 24 / 0.55)",
+      "type": "color",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--font-display",
+      "value": "\"IBM Plex Sans\", \"Segoe UI\", system-ui, sans-serif",
+      "type": "fontFamily",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--font-body",
+      "value": "\"IBM Plex Sans\", \"Segoe UI\", system-ui, sans-serif",
+      "type": "fontFamily",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--font-mono",
+      "value": "\"IBM Plex Mono\", \"SFMono-Regular\", Consolas, monospace",
+      "type": "fontFamily",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-xs",
+      "value": "0.75rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-sm",
+      "value": "0.8125rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-body",
+      "value": "0.9375rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-label",
+      "value": "0.875rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-section",
+      "value": "1.125rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-title",
+      "value": "1.625rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--text-metric",
+      "value": "1.875rem",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--leading-body",
+      "value": "1.5",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-1",
+      "value": "4px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-2",
+      "value": "8px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-3",
+      "value": "12px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-4",
+      "value": "16px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-5",
+      "value": "24px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-6",
+      "value": "32px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--space-7",
+      "value": "48px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--radius-sm",
+      "value": "4px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--radius-md",
+      "value": "6px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--radius-lg",
+      "value": "8px",
+      "type": "dimension",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--sidebar-width",
+      "value": "208px",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--content-max",
+      "value": "1480px",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--row-height",
+      "value": "52px",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--control-height",
+      "value": "44px",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--ease-out",
+      "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--duration-enter",
+      "value": "200ms",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--duration-exit",
+      "value": "140ms",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--shadow-control",
+      "value": "0 1px 2px rgb(0 0 0 / 0.12)",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--shadow-overlay",
+      "value": "0 16px 48px rgb(0 0 0 / 0.22)",
+      "type": "string",
+      "theme": "light",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--bg",
+      "value": "oklch(0.205 0.009 250)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--surface",
+      "value": "oklch(0.245 0.011 250)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--surface-raised",
+      "value": "oklch(0.285 0.013 250)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--fg",
+      "value": "oklch(0.925 0.005 95)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--muted",
+      "value": "oklch(0.73 0.012 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--border",
+      "value": "oklch(0.365 0.014 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--control-border",
+      "value": "oklch(0.60 0.012 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--accent",
+      "value": "oklch(0.78 0.090 185)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--accent-soft",
+      "value": "oklch(0.315 0.026 185)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--on-accent",
+      "value": "oklch(0.20 0.014 185)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--success",
+      "value": "oklch(0.79 0.11 155)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--success-soft",
+      "value": "oklch(0.29 0.025 155)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--warn",
+      "value": "oklch(0.83 0.10 85)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--warn-soft",
+      "value": "oklch(0.30 0.022 85)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--danger",
+      "value": "oklch(0.79 0.11 25)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--danger-soft",
+      "value": "oklch(0.30 0.025 25)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--unknown",
+      "value": "oklch(0.73 0.012 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--unknown-soft",
+      "value": "oklch(0.30 0.013 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-primary",
+      "value": "oklch(0.85 0.025 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-secondary",
+      "value": "oklch(0.66 0.028 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--chart-fill",
+      "value": "oklch(0.33 0.018 245)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    },
+    {
+      "name": "--scrim",
+      "value": "rgb(8 12 16 / 0.72)",
+      "type": "color",
+      "theme": "dark",
+      "confidence": "inferred",
+      "reason": "Original design value derived from the supplied visual direction.",
+      "sources": [
+        "tokens.css",
+        "docs/DESIGN_BRIEF.md"
+      ]
+    }
+  ]
+}

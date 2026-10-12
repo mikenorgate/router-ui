@@ -1,0 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { demoPolicies } from '../lib/demo';
+import { PolicyTable, RuleDetail } from './PolicyTable';
+const meta = { title: 'Investigation/PolicyTable', component: PolicyTable, args: { policies: demoPolicies, onInspect: () => undefined } } satisfies Meta<typeof PolicyTable>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const DistinctClaims: Story = {};
+export const Provenance: Story = { render: () => <RuleDetail policy={demoPolicies[1]!} /> };
+export const ExpiryDoesNotProveRemoval: Story = { render: () => <RuleDetail policy={demoPolicies[2]!} /> };
+export const OriginUnavailable: Story = { render: () => <RuleDetail policy={demoPolicies[3]!} /> };

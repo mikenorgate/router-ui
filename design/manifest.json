@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "od-design-system-project/v1",
+  "id": "user:router-console-design-system",
+  "name": "Router Console",
+  "category": "Project Design System",
+  "description": "Draft standalone router observatory system with policy provenance and explicit evidence states.",
+  "status": "draft",
+  "files": {
+    "design": "DESIGN.md",
+    "tokens": "tokens.css",
+    "designTokens": "design-tokens.json",
+    "components": "components.html"
+  },
+  "usage": "SKILL.md",
+  "assetsDir": "assets",
+  "previewDir": "preview",
+  "componentsManifest": "components.manifest.json",
+  "importMode": "normalized",
+  "fonts": [
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/ibm-plex-sans-latin-400-normal.woff2",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/ibm-plex-sans-latin-500-normal.woff2",
+      "weight": 500,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/ibm-plex-sans-latin-600-normal.woff2",
+      "weight": 600,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "fonts/ibm-plex-mono-latin-400-normal.woff2",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "fonts/ibm-plex-mono-latin-500-normal.woff2",
+      "weight": 500,
+      "style": "normal"
+    }
+  ],
+  "preview": {
+    "dir": "preview",
+    "pages": [
+      {
+        "path": "preview/colors-foundations.html",
+        "title": "Foundations and themes",
+        "role": "colors"
+      },
+      {
+        "path": "preview/typography-specimens.html",
+        "title": "Plex typography and identifiers",
+        "role": "typography"
+      },
+      {
+        "path": "preview/spacing-density.html",
+        "title": "Spacing and density",
+        "role": "spacing"
+      },
+      {
+        "path": "preview/components-controls.html",
+        "title": "Controls and navigation",
+        "role": "components"
+      },
+      {
+        "path": "preview/components-evidence.html",
+        "title": "Evidence and policy badges",
+        "role": "components"
+      },
+      {
+        "path": "preview/components-charts.html",
+        "title": "Aligned timelines and gaps",
+        "role": "components"
+      },
+      {
+        "path": "preview/brand-assets.html",
+        "title": "Route-junction identity",
+        "role": "brand"
+      }
+    ]
+  },
+  "sourceFiles": {
+    "evidence": "context/provenance.md"
+  },
+  "source": {
+    "type": "project",
+    "projectId": "3f8d4985-55cb-4c6c-b1ab-f45d855a89ba",
+    "workspaceId": "a074a105-4b59-43a6-9a70-304651c57a48"
+  },
+  "craft": {
+    "applies": [
+      "typography",
+      "color",
+      "anti-ai-slop"
+    ],
+    "exemptions": [
+      {
+        "rule": "warm-off-white",
+        "reason": "Explicit source brief requires warm off-white."
+      }
+    ]
+  }
+}

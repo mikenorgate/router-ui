@@ -1,0 +1,18 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Empty, Fields, FilterSelect, PageHeader, Panel, Permission, RecordList, RequestState, SearchFilter, Stack, Tabs } from './UI';
+import { ApiError } from '../lib/api';
+const meta = { title: 'Primitives/States', component: Empty } satisfies Meta<typeof Empty>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const NoObservations: Story = {};
+export const AccessLimited: Story = { render: () => <Permission /> };
+export const PageTitle: Story = { render: () => <PageHeader title="Devices" description="Observed identity and address associations." /> };
+export const Surface: Story = { render: () => <Panel title="Installed policy" description="Scope qualifies applicability."><Permission /></Panel> };
+export const FieldList: Story = { render: () => <Fields items={[["Address", <span className="mono">2001:db8:1::24</span>], ['Observed at', 'Unavailable']]} /> };
+export const Search: Story = { render: () => <SearchFilter value="" onChange={() => undefined} label="Find a device" /> };
+export const NativeFilter: Story = { render: () => <FilterSelect label="Evidence" value="" onChange={() => undefined} options={[["", 'All evidence'], ['unknown', 'Unknown']]} /> };
+export const KeyboardTabs: Story = { render: () => <Tabs items={['summary', 'traffic', 'firewall', 'addresses', 'history']} selected="firewall" onSelect={() => undefined} /> };
+export const FlexibleRecords: Story = { render: () => <RecordList records={[{ name: 'Example uplink', addresses: ['203.0.113.10'], rx_bytes: null }]} /> };
+export const StackedSurfaces: Story = { render: () => <Stack><Panel title="Source"><Empty /></Panel><Permission /></Stack> };
+export const LoadingRequest: Story = { render: () => <RequestState resource={{ loading: true, reload: () => undefined }}>{() => null}</RequestState> };
+export const FailedRequest: Story = { render: () => <RequestState resource={{ loading: false, error: new ApiError(503, 'source_unavailable', 'Policy source is unavailable.'), reload: () => undefined }}>{() => null}</RequestState> };

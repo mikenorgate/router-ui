@@ -1,0 +1,1 @@
+import {PreviewCard} from "./PreviewCard.ts";import {Badge} from "./Badge.ts";export default {title:"Reference/PreviewCard"};export const Evidence={render:()=>PreviewCard(`<section class="panel"><h2>Evidence specimen</h2><p class="callout">Fictional records keep their observation time.</p>${Badge("Stale evidence","warn")}</section>`)};

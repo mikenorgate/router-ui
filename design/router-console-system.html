@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>System overview · Router Console</title><style>/* Router Console semantic tokens. Original values inferred from the supplied brief. */
+:root {
+  --bg: oklch(0.975 0.005 95);
+  --surface: oklch(0.995 0.002 95);
+  --surface-raised: oklch(0.955 0.006 95);
+  --fg: oklch(0.25 0.012 250);
+  --muted: oklch(0.49 0.013 245);
+  --border: oklch(0.85 0.010 245);
+  --control-border: oklch(0.57 0.012 245);
+  --accent: oklch(0.42 0.075 185);
+  --accent-soft: oklch(0.93 0.025 185);
+  --on-accent: oklch(0.99 0.002 185);
+  --success: oklch(0.41 0.095 155);
+  --success-soft: oklch(0.95 0.022 155);
+  --warn: oklch(0.44 0.090 75);
+  --warn-soft: oklch(0.96 0.025 85);
+  --danger: oklch(0.45 0.135 25);
+  --danger-soft: oklch(0.96 0.018 25);
+  --unknown: oklch(0.49 0.013 245);
+  --unknown-soft: oklch(0.94 0.008 245);
+  --chart-primary: oklch(0.40 0.035 245);
+  --chart-secondary: oklch(0.54 0.035 245);
+  --chart-fill: oklch(0.90 0.013 245);
+  --scrim: rgb(12 18 24 / 0.55);
+  --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-body: 0.9375rem;
+  --text-label: 0.875rem;
+  --text-section: 1.125rem;
+  --text-title: 1.625rem;
+  --text-metric: 1.875rem;
+  --leading-body: 1.5;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --sidebar-width: 208px;
+  --content-max: 1480px;
+  --row-height: 52px;
+  --control-height: 44px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --duration-enter: 200ms;
+  --duration-exit: 140ms;
+  --shadow-control: 0 1px 2px rgb(0 0 0 / 0.12);
+  --shadow-overlay: 0 16px 48px rgb(0 0 0 / 0.22);
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: oklch(0.205 0.009 250);
+  --surface: oklch(0.245 0.011 250);
+  --surface-raised: oklch(0.285 0.013 250);
+  --fg: oklch(0.925 0.005 95);
+  --muted: oklch(0.73 0.012 245);
+  --border: oklch(0.365 0.014 245);
+  --control-border: oklch(0.60 0.012 245);
+  --accent: oklch(0.78 0.090 185);
+  --accent-soft: oklch(0.315 0.026 185);
+  --on-accent: oklch(0.20 0.014 185);
+  --success: oklch(0.79 0.11 155);
+  --success-soft: oklch(0.29 0.025 155);
+  --warn: oklch(0.83 0.10 85);
+  --warn-soft: oklch(0.30 0.022 85);
+  --danger: oklch(0.79 0.11 25);
+  --danger-soft: oklch(0.30 0.025 25);
+  --unknown: oklch(0.73 0.012 245);
+  --unknown-soft: oklch(0.30 0.013 245);
+  --chart-primary: oklch(0.85 0.025 245);
+  --chart-secondary: oklch(0.66 0.028 245);
+  --chart-fill: oklch(0.33 0.018 245);
+  --scrim: rgb(8 12 16 / 0.72);
+  color-scheme: dark;
+}
+:root[data-density="compact"] { --row-height: 44px; }
+</style><link rel="stylesheet" href="colors_and_type.css"><link rel="stylesheet" href="build/reference.css"><style>main { min-width: 0; }</style><script>try{document.documentElement.dataset.theme=localStorage.getItem('router-console-theme')||'light'}catch(e){}</script></head><body><main class="preview-main" data-od-id="system-overview"><header><div><p class="eyebrow">Draft / native design-system package</p><h1 style="margin-top:8px">Router Console</h1><p>A precise instrument panel for the evidence a router can actually provide.</p></div><button class="btn" data-theme-toggle>Switch to graphite</button></header><div class="two"><section><div class="brand-large"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M7 25V7h10v8h8v10H7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 16h10V7m0 9 8 9" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg><div><strong>One route. A traceable origin.</strong><p class="small muted" style="margin-top:8px">Original route-junction identity.<br>Local Plex Sans + Mono.</p></div></div><div class="notice"><span class="symbol">i</span><p>Standalone, mostly read-only. All records in the examples are fictional. Draft for user review.</p></div></section><section><h2>Inspect the system</h2><div class="spec-links"><a href="storybook/index.html" data-od-id="entry-storybook"><span><strong>Storybook</strong><small>Main reference · reusable components and compositions</small></span><span>↗</span></a><a href="components.html" data-od-id="entry-components"><span><strong>Native component reference</strong><small>Local controls, evidence states, tables and charts</small></span><span>↗</span></a><a href="preview/colors-foundations.html"><span><strong>Colour and typography foundations</strong><small>Both themes · contrast-qualified semantic roles</small></span><span>↗</span></a></div></section></div><section class="specimen"><h2>Small operational compositions</h2><div class="spec-links"><a href="ui_kits/app/overview.html"><span><strong>Overview</strong><small>Aligned timelines and measurement gaps</small></span><span>01 ↗</span></a><a href="ui_kits/app/device-firewall.html"><span><strong>Device · Firewall</strong><small>Installed vs applicable vs observed match</small></span><span>02 ↗</span></a><a href="ui_kits/app/flow-inspector.html"><span><strong>Flow and provenance</strong><small>Tuple, hook path and source chain</small></span><span>03 ↗</span></a><a href="ui_kits/app/access-states.html"><span><strong>Authentication and errors</strong><small>Provider outage, recovery and permission boundaries</small></span><span>04 ↗</span></a></div></section><footer class="preview-footer"><a href="DESIGN.md">Design rules</a><a href="README.md">Package guide</a><a href="design-contract.md">Evidence and decisions</a><a href="context/validation.json">Validation results</a><span>Draft v0.1 / local assets</span></footer></main><script src="ui_kits/app/components/App.js"></script><script>RouterApp.bindInteractions(document.body);</script></body></html>

@@ -1,0 +1,32 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.opendesign.local.json
+.od/
+
+# Build tools and generated caches
+node_modules/
+dist/
+coverage/
+.cache/
+.DS_Store
+
+web/node_modules/
+web/dist/
+web/storybook-static/
+.od-skills/
+critique.json
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sock
+
+web/.preview-dist/
+
+# Local authoring sessions, obsolete previews and captured runtime data
+.pi/
+*.artifact.json
+router-console-overview.html
+*.pcap
+*.pcapng

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "router-console-components/v1",
+  "status": "draft",
+  "entry": "components.html",
+  "nativeEntry": "ui_kits/app/index.html",
+  "storybook": "storybook/index.html",
+  "components": [
+    {
+      "name": "Badge",
+      "source": "ui_kits/app/components/Badge.ts",
+      "story": "ui_kits/app/components/Badge.stories.ts",
+      "browser": "ui_kits/app/components/Badge.js",
+      "contract": "Label and symbol; evidence claims stay separate."
+    },
+    {
+      "name": "Sidebar",
+      "source": "ui_kits/app/components/Sidebar.ts",
+      "story": "ui_kits/app/components/Sidebar.stories.ts",
+      "browser": "ui_kits/app/components/Sidebar.js",
+      "contract": "Seven named sections; examples only; mobile disclosure."
+    },
+    {
+      "name": "Metric",
+      "source": "ui_kits/app/components/Metric.ts",
+      "story": "ui_kits/app/components/Metric.stories.ts",
+      "browser": "ui_kits/app/components/Metric.js",
+      "contract": "Value, unit, change and observation time."
+    },
+    {
+      "name": "Chart",
+      "source": "ui_kits/app/components/Chart.ts",
+      "story": "ui_kits/app/components/Chart.stories.ts",
+      "browser": "ui_kits/app/components/Chart.js",
+      "contract": "Aligned sampled lanes, gap, marker and data alternative."
+    },
+    {
+      "name": "PolicyTable",
+      "source": "ui_kits/app/components/PolicyTable.ts",
+      "story": "ui_kits/app/components/PolicyTable.stories.ts",
+      "browser": "ui_kits/app/components/PolicyTable.js",
+      "contract": "Bounded filtering, sorting, selection and source provenance."
+    },
+    {
+      "name": "Inspector",
+      "source": "ui_kits/app/components/Inspector.ts",
+      "story": "ui_kits/app/components/Inspector.stories.ts",
+      "browser": "ui_kits/app/components/Inspector.js",
+      "contract": "Tuple, translation evidence, hook path and policy source chain."
+    },
+    {
+      "name": "AuthPanel",
+      "source": "ui_kits/app/components/AuthPanel.ts",
+      "story": "ui_kits/app/components/AuthPanel.stories.ts",
+      "browser": "ui_kits/app/components/AuthPanel.js",
+      "contract": "Provider-neutral OIDC, local recovery and failure states."
+    },
+    {
+      "name": "App",
+      "source": "ui_kits/app/components/App.ts",
+      "story": "ui_kits/app/components/App.stories.ts",
+      "browser": "ui_kits/app/components/App.js",
+      "contract": "Small compositions; no backend or router writes."
+    },
+    {
+      "name": "PreviewCard",
+      "source": "ui_kits/app/components/PreviewCard.ts",
+      "story": "ui_kits/app/components/PreviewCard.stories.ts",
+      "browser": "ui_kits/app/components/PreviewCard.js",
+      "contract": "Shared local Storybook specimen wrapper with reference interaction binding."
+    }
+  ],
+  "compositions": [
+    "ui_kits/app/overview.html",
+    "ui_kits/app/device-firewall.html",
+    "ui_kits/app/flow-inspector.html",
+    "ui_kits/app/access-states.html"
+  ]
+}

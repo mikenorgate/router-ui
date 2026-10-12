@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.preview-dist/
+storybook-static/
+coverage/
+.env.local

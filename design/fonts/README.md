@@ -1,0 +1,2 @@
+# Local type assets
+IBM Plex Sans 400, 500, 600 and IBM Plex Mono 400, 500 (Latin subset), obtained from Fontsource packages `@fontsource/ibm-plex-sans@5.3.0` and `@fontsource/ibm-plex-mono@5.3.0`. Original type design: IBM. The accompanying SIL Open Font License 1.1 files are `OFL-sans.txt` and `OFL-mono.txt`. Runtime references are relative and local. Other scripts use the declared system fallbacks; this draft does not include full multilingual coverage.

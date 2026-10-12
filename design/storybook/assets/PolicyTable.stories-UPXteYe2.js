@@ -1,0 +1,1 @@
+import{P as e,c as o,d as t}from"./PreviewCard-DDT3Z37e.js";const r={title:"Policy/PolicyTable",parameters:{layout:"padded"}},s={render:()=>e(o()+t())},c={render:()=>e(o([]))},d=["EvidenceRows","Empty"];export{c as Empty,s as EvidenceRows,d as __namedExportsOrder,r as default};
