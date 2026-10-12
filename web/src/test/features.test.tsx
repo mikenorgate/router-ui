@@ -32,14 +32,14 @@ describe('AnnotationEditor', () => {
 
     const aliasInput = getByLabelText('Console alias') as HTMLInputElement;
     const noteInput = getByLabelText('Console note') as HTMLTextAreaElement;
-    
+
     expect(aliasInput.value).toBe('Old Alias');
     expect(noteInput.value).toBe('Old Note');
 
     // Type unsaved alias
     fireEvent.change(aliasInput, { target: { value: 'New Draft Alias' } });
     aliasInput.focus();
-    
+
     expect(aliasInput.value).toBe('New Draft Alias');
     expect(document.activeElement).toBe(aliasInput);
 
@@ -49,7 +49,7 @@ describe('AnnotationEditor', () => {
         <AnnotationEditor deviceId="dev1" alias="Server Updated Alias" note="Server Updated Note" onSaved={onSaved} />
       </AuthProvider>
     );
-    
+
     // Should retain draft and focus
     expect(aliasInput.value).toBe('New Draft Alias');
     // Note remains old note because component is dirty and doesn't sync ANY props
@@ -58,7 +58,7 @@ describe('AnnotationEditor', () => {
 
     // Submit and fail
     fireEvent.click(getByRole('button', { name: 'Save annotation' }));
-    
+
     await act(async () => {
       rejectRequest(new Error('Network failure'));
       await Promise.resolve();
@@ -103,13 +103,13 @@ describe('DeviceDetailPage extra policies reconcile', () => {
     // Initial load
     await act(async () => { await Promise.resolve(); await Promise.resolve(); });
     expect(getByText('p1')).toBeInTheDocument();
-    
+
     // Load more
     await act(async () => {
       fireEvent.click(getByText('Load more policies'));
       await Promise.resolve(); await Promise.resolve();
     });
-    
+
     expect(getByText('p2')).toBeInTheDocument();
     requests = [];
 
@@ -133,7 +133,7 @@ describe('DeviceDetailPage extra policies reconcile', () => {
     Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' });
     await act(async () => { document.dispatchEvent(new Event('visibilitychange')); });
     await act(async () => { await Promise.resolve(); await Promise.resolve(); });
-    
+
     // Should have re-fetched device and then the policies
     expect(requests).toContain('/devices/dev1');
     expect(requests).toContain('/policies?device_id=dev1&cursor=cursorA');
@@ -143,7 +143,7 @@ describe('DeviceDetailPage extra policies reconcile', () => {
     expect(getByText('p3')).toBeInTheDocument();
 
     requests = [];
-    
+
     // Refresh again, but pagination request fails
     (request as any).mockImplementation(async (path: string) => {
       requests.push(path);
@@ -196,7 +196,7 @@ describe('DeviceDetailPage extra policies reconcile', () => {
     );
 
     await waitFor(() => expect(getByText('slow-p')).toBeInTheDocument());
-    
+
     // Start loading more for dev-slow
     await act(async () => {
       fireEvent.click(getByText('Load more policies'));
@@ -208,7 +208,7 @@ describe('DeviceDetailPage extra policies reconcile', () => {
     });
 
     await waitFor(() => expect(getByText('fast-p')).toBeInTheDocument());
-    
+
     // Now resolve the slow request for dev-slow
     await act(async () => {
       resolveSlowRequest({ items: [{ id: 'ghost-p', action: 'drop' }], next_cursor: 'done' });
@@ -249,17 +249,17 @@ describe('useResource polling and caching', () => {
   it('exercises THREE automatic timer intervals, hidden visibility no fetch, resume, slow unresolved request no overlap, manual refresh during request', async () => {
     let resolveRequest: any;
     let reqPromise: any;
-    
+
     // First request
     reqPromise = new Promise(r => resolveRequest = r);
     (request as any).mockReturnValueOnce(reqPromise);
 
     const { getByTestId, getByText } = render(<TestComponent path="/test" autoRefresh={true} />);
-    
+
     // Initial fetch
     expect(request).toHaveBeenCalledTimes(1);
     expect(getByTestId('loading').textContent).toBe('loading');
-    
+
     await act(async () => {
       resolveRequest({ value: '1' });
       await Promise.resolve(); // flush microtasks
@@ -281,13 +281,13 @@ describe('useResource polling and caching', () => {
     await act(async () => { vi.advanceTimersByTime(30000); });
     expect(request).toHaveBeenCalledTimes(3);
     await act(async () => { resolveRequest({ value: '3' }); await Promise.resolve(); });
-    
+
     // 3rd interval with hidden visibility
     visibilityState = 'hidden';
     await act(async () => { vi.advanceTimersByTime(30000); });
     // Should NOT fetch
     expect(request).toHaveBeenCalledTimes(3);
-    
+
     // Resume (visibility visible)
     reqPromise = new Promise(r => resolveRequest = r);
     (request as any).mockReturnValueOnce(reqPromise);
@@ -296,7 +296,7 @@ describe('useResource polling and caching', () => {
       document.dispatchEvent(new Event('visibilitychange'));
     });
     expect(request).toHaveBeenCalledTimes(4); // Fetches on resume
-    
+
     // Slow unresolved request no overlap & manual refresh during request
     // We haven't resolved 4th request yet.
     expect(getByTestId('loading').textContent).toBe('loading');
@@ -330,7 +330,7 @@ describe('useResource polling and caching', () => {
     render(<TestComponent path="/test-fixed" autoRefresh={false} />);
     expect(request).toHaveBeenCalledTimes(1);
     await act(async () => { await Promise.resolve(); });
-    
+
     // Advance timers
     await act(async () => { vi.advanceTimersByTime(60000); });
     expect(request).toHaveBeenCalledTimes(1); // No polling
@@ -345,19 +345,19 @@ describe('PoliciesPanel features', () => {
   it('preserves extra policy across refresh, dedupes pages by ID, shows inline error', async () => {
     const initialPolicies = [{ id: 'p1', action: 'allow' }];
     let onLoadedMore = vi.fn();
-    
+
     const { getByText, container } = render(
-      <PoliciesPanel 
-        deviceId="dev1" 
-        initialPolicies={initialPolicies as any} 
+      <PoliciesPanel
+        deviceId="dev1"
+        initialPolicies={initialPolicies as any}
         extraPolicies={[]}
-        nextCursor="cursor1" 
-        selectedRule={null} 
-        onInspect={() => {}} 
-        onLoadedMore={onLoadedMore} 
+        nextCursor="cursor1"
+        selectedRule={null}
+        onInspect={() => {}}
+        onLoadedMore={onLoadedMore}
       />
     );
-    
+
     expect(getByText('p1')).toBeInTheDocument();
     expect(getByText('Load more policies')).toBeInTheDocument();
 
@@ -366,41 +366,41 @@ describe('PoliciesPanel features', () => {
       items: [{ id: 'p2', action: 'drop' }, { id: 'p1', action: 'allow' }], // p1 should be deduped
       next_cursor: 'cursor2'
     });
-    
+
     await act(async () => {
       fireEvent.click(getByText('Load more policies'));
     });
-    
+
     expect(request).toHaveBeenCalledWith('/policies?device_id=dev1&cursor=cursor1');
     expect(onLoadedMore).toHaveBeenCalledWith([{ id: 'p2', action: 'drop' }, { id: 'p1', action: 'allow' }], 'cursor2');
-    
+
     // Rerender as if parent updated it
     render(
-      <PoliciesPanel 
-        deviceId="dev1" 
-        initialPolicies={initialPolicies as any} 
+      <PoliciesPanel
+        deviceId="dev1"
+        initialPolicies={initialPolicies as any}
         extraPolicies={[{ id: 'p2', action: 'drop' }] as any}
-        nextCursor="cursor2" 
-        selectedRule={null} 
-        onInspect={() => {}} 
-        onLoadedMore={onLoadedMore} 
+        nextCursor="cursor2"
+        selectedRule={null}
+        onInspect={() => {}}
+        onLoadedMore={onLoadedMore}
       />,
       { container }
     );
-    
+
     expect(getByText('p1')).toBeInTheDocument();
     expect(getByText('p2')).toBeInTheDocument(); // newly loaded and deduped (no duplicate p1 shown)
 
-    // Unsaved draft through a refresh is typically at the DeviceDetailPage level (AnnotationEditor), 
+    // Unsaved draft through a refresh is typically at the DeviceDetailPage level (AnnotationEditor),
     // but the test name implies we should just test we don't reset state.
-    
+
     // Refresh error preserving visible data
     (request as any).mockRejectedValueOnce(new Error('Network error loading policies'));
-    
+
     await act(async () => {
       fireEvent.click(getByText('Load more policies'));
     });
-    
+
     expect(getByText('Network error loading policies')).toBeInTheDocument();
     expect(getByText('p1')).toBeInTheDocument();
     expect(getByText('p2')).toBeInTheDocument(); // Preserved!
