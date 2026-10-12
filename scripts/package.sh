@@ -12,8 +12,8 @@ export TZ=UTC LC_ALL=C
 release_stage="$(mktemp -d)"
 trap 'rm -rf "$release_stage"' EXIT
 mkdir -p "$release_stage/tar/bin" "$release_stage/tar/web" "$release_stage/tar/integration" "$release_stage/tar/schemas" dist
-CGO_ENABLED=0 GOOS=linux GOARCH="$release_arch" go build -buildvcs=false -trimpath -ldflags "-s -w -X main.version=$release_version" -o "$release_stage/tar/bin/router-console" ./cmd/router-console
-CGO_ENABLED=0 GOOS=linux GOARCH="$release_arch" go build -buildvcs=false -trimpath -ldflags '-s -w' -o "$release_stage/tar/bin/router-console-publish" ./cmd/router-console-publish
+CGO_ENABLED=0 GOOS=linux GOARCH="$release_arch" go build -buildvcs=false -trimpath -ldflags "-w -X main.version=$release_version" -o "$release_stage/tar/bin/router-console" ./cmd/router-console
+CGO_ENABLED=0 GOOS=linux GOARCH="$release_arch" go build -buildvcs=false -trimpath -ldflags '-w' -o "$release_stage/tar/bin/router-console-publish" ./cmd/router-console-publish
 cp -R web/dist/. "$release_stage/tar/web/"
 cp deploy/* docs/INTEGRATION.md docs/INGESTION.md "$release_stage/tar/integration/"
 cp schemas/*.json "$release_stage/tar/schemas/"
