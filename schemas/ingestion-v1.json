@@ -192,6 +192,32 @@
     "Policy": {
       "type": "object",
       "properties": {
+        "rule_id": {
+          "type": "string"
+        },
+        "application_id": {
+          "type": "string"
+        },
+        "binding_ref": {
+          "type": "string"
+        },
+        "installation_generation": {
+          "type": "string"
+        },
+        "lifecycle": {
+          "type": "string"
+        },
+        "lifecycle_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "id": {
           "type": "string",
           "pattern": "^[A-Za-z0-9._:-]{1,128}$"
@@ -349,6 +375,26 @@
     "Source": {
       "type": "object",
       "properties": {
+        "scope": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "string"
+        },
+        "checked_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_code": {
+          "type": "string"
+        },
         "id": {
           "type": "string",
           "pattern": "^[A-Za-z0-9._:-]{1,128}$"
@@ -468,7 +514,10 @@
             "policy",
             "dns",
             "event",
-            "network"
+            "network",
+            "rule",
+            "application",
+            "appliance"
           ]
         },
         "observed_at": {
@@ -582,6 +631,54 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "rule"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Policy"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "application"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Application"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "appliance"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Appliance"
+              }
+            }
+          }
         }
       ]
     },
@@ -637,6 +734,267 @@
         "records"
       ],
       "additionalProperties": false
+    },
+    "SnapshotIdentity": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence": {
+          "type": "integer"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": []
+    },
+    "SnapshotChunk": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Record"
+          }
+        }
+      },
+      "required": []
+    },
+    "SnapshotCommit": {
+      "type": "object",
+      "properties": {
+        "chunks": {
+          "type": "integer"
+        },
+        "records": {
+          "type": "integer"
+        },
+        "digest": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "complete": {
+          "type": "boolean"
+        }
+      },
+      "required": []
+    },
+    "SourceStatus": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "error_code": {
+          "type": "string"
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "lost_records": {
+          "type": "integer"
+        }
+      },
+      "required": []
+    },
+    "Application": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "binding_ref": {
+          "type": "string"
+        },
+        "installation_generation": {
+          "type": "string"
+        },
+        "installed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_match": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counters_scope": {
+          "type": "string"
+        },
+        "packets": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifecycle": {
+          "type": "string"
+        },
+        "lifecycle_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": []
+    },
+    "ServiceObservation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "StorageObservation": {
+      "type": "object",
+      "properties": {
+        "mount": {
+          "type": "string"
+        },
+        "available_bytes": {
+          "type": "integer"
+        },
+        "total_bytes": {
+          "type": "integer"
+        }
+      },
+      "required": []
+    },
+    "Appliance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "image_version": {
+          "type": "string"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "clock_synchronized": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ServiceObservation"
+          }
+        },
+        "storage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StorageObservation"
+          }
+        }
+      },
+      "required": []
     }
   },
   "description": "Transport bounds, UID authorization, clock tolerance, shared-counter evidence and monotonic sequences are additionally enforced by the application."

@@ -128,10 +128,14 @@ func Open(stateDir, historyDir string, budget, stateBudget int64, rawDays, histo
 			return nil, err
 		}
 		var version int
-		if err = v.db.QueryRowContext(ctx, "SELECT MAX(version) FROM schema_version").Scan(&version); err != nil || version != 1 {
+		if err = v.db.QueryRowContext(ctx, "SELECT MAX(version) FROM schema_version").Scan(&version); err != nil || version < 1 || v.db == state && version != 1 || v.db == history && version > HistorySchemaVersion {
 			s.Close()
 			return nil, errors.New("unsupported storage version; restore a compatible console artifact")
 		}
+	}
+	if err = s.migrateSnapshots(ctx); err != nil {
+		s.Close()
+		return nil, err
 	}
 	if err = s.loadRetention(ctx); err != nil {
 		s.Close()
@@ -253,15 +257,33 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 				return out, err
 			}
 		}
-		if _, err = tx.ExecContext(ctx, "INSERT INTO "+table+" VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(source,boot,id,kind,time) DO NOTHING", b.SourceID, b.BootID, r.ID, r.Kind, r.ObservedAt.UnixNano(), device, hash, string(r.Data)); err != nil {
-			return out, err
+		changed := true
+		if r.Kind == "device" || r.Kind == "policy" || r.Kind == "network" || r.Kind == "rule" || r.Kind == "application" || r.Kind == "appliance" {
+			var old string
+			e := tx.QueryRowContext(ctx, "SELECT body FROM latest WHERE kind=? AND id=? AND source=?", r.Kind, r.ID, b.SourceID).Scan(&old)
+			if e != nil && !errors.Is(e, sql.ErrNoRows) {
+				return out, e
+			}
+			changed = e != nil || semantic(old) != semantic(string(r.Data))
 		}
-		if r.Kind == "device" || r.Kind == "policy" || r.Kind == "network" {
+		if changed {
+			if _, err = tx.ExecContext(ctx, "INSERT INTO "+table+" VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(source,boot,id,kind,time) DO NOTHING", b.SourceID, b.BootID, r.ID, r.Kind, r.ObservedAt.UnixNano(), device, hash, string(r.Data)); err != nil {
+				return out, err
+			}
+		}
+		if r.Kind == "device" || r.Kind == "policy" || r.Kind == "network" || r.Kind == "rule" || r.Kind == "application" || r.Kind == "appliance" {
 			if _, err = tx.ExecContext(ctx, `INSERT INTO latest VALUES(?,?,?,?,?) ON CONFLICT(kind,id,source) DO UPDATE SET time=excluded.time,body=excluded.body WHERE excluded.time>=latest.time`, r.Kind, r.ID, b.SourceID, r.ObservedAt.UnixNano(), string(r.Data)); err != nil {
 				return out, err
 			}
 		}
 		out.Accepted++
+	}
+	var deviceCount int
+	if err = tx.QueryRowContext(ctx, "SELECT COUNT(*) FROM latest WHERE kind='device'").Scan(&deviceCount); err != nil {
+		return out, err
+	}
+	if deviceCount > 4096 {
+		return out, ErrCapacity
 	}
 	var previous model.Source
 	var previousBody string
@@ -283,7 +305,7 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 	if kinds == "" {
 		kinds = previous.Kind
 	}
-	source := model.Source{ID: b.SourceID, Kind: kinds, Status: "current", ObservedAt: now, Coverage: b.Coverage, SamplingRate: b.SamplingRate * rate, LostRecords: b.LostRecords, SequenceGaps: gaps, LastSequence: b.Sequence, BootID: b.BootID}
+	source := model.Source{ID: b.SourceID, Kind: kinds, Status: "current", ObservedAt: previous.ObservedAt, CheckedAt: &now, Coverage: b.Coverage, SamplingRate: b.SamplingRate * rate, LostRecords: b.LostRecords, SequenceGaps: gaps, LastSequence: b.Sequence, BootID: b.BootID}
 	if len(b.Records) > 0 {
 		source.ObservedAt = b.Records[0].ObservedAt
 		for _, r := range b.Records {
@@ -349,7 +371,7 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 		return nil, errors.New("query too long")
 	}
 	out := []json.RawMessage{}
-	if !q.History && (kind == "device" || kind == "policy" || kind == "network") {
+	if !q.History && (kind == "device" || kind == "policy" || kind == "network" || kind == "appliance" || kind == "rule" || kind == "application") {
 		rows, err := s.history.QueryContext(ctx, `SELECT body FROM latest WHERE kind=? AND (?='' OR id=?) AND (?='' OR body LIKE ? ESCAPE '\') ORDER BY time DESC LIMIT ? OFFSET ?`, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
 		if err != nil {
 			return nil, err
@@ -408,6 +430,10 @@ func escape(s string) string {
 	return strings.NewReplacer("\\", "\\\\", "%", "\\%", "_", "\\_").Replace(s)
 }
 func (s *Store) Sources(ctx context.Context, now time.Time) ([]model.Source, error) {
+	health, err := s.sourceHealth(ctx)
+	if err != nil {
+		return nil, err
+	}
 	rows, err := s.history.QueryContext(ctx, "SELECT body FROM sources ORDER BY id")
 	if err != nil {
 		return nil, err
@@ -415,21 +441,41 @@ func (s *Store) Sources(ctx context.Context, now time.Time) ([]model.Source, err
 	defer rows.Close()
 	out := []model.Source{}
 	for rows.Next() {
-		var b string
-		if err = rows.Scan(&b); err != nil {
-			return nil, err
-		}
+		var body string
 		var v model.Source
-		if err = json.Unmarshal([]byte(b), &v); err != nil {
+		if err = rows.Scan(&body); err != nil {
 			return nil, err
 		}
-		v.LagSeconds = now.Sub(v.ObservedAt).Seconds()
-		if v.LagSeconds > 90 {
+		if err = json.Unmarshal([]byte(body), &v); err != nil {
+			return nil, err
+		}
+		if h, ok := health[v.ID]; ok {
+			v.Status = h.Status
+			v.CheckedAt = h.CheckedAt
+			v.Coverage = h.Coverage
+			v.ErrorCode = h.ErrorCode
+			v.LostRecords = h.LostRecords
+			delete(health, v.ID)
+		}
+		if !v.ObservedAt.IsZero() {
+			v.LagSeconds = now.Sub(v.ObservedAt).Seconds()
+		}
+		if v.Status == "current" && (v.ObservedAt.IsZero() || v.LagSeconds > 90) {
 			v.Status = "stale"
 		}
 		out = append(out, v)
 	}
-	return out, rows.Err()
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	for _, v := range health {
+		if v.Status == "current" {
+			v.Status = "missing"
+		}
+		out = append(out, v)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
+	return out, nil
 }
 func (s *Store) Stats(ctx context.Context) (Stats, error) {
 	out := Stats{Budget: s.budget, RawDays: int(s.rawDays.Load()), HistoryDays: int(s.historyDays.Load()), MaxRawDays: s.rawLimit, MaxHistoryDays: s.historyLimit}
@@ -447,6 +493,9 @@ func (s *Store) Stats(ctx context.Context) (Stats, error) {
 func (s *Store) Maintenance(ctx context.Context, now time.Time) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if _, err := s.history.ExecContext(ctx, "DELETE FROM staged_snapshots WHERE created<?", now.Add(-5*time.Minute).UnixNano()); err != nil {
+		return err
+	}
 	ts, err := s.tables(ctx)
 	if err != nil {
 		return err

@@ -45,6 +45,9 @@ func New(c config.Config) *Client {
 	return &Client{URL: c.PrometheusURL, Catalog: c.MetricQueries, HTTP: &http.Client{Timeout: 4 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}}
 }
 func (c *Client) Overview(ctx context.Context, span time.Duration) ([]Metric, []Series) {
+	return c.Range(ctx, time.Now().UTC().Add(-span), time.Now().UTC())
+}
+func (c *Client) Range(ctx context.Context, from, to time.Time) ([]Metric, []Series) {
 	metrics := []Metric{}
 	series := []Series{}
 	ids := []string{}
@@ -52,8 +55,9 @@ func (c *Client) Overview(ctx context.Context, span time.Duration) ([]Metric, []
 		ids = append(ids, id)
 	}
 	sort.Strings(ids)
-	now := time.Now().UTC()
-	step := span / 120
+	now := to.UTC().Truncate(time.Second)
+	from = from.UTC().Truncate(time.Second)
+	step := ((to.Sub(from)) / 120 / time.Second) * time.Second
 	if step < 30*time.Second {
 		step = 30 * time.Second
 	}
@@ -62,17 +66,17 @@ func (c *Client) Overview(ctx context.Context, span time.Duration) ([]Metric, []
 		m := Metric{ID: id, Label: q.Label, Unit: q.Unit, Scope: q.Scope, Status: "missing"}
 		s := Series{ID: id, Label: q.Label, Unit: q.Unit, Points: []Point{}}
 		if c.URL != "" {
-			values, err := c.query(ctx, q.Query, now.Add(-span), now, step)
+			values, err := c.query(ctx, q.Query, from, now, step)
 			observations := map[int64]*float64{}
 			if q.TimestampQuery != "" {
 				var e error
-				observations, e = c.query(ctx, q.TimestampQuery, now.Add(-span), now, step)
+				observations, e = c.query(ctx, q.TimestampQuery, from, now, step)
 				if e != nil {
 					observations = map[int64]*float64{}
 				}
 			}
 			if err == nil {
-				for t := now.Add(-span); !t.After(now); t = t.Add(step) {
+				for t := from; !t.After(now); t = t.Add(step) {
 					s.Points = append(s.Points, Point{Time: t, Value: values[t.Unix()]})
 				}
 				for i := len(s.Points) - 1; i >= 0; i-- {

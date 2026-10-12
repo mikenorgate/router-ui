@@ -34,3 +34,25 @@ The application repository does not certify unimplemented router producers, actu
 The Go race suite, vet and golangci-lint passed. The dependency scan reported no reachable vulnerabilities. All 28 frontend interaction/API tests, TypeScript and production builds passed; Open Design also built the Storybook and verified its compiled preview boots in an opaque frame and navigates without network requests.
 
 Chromium checks against the real fixture appliance covered local login, every core route, the device Firewall tab and producer provenance, server-side traffic filters, retention bounds and persistence, annotation saving, both themes, and the 390-pixel mobile layout. No JavaScript errors, page error alerts or horizontal mobile overflow were observed. Both Linux amd64 and arm64 archives were built; the amd64 artifact was extracted, its internal checksums verified and its version command executed. These checks do not replace the router qualification matrix above.
+
+## Snapshot and provenance prerelease
+
+The snapshot protocol stages exact producer wire bytes, validates the complete
+ordered generation and activates it atomically. Integration tests cover durable
+staging across a process restart, unchanged acknowledgements on replay, missing
+chunks, conflicts, stale producer sequences, scope removal and the inventory
+ceiling. Device policy filtering happens before pagination; a fixture with more
+than 500 applications checks that boundary.
+
+The phase frontend has 36 passing tests, including foreground polling without
+overlapping requests, fixed intervals, draft preservation, refresh failures and
+policy disappearance. Its compiled Open Design preview navigates all seven
+pages without network requests. The Go race suite and static checks run against
+the application independently of appliance services.
+
+Release builds produce inert amd64 and arm64 Debian packages and archives.
+`console-release.json` binds their source commit, toolchains, contract versions,
+individual package files and security reports. Repeat builds must compare byte
+for byte before publication. These checks qualify application artifacts; router
+boot, network isolation, storage failure and forwarding gates still require the
+router-owned candidate workflow.

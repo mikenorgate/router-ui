@@ -27,7 +27,14 @@ Existing Alloy/journald pipelines can feed the local ingestion contract through 
 
 Suricata remains the existing detector. Its router-owned adapter publishes qualified events/flow metadata and records coverage limitations, including WAN-only observations after NAT and rotation gaps. Do not infer individual devices from an external WAN address. Conntrack/NAT and DNS lifecycle adapters, where supported, publish original/translated tuples and address bindings valid at event time. No second DPI engine is required.
 
-The policy producer must extend its read-only publication interface with stable logical IDs, revision/source references, installed snapshots, membership, lifecycle and counter scope. Its current aggregate status socket is not a per-device provenance API. A router-owned bridge publishes those records to ingestion; the web process never receives the enforcement socket's pinned operator identity. Keep the currently approved enforcement cohort unchanged.
+The router's policy adapter supplies stable logical rule IDs, revisions, source references, installed snapshots, memberships, lifecycle and counter scope. Publish definitions and device applications as a complete v2 policy scope. Keep its read-only observation identity distinct from enforcement and operator identities. A router-owned bridge joins sanitized compilation provenance with independent kernel evidence; the web process never accesses enforcement sockets. Keep the approved enforcement cohort unchanged.
+
+The Debian package installs binaries in `/usr/bin` and assets, schemas and
+dependency notices in `/usr/share/router-console`. It contains no units,
+maintainer scripts, installation configuration or credentials. The router owns
+those resources. `console-release.json` binds source, toolchains, contracts,
+artifact hashes and security reports. Verify it against a reviewed router-side
+pin before extracting a package into the immutable image.
 
 Scrape console health from the protected ingest socket's `GET /metrics`, through a router-owned Unix-socket adapter or existing textfile pipeline. The application does not expose unauthenticated metrics on the browser listeners. Source lag/loss, storage pressure, rejected ingest and sampling are available; certificate/listener state is also in the authenticated System API. Remote export remains optional.
 

@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 root=Path(__file__).resolve().parent.parent
-source=(root/'internal/model/model.go').read_text()
+source=(root/'internal/model/model.go').read_text()+'\n'+(root/'internal/model/snapshot.go').read_text()
 definitions={}
 def field_type(value):
     if value.startswith('*'):
@@ -31,9 +31,33 @@ for name,definition in definitions.items():
 definitions['Batch']['additionalProperties']=False
 definitions['Batch']['properties'].update(version={'const':1},sequence={'type':'integer','minimum':1,'maximum':4611686018427387904},cursor={'type':'string','maxLength':2048},coverage={'type':'string','maxLength':1024},records={'type':'array','maxItems':256,'items':{'$ref':'#/$defs/Record'}})
 definitions['Record']['additionalProperties']=False
-definitions['Record']['properties']['kind']={'enum':['device','flow','policy','dns','event','network']}
-definitions['Record']['allOf']=[{'if':{'properties':{'kind':{'const':kind}}},'then':{'properties':{'data':{'$ref':'#/$defs/'+name}}}} for kind,name in {'device':'Device','flow':'Flow','policy':'Policy','dns':'DNS','event':'Event','network':'Network'}.items()]
+definitions['Record']['properties']['kind']={'enum':['device','flow','policy','dns','event','network','rule','application','appliance']}
+definitions['Record']['allOf']=[{'if':{'properties':{'kind':{'const':kind}}},'then':{'properties':{'data':{'$ref':'#/$defs/'+name}}}} for kind,name in {'device':'Device','flow':'Flow','policy':'Policy','dns':'DNS','event':'Event','network':'Network','rule':'Policy','application':'Application','appliance':'Appliance'}.items()]
 definitions['Flow']['properties']['verdict']={'enum':['allowed','blocked','unknown']}
 definitions['Policy']['properties']['counters_scope']={'enum':['shared','device','unknown']}
 schema={'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:router-console:ingestion:v1','title':'Router Console observation batch v1','$ref':'#/$defs/Batch','$defs':definitions,'description':'Transport bounds, UID authorization, clock tolerance, shared-counter evidence and monotonic sequences are additionally enforced by the application.'}
 out=root/'schemas/ingestion-v1.json';out.parent.mkdir(exist_ok=True);out.write_text(json.dumps(schema,indent=2)+'\n')
+
+# Embedded metadata is expanded explicitly for language-neutral producers.
+for name in ['SnapshotChunk','SnapshotCommit']:
+    definitions[name]['properties']={**definitions['SnapshotIdentity']['properties'],**definitions[name]['properties']}
+    definitions[name]['required']=list(definitions[name]['properties'])
+    definitions[name]['additionalProperties']=False
+    definitions[name]['properties']['version']={'const':2}
+    definitions[name]['properties']['scope']={'enum':['devices','policies','appliance','network']}
+    definitions[name]['properties']['sequence']={'type':'integer','minimum':1,'maximum':4611686018427387904}
+definitions['SnapshotChunk']['properties']['records']={'type':'array','maxItems':256,'items':{'$ref':'#/$defs/Record'}}
+definitions['SnapshotChunk']['properties']['index']={'type':'integer','minimum':0,'maximum':65535}
+definitions['SnapshotCommit']['properties']['digest']={'type':'string','pattern':'^[0-9a-f]{64}$'}
+definitions['SnapshotCommit']['properties']['complete']={'const':True}
+definitions['SnapshotCommit']['properties']['chunks']={'type':'integer','minimum':1,'maximum':65536}
+definitions['SnapshotCommit']['properties']['records']={'type':'integer','minimum':0,'maximum':65536}
+for name in ['Application','Appliance','SourceStatus']:
+    definitions[name]['required']=[field for field in definitions[name]['properties'] if field!='expires_at']
+definitions['Application']['properties']['lifecycle']={'enum':['active','expired_pending_removal','confirmed_removed','unknown']}
+definitions['SourceStatus']['additionalProperties']=False
+definitions['SourceStatus']['properties']['version']={'const':2}
+definitions['SourceStatus']['properties']['status']={'enum':['current','missing','failed','partial','unsupported']}
+for name,suffix in [('SnapshotChunk','snapshot-chunk'),('SnapshotCommit','snapshot-commit'),('SourceStatus','source-status')]:
+    doc={'$schema':schema['$schema'],'$id':'urn:router-console:ingestion:v2:'+suffix,'$ref':'#/$defs/'+name,'$defs':definitions}
+    (root/'schemas'/('ingestion-v2-'+suffix+'.json')).write_text(json.dumps(doc,indent=2)+'\n')

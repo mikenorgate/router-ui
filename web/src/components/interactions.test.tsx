@@ -56,7 +56,7 @@ describe('investigation interactions', () => {
     const { container } = render(<PolicyTable policies={[{ ...demoPolicies[0]!, name: hostile }]} onInspect={() => undefined} />);
     expect(screen.getByText(hostile)).toBeInTheDocument(); expect(container.querySelector('img')).toBeNull();
     expect(screen.getByText('Shared rule counter')).toBeInTheDocument();
-    expect(screen.getByText('Installed')).toBeInTheDocument(); expect(screen.getByText('Applicable')).toBeInTheDocument(); expect(screen.getByText('Observed match')).toBeInTheDocument();
+    expect(screen.getByText('Installed')).toBeInTheDocument(); expect(screen.getByText('Applicable')).toBeInTheDocument(); expect(screen.getByText('Match unobserved')).toBeInTheDocument();
   });
   it('supports arrow/Home/End tab navigation', async () => {
     const user = userEvent.setup();

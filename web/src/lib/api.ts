@@ -47,6 +47,6 @@ export async function request<T>(path: string, init: RequestInit = {}): Promise<
 }
 export function query(path: string, params: Record<string, string | undefined | null>): string {
   const search = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) if (value) search.set(key, value);
+  for (const [key, value] of Object.entries(params)) if (value !== undefined && value !== null) search.set(key, value);
   return `${path}${search.size ? `?${search}` : ''}`;
 }

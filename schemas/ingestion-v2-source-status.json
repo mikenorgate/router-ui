@@ -1,0 +1,1137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:router-console:ingestion:v2:source-status",
+  "$ref": "#/$defs/SourceStatus",
+  "$defs": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "Device": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "segment": {
+          "type": "string"
+        },
+        "mac": {
+          "type": "string"
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Address"
+          }
+        },
+        "last_seen": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Flow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "source_ip": {
+          "type": "string"
+        },
+        "destination_ip": {
+          "type": "string"
+        },
+        "destination_name": {
+          "type": "string"
+        },
+        "source_port": {
+          "type": "integer"
+        },
+        "destination_port": {
+          "type": "integer"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "bytes_sent": {
+          "type": "integer"
+        },
+        "bytes_received": {
+          "type": "integer"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_seen": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "verdict": {
+          "enum": [
+            "allowed",
+            "blocked",
+            "unknown"
+          ]
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "policy_revision": {
+          "type": "string"
+        },
+        "binding_ref": {
+          "type": "string"
+        },
+        "translated_source_ip": {
+          "type": "string"
+        },
+        "translated_destination_ip": {
+          "type": "string"
+        },
+        "sampling_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "id",
+        "source_ip",
+        "destination_ip",
+        "started_at",
+        "last_seen",
+        "verdict",
+        "sampling_rate"
+      ]
+    },
+    "Origin": {
+      "type": "object",
+      "properties": {
+        "producer": {
+          "type": "string"
+        },
+        "policy_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "group_id": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "rule_id": {
+          "type": "string"
+        },
+        "application_id": {
+          "type": "string"
+        },
+        "binding_ref": {
+          "type": "string"
+        },
+        "installation_generation": {
+          "type": "string"
+        },
+        "lifecycle": {
+          "type": "string"
+        },
+        "lifecycle_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "conditions": {
+          "type": "string"
+        },
+        "installed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_match": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "$ref": "#/$defs/Origin"
+        },
+        "table": {
+          "type": "string"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "hook": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "order": {
+          "type": "integer"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counters_scope": {
+          "enum": [
+            "shared",
+            "device",
+            "unknown"
+          ]
+        },
+        "packets": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "counters_scope"
+      ]
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      },
+      "required": [
+        "id",
+        "time"
+      ]
+    },
+    "Source": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "string"
+        },
+        "checked_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_code": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lag_seconds": {
+          "type": "number"
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "sampling_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "lost_records": {
+          "type": "integer"
+        },
+        "last_sequence": {
+          "type": "integer"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence_gaps": {
+          "type": "integer"
+        }
+      },
+      "required": []
+    },
+    "Network": {
+      "type": "object",
+      "properties": {
+        "interfaces": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "coverage_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": []
+    },
+    "DNS": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "kind": {
+          "enum": [
+            "device",
+            "flow",
+            "policy",
+            "dns",
+            "event",
+            "network",
+            "rule",
+            "application",
+            "appliance"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "observed_at",
+        "data"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "device"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Device"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "flow"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Flow"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "policy"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Policy"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "dns"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/DNS"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "event"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Event"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "network"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Network"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "rule"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Policy"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "application"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Application"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "appliance"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/Appliance"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Batch": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4611686018427387904
+        },
+        "cursor": {
+          "type": "string",
+          "maxLength": 2048
+        },
+        "coverage": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "sampling_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "lost_records": {
+          "type": "integer"
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/Record"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "source_id",
+        "boot_id",
+        "sequence",
+        "sampling_rate",
+        "records"
+      ],
+      "additionalProperties": false
+    },
+    "SnapshotIdentity": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence": {
+          "type": "integer"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": []
+    },
+    "SnapshotChunk": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 2
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4611686018427387904
+        },
+        "scope": {
+          "enum": [
+            "devices",
+            "policies",
+            "appliance",
+            "network"
+          ]
+        },
+        "generation": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "#/$defs/Record"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "source_id",
+        "boot_id",
+        "sequence",
+        "scope",
+        "generation",
+        "observed_at",
+        "index",
+        "records"
+      ],
+      "additionalProperties": false
+    },
+    "SnapshotCommit": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 2
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4611686018427387904
+        },
+        "scope": {
+          "enum": [
+            "devices",
+            "policies",
+            "appliance",
+            "network"
+          ]
+        },
+        "generation": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "chunks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "records": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65536
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "complete": {
+          "const": true
+        }
+      },
+      "required": [
+        "version",
+        "source_id",
+        "boot_id",
+        "sequence",
+        "scope",
+        "generation",
+        "observed_at",
+        "chunks",
+        "records",
+        "digest",
+        "cursor",
+        "complete"
+      ],
+      "additionalProperties": false
+    },
+    "SourceStatus": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 2
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "current",
+            "missing",
+            "failed",
+            "partial",
+            "unsupported"
+          ]
+        },
+        "error_code": {
+          "type": "string"
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "lost_records": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "source_id",
+        "scope",
+        "status",
+        "error_code",
+        "coverage",
+        "lost_records"
+      ],
+      "additionalProperties": false
+    },
+    "Application": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "binding_ref": {
+          "type": "string"
+        },
+        "installation_generation": {
+          "type": "string"
+        },
+        "installed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicable": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_match": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counters_scope": {
+          "type": "string"
+        },
+        "packets": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "active",
+            "expired_pending_removal",
+            "confirmed_removed",
+            "unknown"
+          ]
+        },
+        "lifecycle_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "rule_id",
+        "device_id",
+        "binding_ref",
+        "installation_generation",
+        "installed",
+        "applicable",
+        "observed_match",
+        "counters_scope",
+        "packets",
+        "bytes",
+        "lifecycle",
+        "lifecycle_at",
+        "observed_at"
+      ]
+    },
+    "ServiceObservation": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "StorageObservation": {
+      "type": "object",
+      "properties": {
+        "mount": {
+          "type": "string"
+        },
+        "available_bytes": {
+          "type": "integer"
+        },
+        "total_bytes": {
+          "type": "integer"
+        }
+      },
+      "required": []
+    },
+    "Appliance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "image_version": {
+          "type": "string"
+        },
+        "boot_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "clock_synchronized": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ServiceObservation"
+          }
+        },
+        "storage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StorageObservation"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "image_version",
+        "boot_id",
+        "observed_at",
+        "clock_synchronized",
+        "services",
+        "storage"
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "router-console-web",
-  "version": "0.1.0",
+  "version": "0.2.0-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -33,5 +33,7 @@
     "vite": "8.3.4",
     "vitest": "5.0.3"
   },
-  "engines": { "node": ">=22.12" }
+  "engines": {
+    "node": ">=22.12"
+  }
 }

@@ -62,26 +62,32 @@ type Origin struct {
 	GroupID   string `json:"group_id"`
 }
 type Policy struct {
-	ID            string     `json:"id"`
-	DeviceID      string     `json:"device_id,omitempty"`
-	Action        string     `json:"action"`
-	Scope         string     `json:"scope"`
-	Name          string     `json:"name"`
-	Conditions    string     `json:"conditions"`
-	Installed     *bool      `json:"installed"`
-	Applicable    *bool      `json:"applicable"`
-	ObservedMatch *bool      `json:"observed_match"`
-	Origin        Origin     `json:"origin"`
-	Table         string     `json:"table"`
-	Chain         string     `json:"chain"`
-	Hook          string     `json:"hook"`
-	Priority      int        `json:"priority"`
-	Order         int        `json:"order"`
-	ObservedAt    time.Time  `json:"observed_at"`
-	ExpiresAt     *time.Time `json:"expires_at,omitempty"`
-	CountersScope string     `json:"counters_scope"`
-	Packets       *uint64    `json:"packets"`
-	Bytes         *uint64    `json:"bytes"`
+	RuleID                 string     `json:"rule_id,omitempty"`
+	ApplicationID          string     `json:"application_id,omitempty"`
+	BindingRef             string     `json:"binding_ref,omitempty"`
+	InstallationGeneration string     `json:"installation_generation,omitempty"`
+	Lifecycle              string     `json:"lifecycle,omitempty"`
+	LifecycleAt            *time.Time `json:"lifecycle_at,omitempty"`
+	ID                     string     `json:"id"`
+	DeviceID               string     `json:"device_id,omitempty"`
+	Action                 string     `json:"action"`
+	Scope                  string     `json:"scope"`
+	Name                   string     `json:"name"`
+	Conditions             string     `json:"conditions"`
+	Installed              *bool      `json:"installed"`
+	Applicable             *bool      `json:"applicable"`
+	ObservedMatch          *bool      `json:"observed_match"`
+	Origin                 Origin     `json:"origin"`
+	Table                  string     `json:"table"`
+	Chain                  string     `json:"chain"`
+	Hook                   string     `json:"hook"`
+	Priority               int        `json:"priority"`
+	Order                  int        `json:"order"`
+	ObservedAt             time.Time  `json:"observed_at"`
+	ExpiresAt              *time.Time `json:"expires_at,omitempty"`
+	CountersScope          string     `json:"counters_scope"`
+	Packets                *uint64    `json:"packets"`
+	Bytes                  *uint64    `json:"bytes"`
 }
 type Event struct {
 	ID       string    `json:"id"`
@@ -95,17 +101,21 @@ type Event struct {
 	SourceID string    `json:"source_id"`
 }
 type Source struct {
-	ID           string    `json:"id"`
-	Kind         string    `json:"kind"`
-	Status       string    `json:"status"`
-	ObservedAt   time.Time `json:"observed_at"`
-	LagSeconds   float64   `json:"lag_seconds"`
-	Coverage     string    `json:"coverage"`
-	SamplingRate float64   `json:"sampling_rate"`
-	LostRecords  uint64    `json:"lost_records"`
-	LastSequence uint64    `json:"last_sequence"`
-	BootID       string    `json:"boot_id"`
-	SequenceGaps uint64    `json:"sequence_gaps"`
+	Scope        string     `json:"scope,omitempty"`
+	Generation   string     `json:"generation,omitempty"`
+	CheckedAt    *time.Time `json:"checked_at,omitempty"`
+	ErrorCode    string     `json:"error_code,omitempty"`
+	ID           string     `json:"id"`
+	Kind         string     `json:"kind"`
+	Status       string     `json:"status"`
+	ObservedAt   time.Time  `json:"observed_at"`
+	LagSeconds   float64    `json:"lag_seconds"`
+	Coverage     string     `json:"coverage"`
+	SamplingRate float64    `json:"sampling_rate"`
+	LostRecords  uint64     `json:"lost_records"`
+	LastSequence uint64     `json:"last_sequence"`
+	BootID       string     `json:"boot_id"`
+	SequenceGaps uint64     `json:"sequence_gaps"`
 }
 type Network struct {
 	Interfaces    []map[string]any `json:"interfaces"`
@@ -217,16 +227,56 @@ func (r Record) Validate() error {
 		if v.SamplingRate <= 0 || v.SamplingRate > 1 {
 			return errors.New("invalid flow sample rate")
 		}
-	case "policy":
+	case "policy", "rule":
 		var v Policy
 		if err := json.Unmarshal(r.Data, &v); err != nil {
 			return err
+		}
+		if r.Kind == "rule" && v.DeviceID != "" {
+			return errors.New("rule definition cannot name a device")
 		}
 		if v.ID != r.ID || v.CountersScope != "shared" && v.CountersScope != "device" && v.CountersScope != "unknown" {
 			return errors.New("invalid policy")
 		}
 		if v.ObservedMatch != nil && *v.ObservedMatch && v.CountersScope == "shared" && v.DeviceID != "" {
 			return errors.New("shared counters do not prove a device match")
+		}
+	case "application":
+		var v Application
+		if err := json.Unmarshal(r.Data, &v); err != nil {
+			return err
+		}
+		if v.ID != r.ID || !Identifier(v.RuleID) || !Identifier(v.DeviceID) || !Identifier(v.BindingRef) || !Identifier(v.InstallationGeneration) || v.ObservedAt.IsZero() || v.LifecycleAt.IsZero() {
+			return errors.New("invalid application references")
+		}
+		if v.CountersScope != "shared" && v.CountersScope != "device" && v.CountersScope != "unknown" {
+			return errors.New("invalid application counter scope")
+		}
+		if v.ObservedMatch != nil && v.CountersScope != "device" {
+			return errors.New("device match requires qualified counters")
+		}
+		switch v.Lifecycle {
+		case "active", "expired_pending_removal", "confirmed_removed", "unknown":
+		default:
+			return errors.New("invalid policy lifecycle")
+		}
+	case "appliance":
+		var v Appliance
+		if err := json.Unmarshal(r.Data, &v); err != nil {
+			return err
+		}
+		if v.ID != r.ID || !Identifier(v.BootID) || len(v.ImageVersion) > 128 || v.ObservedAt.IsZero() || len(v.Services) > 128 || len(v.Storage) > 32 {
+			return errors.New("invalid appliance observation")
+		}
+		for _, service := range v.Services {
+			if !Identifier(service.Name) || len(service.Status) > 32 {
+				return errors.New("invalid service observation")
+			}
+		}
+		for _, disk := range v.Storage {
+			if len(disk.Mount) > 256 || disk.AvailableBytes > disk.TotalBytes {
+				return errors.New("invalid storage observation")
+			}
 		}
 	case "event":
 		var v Event

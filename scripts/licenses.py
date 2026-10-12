@@ -29,7 +29,7 @@ while raw.strip():
             dest.mkdir(parents=True,exist_ok=True)
             shutil.copy2(file,dest/file.name)
 packages=[]
-for manifest in (root/'web/node_modules').rglob('package.json'):
+for manifest in sorted((root/'web/node_modules').rglob('package.json')):
     if '.cache' in manifest.parts:continue
     try: item=json.loads(manifest.read_text())
     except (OSError,ValueError):continue
@@ -40,4 +40,4 @@ for manifest in (root/'web/node_modules').rglob('package.json'):
         if file.is_file() and file.name.upper().startswith(('LICENSE','COPYING','NOTICE')):
             dest.mkdir(parents=True,exist_ok=True)
             shutil.copy2(file,dest/file.name)
-(out/'components.json').write_text(json.dumps({'go':modules,'npm':packages},indent=2)+'\n')
+(out/'components.json').write_text(json.dumps({'go':sorted(modules,key=lambda x:(x['Path'],x.get('Version',''))),'npm':sorted(packages,key=lambda x:(x['name'],x['version']))},indent=2)+'\n')

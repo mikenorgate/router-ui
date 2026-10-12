@@ -359,7 +359,7 @@ func (a *API) collection(kind string) http.Handler {
 			problem(w, 503, "unavailable", "History unavailable")
 			return
 		}
-		body := map[string]any{"items": items}
+		body := map[string]any{"items": items, "capabilities": a.capabilities()}
 		if kind == "event" {
 			redacted, err := summaryEvents(items, session(r).User.Role)
 			if err != nil {
@@ -478,35 +478,31 @@ func (a *API) device(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Annotation unavailable")
 		return
 	}
-	output(w, 200, map[string]any{"device": view, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")})
+	body := map[string]any{"device": view, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")}
+	if len(policies) == 100 {
+		body["policies_next_cursor"] = "100"
+	}
+	output(w, 200, body)
 }
 func (a *API) devicePolicies(ctx context.Context, id string) ([]model.Policy, error) {
-	items, err := a.Store.Query(ctx, "policy", store.Query{Limit: 500})
-	if err != nil {
-		return nil, err
-	}
-	out := []model.Policy{}
-	for _, b := range items {
-		var p model.Policy
-		if err = json.Unmarshal(b, &p); err != nil {
-			return nil, err
-		}
-		if id == "" || p.DeviceID == id || p.DeviceID == "" {
-			if id != "" && p.DeviceID == "" {
-				p.ObservedMatch = nil
-			}
-			out = append(out, p)
-		}
-	}
-	return out, nil
+	return a.Store.PolicyViews(ctx, store.Query{DeviceID: id, Limit: 100})
 }
 func (a *API) policies(w http.ResponseWriter, r *http.Request) {
-	items, err := a.devicePolicies(r.Context(), r.URL.Query().Get("device_id"))
+	q, err := query(r)
+	if err != nil {
+		problem(w, 400, "invalid_query", err.Error())
+		return
+	}
+	items, err := a.Store.PolicyViews(r.Context(), q)
 	if err != nil {
 		problem(w, 503, "unavailable", "Policy unavailable")
 		return
 	}
-	output(w, 200, map[string]any{"items": items})
+	body := map[string]any{"items": items}
+	if len(items) == q.Limit && q.Offset+q.Limit <= 10000 {
+		body["next_cursor"] = strconv.Itoa(q.Offset + q.Limit)
+	}
+	output(w, 200, body)
 }
 func (a *API) annotation(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
@@ -547,18 +543,33 @@ func (a *API) overview(w http.ResponseWriter, r *http.Request) {
 		problem(w, 400, "invalid_range", "Choose 15m, 1h, 24h or 7d")
 		return
 	}
-	events, err := a.Store.Query(r.Context(), "event", store.Query{Limit: 20})
-	if err != nil {
-		problem(w, 503, "unavailable", "Events unavailable")
-		return
-	}
 	sources, err := a.sources(r.Context())
 	if err != nil {
 		problem(w, 503, "unavailable", "Sources unavailable")
 		return
 	}
+	to := time.Now().UTC()
+	from := to.Add(-span)
+	if r.URL.Query().Has("from") || r.URL.Query().Has("to") {
+		var err error
+		from, err = time.Parse(time.RFC3339, r.URL.Query().Get("from"))
+		if err != nil {
+			problem(w, 400, "invalid_range", "A fixed interval requires from and to")
+			return
+		}
+		to, err = time.Parse(time.RFC3339, r.URL.Query().Get("to"))
+		if err != nil || !to.After(from) || to.Sub(from) > 7*24*time.Hour || from.Before(time.Now().AddDate(0, 0, -90)) || to.After(time.Now().Add(5*time.Minute)) {
+			problem(w, 400, "invalid_range", "Choose an interval of at most seven days within retained history")
+			return
+		}
+	}
+	events, err := a.Store.Query(r.Context(), "event", store.Query{Limit: 20, From: from, To: to})
+	if err != nil {
+		problem(w, 503, "unavailable", "Events unavailable")
+		return
+	}
 	metricsCtx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
-	m, s := a.Metrics.Overview(metricsCtx, span)
+	m, s := a.Metrics.Range(metricsCtx, from, to)
 	cancel()
 	events, err = summaryEvents(events, session(r).User.Role)
 	if err != nil {
@@ -573,12 +584,12 @@ func (a *API) overview(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Inventory counts unavailable")
 		return
 	}
-	count, err := a.Store.FlowCount(r.Context(), time.Now().Add(-span))
+	count, err := a.Store.FlowCountRange(r.Context(), from, to)
 	if err != nil {
 		problem(w, 503, "unavailable", "Summary unavailable")
 		return
 	}
-	output(w, 200, map[string]any{"metrics": m, "series": s, "devices_total": total, "active_devices": active, "flows_total": count, "events": events, "sources": sources})
+	output(w, 200, map[string]any{"metrics": m, "series": s, "devices_total": total, "active_devices": active, "flows_total": count, "capabilities": a.capabilities(), "events": events, "sources": sources})
 }
 func (a *API) network(w http.ResponseWriter, r *http.Request) {
 	items, err := a.Store.Query(r.Context(), "network", store.Query{Limit: 1})
@@ -619,18 +630,7 @@ func (a *API) system(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Sources unavailable")
 		return
 	}
-	caps := []map[string]any{}
-	for _, kind := range []string{"device", "flow", "dns", "policy", "network", "event"} {
-		supported := false
-		for _, p := range a.Config.Producers {
-			for _, k := range p.Kinds {
-				if k == kind {
-					supported = true
-				}
-			}
-		}
-		caps = append(caps, map[string]any{"id": kind, "supported": supported, "reason": "Availability depends on router-owned producer coverage and freshness"})
-	}
+	caps := a.capabilities()
 	runtime := map[string]any{}
 	if a.Runtime != nil {
 		if v, ok := a.Runtime().(map[string]any); ok {
@@ -645,7 +645,16 @@ func (a *API) system(w http.ResponseWriter, r *http.Request) {
 	if certs == nil {
 		certs = []any{}
 	}
-	output(w, 200, map[string]any{"version": a.Version, "mode": session(r).Mode, "capabilities": caps, "sources": sources, "storage": stats, "listeners": listeners, "certificates": certs, "auth": map[string]bool{"oidc_enabled": a.Config.OIDC.Issuer != "", "local_recovery": true}})
+	appliances, err := a.Store.Query(r.Context(), "appliance", store.Query{Limit: 1})
+	if err != nil {
+		problem(w, 503, "unavailable", "Appliance observation unavailable")
+		return
+	}
+	var appliance any
+	if len(appliances) > 0 {
+		appliance = appliances[0]
+	}
+	output(w, 200, map[string]any{"appliance": appliance, "ingestion_contract": 2, "state_schema": 1, "history_schema": store.HistorySchemaVersion, "version": a.Version, "mode": session(r).Mode, "capabilities": caps, "sources": sources, "storage": stats, "listeners": listeners, "certificates": certs, "auth": map[string]bool{"oidc_enabled": a.Config.OIDC.Issuer != "", "local_recovery": true}})
 }
 func (a *API) export(w http.ResponseWriter, r *http.Request) {
 	kind := r.URL.Query().Get("kind")
@@ -728,4 +737,20 @@ func (a *API) static(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-cache")
 	}
 	http.ServeFile(w, r, path)
+}
+
+func (a *API) capabilities() []map[string]any {
+	caps := []map[string]any{}
+	for _, kind := range []string{"device", "flow", "dns", "policy", "network", "event"} {
+		supported := false
+		for _, p := range a.Config.Producers {
+			for _, k := range p.Kinds {
+				if k == kind || kind == "policy" && (k == "rule" || k == "application") {
+					supported = true
+				}
+			}
+		}
+		caps = append(caps, map[string]any{"id": kind, "supported": supported, "reason": "Availability depends on router-owned producer coverage and freshness"})
+	}
+	return caps
 }

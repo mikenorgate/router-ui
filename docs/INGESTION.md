@@ -1,4 +1,51 @@
-# Observation contract v1
+# Observation contracts
+
+Complete catalogs use v2; append-only records and partial upserts may use v1.
+
+## Complete snapshots (v2)
+
+Publish to `/ingest/v2/snapshots/chunks`, then `/ingest/v2/snapshots/commit`.
+Both use the existing UID-authorized Unix socket. Every request repeats
+`version: 2`, `source_id`, `boot_id`, `sequence`, `scope`, `generation` and the
+original `observed_at`. Record IDs start with `source_id + ":"`.
+
+Supported scopes are `devices` (device records), `policies` (rule definitions
+and applications), `appliance` and `network`. A policy application references
+a definition in the same complete snapshot. Its device and binding references
+do not grant authorization or predict access.
+
+Chunks add zero-based `index` and `records`. Limits are 1 MiB and 256 records
+per chunk, 16 KiB per record, and 32 MiB or 65,536 records per snapshot. The
+current inventory has a global 4,096-device ceiling. One generation may be
+staged per source; incomplete stages expire after five minutes.
+
+Commit adds `chunks`, `records` (the total count), `digest`, `cursor` and
+`complete: true`. Compute the hexadecimal SHA-256 digest over each chunk's
+**exact transmitted JSON bytes**, followed by one newline byte, in ascending
+index order. JSON whitespace and property order are not canonicalized.
+
+Only a validated commit activates the catalog, records semantic history and
+acknowledges its cursor, in one transaction. Missing, conflicting or expired
+chunks leave the previous catalog active. Retry the same committed manifest
+after an uncertain response to recover the original acknowledgement.
+
+Only a complete scope establishes absence. Partial v1 upserts never confirm
+device disappearance or policy removal. Removal observations remain in history;
+expiry by itself is `expired_pending_removal`. Shared rule counters cannot
+establish a device match: applications retain `observed_match: null`.
+
+Report collection health separately to `/ingest/v2/source-status`, with
+`version`, `source_id`, `scope`, `status`, `coverage`, `error_code` and
+`lost_records`. Status may be current, missing, failed, partial or unsupported.
+The application records the check time separately; a successful heartbeat
+cannot update an old measurement's observation time.
+
+The shipped `schemas/ingestion-v2-*.json` describe these payloads. History
+schema 2 migrates history schema 1; account and annotation schema remains 1.
+An older binary rejects the newer history schema. Disposable history may be
+recreated by trusted router administration; durable account state stays intact.
+
+## Batches (v1)
 
 Send one JSON batch to `POST /ingest/v1/batches` over the configured Unix socket. TCP is not an ingestion transport. The server uses the connecting process's kernel UID; a header cannot substitute for it. Each configured source authorizes a set of `device`, `flow`, `policy`, `dns`, `event` or `network` records.
 

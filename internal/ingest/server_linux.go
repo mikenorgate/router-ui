@@ -59,6 +59,9 @@ func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /ingest/v1/batches", s.batch)
 	mux.HandleFunc("GET /metrics", s.metrics)
+	mux.HandleFunc("POST /ingest/v2/snapshots/chunks", s.snapshotChunk)
+	mux.HandleFunc("POST /ingest/v2/snapshots/commit", s.snapshotCommit)
+	mux.HandleFunc("POST /ingest/v2/source-status", s.sourceStatus)
 	return mux
 }
 func (s *Server) batch(w http.ResponseWriter, r *http.Request) {

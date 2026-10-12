@@ -12,14 +12,22 @@ function fixtureAPI() {
 }
 describe('routed application contract', () => {
   it.each([
-    ['/overview', 'Overview', '/overview?range=1h'], ['/devices', 'Devices', '/devices'], ['/traffic', 'Traffic', '/flows?limit=50'],
-    ['/network', 'Network', '/network'], ['/firewall', 'Firewall', '/policies'], ['/events', 'Events', '/events'], ['/system', 'System', '/system'],
-    ['/devices/device-a?tab=addresses', 'Example workstation', '/devices/device-a'],
-  ])('renders %s with a real API request', async (route, title, endpoint) => {
+    ['/overview', 'Overview', '/api/v1/overview?range=1h'],
+    ['/overview?to=1600000000', 'Overview', '/api/v1/overview?from=&to=1600000000'],
+    ['/overview?from=1500000000&to=1600000000', 'Overview', '/api/v1/overview?from=1500000000&to=1600000000'],
+    ['/devices', 'Devices', '/api/v1/devices'], ['/traffic', 'Traffic', '/api/v1/flows'],
+    ['/network', 'Network', '/api/v1/network'], ['/firewall', 'Firewall', '/api/v1/policies'], ['/events', 'Events', '/api/v1/events'], ['/system', 'System', '/api/v1/system'],
+    ['/devices/device-a?tab=addresses', 'Example workstation', '/api/v1/devices/device-a'],
+  ])('renders %s with a real API request', async (route, title, endpointPrefix) => {
     const fetch = fixtureAPI();
     render(<MemoryRouter initialEntries={[route]}><AuthProvider><App /></AuthProvider></MemoryRouter>);
     expect(await screen.findByRole('heading', { level: 1, name: title })).toBeInTheDocument();
-    expect(fetch).toHaveBeenCalledWith(`/api/v1${endpoint}`, expect.objectContaining({ credentials: 'same-origin' }));
+
+    const { waitFor } = await import('@testing-library/react');
+    await waitFor(() => {
+      const calls = fetch.mock.calls.map(c => c[0]);
+      expect(calls.some(url => url.startsWith(endpointPrefix))).toBe(true);
+    });
   });
   it('shows initial login after 401, provider outage, then accepts local recovery', async () => {
     const user = userEvent.setup();

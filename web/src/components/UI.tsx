@@ -23,12 +23,17 @@ export function Permission({ detail = 'Detailed traffic and exports require Oper
   return <div className="notice" data-od-id="permission-limited"><Badge tone="unknown">Permission limited</Badge><p>{detail}</p></div>;
 }
 export function RequestState<T>({ resource, children }: { resource: Resource<T>; children: (data: T) => ReactNode }) {
-  if (resource.loading) return <div className="loading" role="status"><span className="loading-bar" />Loading router observations…</div>;
-  if (resource.error) {
+  if (resource.loading && resource.data === undefined) return <div className="loading" role="status"><span className="loading-bar" />Loading router observations…</div>;
+  if (resource.error && resource.data === undefined) {
     const denied = resource.error instanceof ApiError && resource.error.status === 403;
     return <div className="notice error" role="alert" data-od-id="request-error"><h2>{denied ? 'Access denied' : 'Unable to load observations'}</h2><p>{resource.error.message}</p>{denied ? <Permission detail="The current session does not have permission for this request." /> : <button className="btn" onClick={resource.reload}>Retry request</button>}</div>;
   }
-  return resource.data !== undefined ? children(resource.data) : <Empty />;
+  return resource.data !== undefined ? (
+    <>
+      {resource.error && <div className="notice error" role="alert" style={{ marginBottom: '16px' }}><p>Background refresh failed: {resource.error.message}</p></div>}
+      {children(resource.data)}
+    </>
+  ) : <Empty />;
 }
 export function Fields({ items }: { items: [string, ReactNode][] }) {
   return <dl className="keylist">{items.map(([label, value]) => <div className="field-pair" key={label}><dt>{label}</dt><dd>{value == null || value === '' ? 'Unavailable' : value}</dd></div>)}</dl>;

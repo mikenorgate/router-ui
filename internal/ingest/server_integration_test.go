@@ -28,7 +28,7 @@ func TestRealUnixPeerAuthorization(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	server := New(s, []config.Producer{{ID: "authorized", UID: uint32(os.Getuid()), Kinds: []string{"event"}}, {ID: "other-uid", UID: uint32(os.Getuid() + 1), Kinds: []string{"event"}}})
+	server := New(s, []config.Producer{{ID: "authorized", UID: uint32(os.Getuid()), Kinds: []string{"event", "device"}}, {ID: "other-uid", UID: uint32(os.Getuid() + 1), Kinds: []string{"event", "device"}}})
 	httpd := &http.Server{Handler: server.Handler(), ConnContext: PeerContext, ReadHeaderTimeout: time.Second}
 	go httpd.Serve(l)
 	defer httpd.Close()
@@ -58,4 +58,26 @@ func TestRealUnixPeerAuthorization(t *testing.T) {
 			}
 		})
 	}
+	for _, tc := range []struct {
+		source string
+		status int
+	}{
+		{"authorized", 200}, {"other-uid", 403}, {"unknown", 403},
+	} {
+		body := `{"version":2,"source_id":"` + tc.source + `","boot_id":"boot-1","sequence":2,"scope":"devices","generation":"g2","observed_at":"` + time.Now().UTC().Format(time.RFC3339Nano) + `","index":0,"records":[]}`
+		req, err := http.NewRequest("POST", "http://unix/ingest/v2/snapshots/chunks", strings.NewReader(body))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("X-Producer-UID", "0")
+		res, err := client.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		res.Body.Close()
+		if res.StatusCode != tc.status {
+			t.Fatalf("v2 peer %s: %d", tc.source, res.StatusCode)
+		}
+	}
+
 }

@@ -41,8 +41,11 @@ func (s *Store) Summaries(ctx context.Context, q Query) ([]Summary, error) {
 	return out, rows.Err()
 }
 func (s *Store) FlowCount(ctx context.Context, from time.Time) (uint64, error) {
+	return s.FlowCountRange(ctx, from, time.Now())
+}
+func (s *Store) FlowCountRange(ctx context.Context, from, to time.Time) (uint64, error) {
 	var n uint64
-	err := s.history.QueryRowContext(ctx, "SELECT COALESCE(SUM(flows),0) FROM summaries WHERE hour>=?", from.Truncate(time.Hour).Unix()).Scan(&n)
+	err := s.history.QueryRowContext(ctx, "SELECT COALESCE(SUM(flows),0) FROM summaries WHERE hour>=? AND hour<=?", from.Truncate(time.Hour).Unix(), to.Truncate(time.Hour).Unix()).Scan(&n)
 	return n, err
 }
 func (s *Store) DeviceCounts(ctx context.Context) (int, int, error) {
