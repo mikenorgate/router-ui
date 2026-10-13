@@ -193,6 +193,7 @@ func TestCompletePolicyCapacityCancellationKeepsAcknowledgement(t *testing.T) {
 	if !<-observedWrite || err == nil {
 		t.Fatalf("failed to cancel after WAL spill: %v", err)
 	}
+	checkWriterConfiguration(t, s.history, 3<<30)
 	for _, kind := range []string{"rule", "application"} {
 		rows, queryErr := s.Query(t.Context(), kind, Query{Limit: 500})
 		if queryErr != nil || len(rows) != 1 {
@@ -215,4 +216,5 @@ func TestCompletePolicyCapacityCancellationKeepsAcknowledgement(t *testing.T) {
 	if err != nil || result.Accepted != manifest.Records || result.Cursor != manifest.Cursor {
 		t.Fatalf("replay after cancellation: %+v, %v", result, err)
 	}
+	checkWriterConfiguration(t, s.history, 3<<30)
 }

@@ -65,17 +65,26 @@ type Stats struct {
 }
 
 func open(path string, budget int64) (*sql.DB, error) {
-	db, err := sql.Open("sqlite", path)
+	// A bounded writer page cache avoids repeated dirty index-page spills during
+	// complete policy snapshots. Keep FULL durability and automatic checkpoints.
+	// Settings must apply to replacement connections after cancellation too.
+	options := url.Values{"_pragma": {
+		"journal_mode(WAL)", "busy_timeout(3000)", "synchronous(FULL)",
+		"cache_size(-32768)", "foreign_keys(ON)", "auto_vacuum(INCREMENTAL)",
+		"wal_autocheckpoint(128)", "journal_size_limit(1048576)",
+		fmt.Sprintf("max_page_count(%d)", budget*9/10/4096),
+	}}
+	uri := (&url.URL{Scheme: "file", Path: path, RawQuery: options.Encode()}).String()
+	db, err := sql.Open("sqlite", uri)
 	if err != nil {
 		return nil, err
 	}
 	db.SetMaxOpenConns(1)
-	// WAL is bounded by small commits/checkpoints. The router must also enforce a hard filesystem quota.
-	for _, q := range []string{"PRAGMA journal_mode=WAL", "PRAGMA busy_timeout=3000", "PRAGMA synchronous=FULL", "PRAGMA foreign_keys=ON", "PRAGMA auto_vacuum=INCREMENTAL", "PRAGMA wal_autocheckpoint=128", "PRAGMA journal_size_limit=1048576", fmt.Sprintf("PRAGMA max_page_count=%d", budget*9/10/4096)} {
-		if _, err = db.Exec(q); err != nil {
-			db.Close()
-			return nil, err
-		}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err = db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, err
 	}
 	if err = os.Chmod(path, 0600); err != nil {
 		db.Close()
