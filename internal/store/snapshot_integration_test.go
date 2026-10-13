@@ -207,6 +207,14 @@ func TestPolicyPaginationAndRemovalEvidence(t *testing.T) {
 	if e = json.Unmarshal(history[0], &p); e != nil || p.Lifecycle != "confirmed_removed" || p.Installed == nil || *p.Installed {
 		t.Fatal(p, e)
 	}
+	history, e = s.Query(ctx, "policy", Query{History: true, RecordID: "test:r599", Limit: 100})
+	if e != nil || len(history) != 2 {
+		t.Fatal("shared rule history", len(history), e)
+	}
+	p = model.Policy{}
+	if e = json.Unmarshal(history[0], &p); e != nil || p.Lifecycle != "confirmed_removed" || p.Installed == nil || *p.Installed || p.DeviceID != "" || p.Applicable != nil || p.ObservedMatch != nil {
+		t.Fatal("shared rule removal is not confirmed or implies device evidence", p, e)
+	}
 }
 
 func TestLegacyGlobalPolicyRemainsVisibleWithoutDeviceClaims(t *testing.T) {

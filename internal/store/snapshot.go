@@ -287,7 +287,7 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 				data["rule_definition"] = d
 			}
 			data["observed_at"] = c.ObservedAt
-			if kind == "application" {
+			if kind == "application" || kind == "rule" {
 				data["lifecycle"] = "confirmed_removed"
 				data["lifecycle_at"] = c.ObservedAt
 				data["installed"] = false
