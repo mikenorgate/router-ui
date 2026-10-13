@@ -13,6 +13,7 @@ export function PoliciesPanel({
   onInspect,
   onRefresh,
   filters,
+  pageResetKey,
 }: {
   title: string;
   description: string;
@@ -21,13 +22,15 @@ export function PoliciesPanel({
   onInspect: (policy: Policy) => void;
   onRefresh?: () => void;
   filters?: ReactNode;
+  /** Device/search/filter context; a change returns the client pager to the first page. */
+  pageResetKey?: string;
 }) {
   return (
     <Panel title={title} description={description} action={onRefresh && <button className="btn" onClick={onRefresh}>Refresh snapshot</button>}>
       {filters}
       <RequestState resource={pages.resource}>{() => (
         <>
-          <PolicyTable policies={pages.policies} selected={selectedRule} onInspect={onInspect} />
+          <PolicyTable policies={pages.policies} selected={selectedRule} onInspect={onInspect} pageResetKey={pageResetKey} />
           {pages.pagesError && (
             <div className="notice error" role="alert" data-od-id="policy-pages-error">
               <p>

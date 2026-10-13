@@ -68,6 +68,7 @@ export function DeviceDetailPage() {
           selectedRule={rule?.id}
           onInspect={p => filters.set('rule', p.id)}
           onRefresh={pages.reload}
+          pageResetKey={`${id}|${q}|${evidence}`}
           filters={<div className="filterbar">
             <SearchFilter value={q} onChange={value => filters.set('q', value)} label="Find a rule" hint="Rule ID, producer, revision or scope" />
             <FilterSelect label="Evidence" value={evidence} onChange={value => filters.set('evidence', value)} options={[["", 'All evidence'], ['installed', 'Installed'], ['applicable', 'Applicable'], ['observed', 'Observed match'], ['unknown', 'Origin unavailable']]} />

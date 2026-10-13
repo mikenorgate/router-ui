@@ -4,9 +4,11 @@ import { producerLabel } from '../lib/policies';
 import { Badge, Evidence, Status } from './Badge';
 import { DataTable } from './DataTable';
 import { Fields } from './UI';
+/** Client page size for loaded policy rows; matches the server page size so each fetched page is one client page. */
+export const POLICY_CLIENT_PAGE_SIZE = 100;
 export function counterLabel(policy: Policy): string { return policy.counters_scope === 'shared' ? 'Shared rule counter' : policy.counters_scope === 'device' ? 'Device-attributed counter' : 'Counter attribution unknown'; }
-export function PolicyTable({ policies, onInspect, selected }: { policies: Policy[]; onInspect: (policy: Policy) => void; selected?: string | null }) {
-  return <DataTable rows={policies} selected={selected} caption="Installed, applicable and observed match are separate claims. Scope and observation time qualify each rule." columns={[
+export function PolicyTable({ policies, onInspect, selected, pageResetKey }: { policies: Policy[]; onInspect: (policy: Policy) => void; selected?: string | null; pageResetKey?: string }) {
+  return <DataTable rows={policies} selected={selected} paginate pageSize={POLICY_CLIENT_PAGE_SIZE} pageResetKey={pageResetKey} caption="Installed, applicable and observed match are separate claims. Scope and observation time qualify each rule." columns={[
     { key: 'rule', label: 'Rule / Application', sort: p => p.rule_id || p.id, render: p => <><strong className="mono">{p.rule_id || p.id}</strong><span className="sub">{p.name || 'Rule name unavailable'}</span><span className="sub">{p.application_id ? `App: ${p.application_id}` : producerLabel(p.origin?.producer)}</span></> },
     { key: 'scope', label: 'Action / scope', sort: p => p.action, render: p => <><Status value={p.action} /><span className="sub">{p.scope || 'Scope unavailable'}</span></> },
     { key: 'evidence', label: 'Evidence / Lifecycle', render: p => <><Evidence installed={p.installed} applicable={p.applicable} observed={p.observed_match} />{p.lifecycle && <Badge tone={p.lifecycle === 'confirmed_removed' ? 'plain' : p.lifecycle === 'active' ? 'good' : 'warn'}>{p.lifecycle.replace(/_/g, ' ')}</Badge>}{(p.lifecycle !== 'expired_pending_removal' && expired(p.expires_at)) && <Badge tone="warn">Expiry passed · removal unconfirmed</Badge>}</> },

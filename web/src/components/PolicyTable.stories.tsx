@@ -8,3 +8,5 @@ export const DistinctClaims: Story = {};
 export const Provenance: Story = { render: () => <RuleDetail policy={demoPolicies[1]!} /> };
 export const ExpiryDoesNotProveRemoval: Story = { render: () => <RuleDetail policy={demoPolicies[2]!} /> };
 export const OriginUnavailable: Story = { render: () => <RuleDetail policy={demoPolicies[3]!} /> };
+const manyPolicies = Array.from({ length: 230 }, (_, i) => ({ ...demoPolicies[i % demoPolicies.length]!, id: `rule-${String(i + 1).padStart(3, '0')}`, rule_id: `example-${String(i + 1).padStart(3, '0')}`, name: `Fictional rule ${i + 1}`, packets: (i + 1) * 13 }));
+export const PaginatedLoadedPages: Story = { render: () => <PolicyTable policies={manyPolicies} onInspect={() => undefined} pageResetKey="story" /> };
