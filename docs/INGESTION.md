@@ -91,3 +91,14 @@ Policy observations include stable IDs, producer/policy/revision/source/group re
 The application currently renders producer-supplied policy evidence. It does not execute a general nftables interpreter, predict access through unsupported hooks, or infer the cause of a failure from a counter alone. Router adapters must qualify their semantics and make unsupported coverage explicit.
 
 Browser endpoints use `/api/v1`, JSON collection envelopes `{ "items": [] }`, bounded `limit`/`cursor`, `device_id`, literal text `q`, and optional RFC3339 `from`/`to` for history. Offset cursors are bounded to 10,000 and may move while new observations arrive; use an explicit end time for a stable investigation. Exports contain at most 500 records and require Operator. Traffic verdict, protocol, address-family and recorded-translation filters apply before pagination. No arbitrary SQL or PromQL reaches the stores.
+
+Policy collections also accept `evidence=installed|applicable|observed|unknown`.
+Omitting the filter returns all evidence; unsupported values return HTTP 400.
+Device, text and evidence filters apply to the joined rule/application view
+before pagination. Text searches include inherited rule names, conditions and
+provenance. Unknown origin includes a blank producer or the literal `unknown`.
+The policy collection includes `sources`; device detail includes
+`policy_sources`. Both use the existing normalized source metadata, preserving
+original observation times separately from check times. Missing coverage
+metadata means unavailable coverage. These additions require no ingestion or
+database schema migration.

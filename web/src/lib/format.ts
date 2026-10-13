@@ -25,6 +25,13 @@ export function sampling(rate?: number | null): string {
   if (rate === 1) return 'Unsampled';
   return rate < 1 ? `Sampled · ${number(rate * 100)}%` : `Sampled · 1 in ${number(rate)}`;
 }
+export function age(seconds?: number | null): string | null {
+  if (typeof seconds !== 'number' || !Number.isFinite(seconds) || seconds < 0) return null;
+  if (seconds < 60) return `${Math.round(seconds)} s ago`;
+  if (seconds < 3600) return `${Math.round(seconds / 60)} min ago`;
+  if (seconds < 86400) return `${Math.round(seconds / 3600)} h ago`;
+  return `${Math.round(seconds / 86400)} d ago`;
+}
 export function endpoint(ip?: string, port?: number | null): string {
   if (!ip) return 'Address unavailable';
   return `${ip.includes(':') ? `[${ip}]` : ip}${port == null ? '' : `:${port}`}`;
