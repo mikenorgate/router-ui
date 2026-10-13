@@ -29,8 +29,9 @@ while raw.strip():
             dest.mkdir(parents=True,exist_ok=True)
             shutil.copy2(file,dest/file.name)
 packages=[]
-for manifest in sorted((root/'web/node_modules').rglob('package.json')):
-    if '.cache' in manifest.parts:continue
+module_root=(root/'web/node_modules').resolve(strict=True)
+for manifest in sorted(module_root.rglob('package.json')):
+    if '.cache' in manifest.relative_to(module_root).parts:continue
     try: item=json.loads(manifest.read_text())
     except (OSError,ValueError):continue
     if not item.get('name') or not item.get('version'):continue
@@ -40,4 +41,7 @@ for manifest in sorted((root/'web/node_modules').rglob('package.json')):
         if file.is_file() and file.name.upper().startswith(('LICENSE','COPYING','NOTICE')):
             dest.mkdir(parents=True,exist_ok=True)
             shutil.copy2(file,dest/file.name)
+required=json.loads((root/'web/package.json').read_text()).get('dependencies',{})
+if set(required)-{item['name'] for item in packages}:
+    raise SystemExit('Runtime npm dependency notices are incomplete')
 (out/'components.json').write_text(json.dumps({'go':sorted(modules,key=lambda x:(x['Path'],x.get('Version',''))),'npm':sorted(packages,key=lambda x:(x['name'],x['version']))},indent=2)+'\n')

@@ -12,6 +12,7 @@ jobs:
           go-version: '1.26.9'
           cache-dependency-path: go.sum
       - run: go mod verify
+      - run: python3 scripts/test_licenses.py
       - run: go test -race -shuffle=on -tags=integration ./...
       - run: go vet -tags=integration ./...
       - uses: golangci/golangci-lint-action@v9
