@@ -250,6 +250,19 @@ func TestPolicyRemovalKeepsFormerDefinitionAcrossRevisionAndDay(t *testing.T) {
 			}
 			records = append(records, model.Record{ID: id, Kind: "application", ObservedAt: now, Data: body})
 		}
+		stableRule := rule
+		stableRule.ID, stableRule.Origin.Revision = "test:stable-rule", "stable"
+		stableApplication := model.Application{ID: "test:stable-application", RuleID: stableRule.ID, DeviceID: "test:device", BindingRef: "test:binding", InstallationGeneration: revision, CountersScope: "shared", Lifecycle: "active", LifecycleAt: now, Installed: &yes, Applicable: &yes, ObservedAt: now}
+		for _, value := range []struct {
+			kind, id string
+			data     any
+		}{{"rule", stableRule.ID, stableRule}, {"application", stableApplication.ID, stableApplication}} {
+			body, err := json.Marshal(value.data)
+			if err != nil {
+				t.Fatal(err)
+			}
+			records = append(records, model.Record{ID: value.id, Kind: value.kind, ObservedAt: now, Data: body})
+		}
 		return records
 	}
 	chunks, manifest := snapshot(t, 1, "policies", makeRecords("former", first, true), first)
@@ -257,12 +270,16 @@ func TestPolicyRemovalKeepsFormerDefinitionAcrossRevisionAndDay(t *testing.T) {
 	later := first.Add(2 * time.Hour)
 	chunks, manifest = snapshot(t, 2, "policies", makeRecords("current", later, false), later)
 	commit(t, s, chunks, manifest, later)
-	for _, test := range []struct{ id, revision, lifecycle string }{
-		{"test:removed", "former", "confirmed_removed"},
-		{"test:retained", "current", "active"},
+	for _, test := range []struct {
+		id, revision, lifecycle string
+		count                   int
+	}{
+		{"test:removed", "former", "confirmed_removed", 2},
+		{"test:retained", "current", "active", 2},
+		{"test:stable-application", "stable", "active", 1},
 	} {
 		history, err := s.Query(t.Context(), "policy", Query{History: true, RecordID: test.id, Limit: 10})
-		if err != nil || len(history) != 2 {
+		if err != nil || len(history) != test.count {
 			t.Fatalf("%s history: %d, %v", test.id, len(history), err)
 		}
 		var policy model.Policy

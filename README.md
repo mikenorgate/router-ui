@@ -24,7 +24,7 @@ go vet -tags=integration ./...
 golangci-lint run
 npm --prefix web test
 npm --prefix web run build
-bash scripts/package.sh 0.2.0-rc.4 amd64
+bash scripts/package.sh 0.2.0-rc.5 amd64
 ```
 
 Packages contain binaries, local web assets, checksums, schemas/version metadata and integration examples. They do not install or activate router services. Use `deploy/config.example.json` as an installation input; all addresses, source UIDs, credentials and measurement queries must be supplied by the router build.

@@ -15,14 +15,14 @@ GOMAXPROCS=1 go test -tags=integration -run '^$' \
   -benchtime=50x -benchmem -count=10 ./internal/store
 ```
 
-The wall-clock acceptance test is separate from normal CI and race tests:
+The Linux cgroup v2 wall-clock acceptance test is separate from normal CI and race tests:
 
 ```sh
 GOMAXPROCS=1 go test -tags=integration,capacity \
-  -run '^TestCompletePolicyCapacityDeadline$' -v ./internal/store
+  -run '^TestCompletePolicyCapacity(Deadline|CancellationKeepsAcknowledgement)$' -v ./internal/store
 ```
 
-Run that test only on a recorded native environment with the declared one-CPU and 2 GiB limits. It checks initial commit, shared rule revision and complete removal against an eight-second wall-clock limit. A timeout or missing resource isolation is not a pass.
+Run that test only on a recorded native environment with the declared one-CPU and 2 GiB limits. It verifies effective kernel CPU, memory and swap ceilings, then checks initial commit, shared rule revision and complete removal against an eight-second wall-clock limit. It records process CPU time, cgroup throttling and block I/O alongside elapsed time. A second test cancels after new WAL pages appear, checks that the previous generation and cursor remain unchanged, and replays the same upload. Its replay budget checks recovery separately from latency. A timeout or missing resource isolation is not a pass.
 
 For container isolation, compile a static test binary and run it inside an explicitly selected local Linux image. Mount an owned writable evidence directory and set `TMPDIR` there; the databases need more than a small container `/tmp` mount. Use no networking, no capabilities, a one-CPU quota, a 2 GiB memory ceiling, a 2 GiB memory-plus-swap ceiling and a bounded PID count. Record the image identity, Go version, CPU model, source identity and exact invocation with results.
 
@@ -32,7 +32,7 @@ The October 2026 validation also exercises the packaged application through UID-
 
 ## Recorded component measurements
 
-Go 1.26.9 on an AMD Ryzen Threadripper 2950X, with one CPU and a 2 GiB hard memory ceiling, produced these interleaved ten-sample results against `v0.2.0-rc.2`:
+Go 1.26.9 on an AMD Ryzen Threadripper 2950X, with one CPU and a 2 GiB hard memory ceiling, produced these interleaved ten-sample `v0.2.0-rc.4` results against `v0.2.0-rc.2`:
 
 | Initial 32,776-record complete commit | Baseline | Candidate |
 | --- | ---: | ---: |
@@ -42,6 +42,10 @@ Go 1.26.9 on an AMD Ryzen Threadripper 2950X, with one CPU and a 2 GiB hard memo
 
 `benchstat` reported p < 0.001 for all three comparisons. The time confidence intervals were wide: ±12% for baseline and ±49% for candidate. This shared-host result establishes a component improvement, not predictable worst-case router latency.
 
-Three runs of 50 operations each measured median run averages of 0.69 ms for a 500-device page, 10.75 ms for one device's eight policies, 44.05 ms for its policy history and 15.02 ms for policy reads during retention. These are store-operation averages, not HTTP p95 measurements. Separate native wall-clock checks completed initial commit, shared rule revision and complete removal in 3.34, 5.50 and 4.46 seconds respectively, within their eight-second limit.
+Three runs of 50 operations each measured median run averages of 0.69 ms for a 500-device page, 10.75 ms for one device's eight policies, 44.05 ms for its policy history and 15.02 ms for policy reads during retention. These are store-operation averages, not HTTP p95 measurements. Earlier native wall-clock checks completed initial commit, shared rule revision and complete removal in 3.34, 5.50 and 4.46 seconds respectively. A later disk-backed rerun exceeded the eight-second revision limit at 8.09 seconds. Preserve both observations; the earlier pass does not establish a stable deadline guarantee.
+
+The `v0.2.0-rc.5` revision path reuses validated application-to-rule references and skips old-body comparisons when the changed definition already requires history. Ten interleaved samples against `rc.4` measured median revision time of 7.371 to 4.547 seconds (p=0.019), allocated bytes of 698.9 to 343.1 MiB, and allocations of 10.103 to 3.386 million (p<0.001 for both allocation comparisons). Time intervals remained wide: ±36% and ±38%.
+
+An early development rerun still exceeded eight seconds once. Three subsequent disk-backed checks with measured kernel limits, CPU time and throttling passed, as did three tmpfs diagnostics. Tmpfs excludes disk durability cost and is CPU diagnostic evidence only. These results do not close storage/deadline qualification on a stable appliance runner. Retain failed timings, raw measurements and runner conditions; do not repeat until a passing sample appears and discard the failures.
 
 Component benchmarks do not qualify a signed router image, filesystem exhaustion behavior, physical forwarding or NIC/VPP performance. The deployment owner must perform those acceptance checks against the exact installed artifact.

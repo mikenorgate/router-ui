@@ -214,6 +214,7 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 	sort.SliceStable(records, func(i, j int) bool { return records[i].Kind == "rule" && records[j].Kind != "rule" })
 	seen := map[string]bool{}
 	definitions := map[string]model.Policy{}
+	applicationRules := map[string]string{}
 	deviceCount := 0
 	for _, r := range records {
 		if r.Kind == "device" {
@@ -238,7 +239,10 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 	for _, r := range records {
 		if r.Kind == "application" {
 			var a model.Application
-			_ = json.Unmarshal(r.Data, &a)
+			if err = json.Unmarshal(r.Data, &a); err != nil {
+				return out, err
+			}
+			applicationRules[r.ID] = a.RuleID
 			if _, ok := definitions[a.RuleID]; !ok {
 				return out, ErrSnapshot
 			}
@@ -344,23 +348,21 @@ func (s *Store) CommitSnapshot(ctx context.Context, c model.SnapshotCommit, now 
 	}
 	changedRules := map[string]bool{}
 	for _, r := range records {
-		var old string
-		e := latestRead.QueryRowContext(ctx, r.Kind, r.ID, c.SourceID).Scan(&old)
-		if e != nil && !errors.Is(e, sql.ErrNoRows) {
-			return out, e
+		// A changed shared definition already requires application history.
+		// Reuse its validated reference and skip the old-body lookup and two
+		// semantic JSON conversions; the revision benchmark profiles that work
+		// as avoidable cost at the declared device limit.
+		changed := r.Kind == "application" && changedRules[applicationRules[r.ID]]
+		if !changed {
+			var old string
+			e := latestRead.QueryRowContext(ctx, r.Kind, r.ID, c.SourceID).Scan(&old)
+			if e != nil && !errors.Is(e, sql.ErrNoRows) {
+				return out, e
+			}
+			changed = e != nil || semantic(old) != semantic(string(r.Data))
 		}
-		changed := e != nil || semantic(old) != semantic(string(r.Data))
 		if r.Kind == "rule" && changed {
 			changedRules[r.ID] = true
-		}
-		// A changed shared definition also changes the device's policy history,
-		// even when the application and binding themselves remain identical.
-		if r.Kind == "application" && !changed && len(changedRules) > 0 {
-			var application model.Application
-			if err = json.Unmarshal(r.Data, &application); err != nil {
-				return out, err
-			}
-			changed = changedRules[application.RuleID]
 		}
 		if changed {
 			if err = s.writeSnapshotHistory(ctx, tx, c, r, false, historyWrites, definitions); err != nil {
