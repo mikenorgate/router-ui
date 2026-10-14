@@ -1,12 +1,13 @@
 import type { Policy } from '../types';
 import { bytes, expired, number, text, timestamp } from '../lib/format';
+import { producerLabel } from '../lib/policies';
 import { Badge, Evidence, Status } from './Badge';
 import { DataTable } from './DataTable';
 import { Fields } from './UI';
 export function counterLabel(policy: Policy): string { return policy.counters_scope === 'shared' ? 'Shared rule counter' : policy.counters_scope === 'device' ? 'Device-attributed counter' : 'Counter attribution unknown'; }
 export function PolicyTable({ policies, onInspect, selected }: { policies: Policy[]; onInspect: (policy: Policy) => void; selected?: string | null }) {
   return <DataTable rows={policies} selected={selected} caption="Installed, applicable and observed match are separate claims. Scope and observation time qualify each rule." columns={[
-    { key: 'rule', label: 'Rule / Application', sort: p => p.rule_id || p.id, render: p => <><strong className="mono">{p.rule_id || p.id}</strong><span className="sub">{p.name || 'Rule name unavailable'}</span><span className="sub">{p.application_id ? `App: ${p.application_id}` : (p.origin?.producer || 'Origin unavailable')}</span></> },
+    { key: 'rule', label: 'Rule / Application', sort: p => p.rule_id || p.id, render: p => <><strong className="mono">{p.rule_id || p.id}</strong><span className="sub">{p.name || 'Rule name unavailable'}</span><span className="sub">{p.application_id ? `App: ${p.application_id}` : producerLabel(p.origin?.producer)}</span></> },
     { key: 'scope', label: 'Action / scope', sort: p => p.action, render: p => <><Status value={p.action} /><span className="sub">{p.scope || 'Scope unavailable'}</span></> },
     { key: 'evidence', label: 'Evidence / Lifecycle', render: p => <><Evidence installed={p.installed} applicable={p.applicable} observed={p.observed_match} />{p.lifecycle && <Badge tone={p.lifecycle === 'confirmed_removed' ? 'plain' : p.lifecycle === 'active' ? 'good' : 'warn'}>{p.lifecycle.replace(/_/g, ' ')}</Badge>}{(p.lifecycle !== 'expired_pending_removal' && expired(p.expires_at)) && <Badge tone="warn">Expiry passed · removal unconfirmed</Badge>}</> },
     { key: 'counters', label: 'Counters / observation', sort: p => p.packets, render: p => <>{counterLabel(p)}<span className="sub mono">{number(p.packets)} packets · {bytes(p.bytes)}</span><span className="sub mono">{timestamp(p.observed_at)}</span></> },
@@ -21,7 +22,7 @@ export function RuleDetail({ policy: p }: { policy: Policy }) {
     ['Table / chain', <span className="mono">{p.table || 'Unknown'} / {p.chain || 'Unknown'}</span>], ['Recorded hook', p.hook || 'Hook path unavailable'], ['Priority / order', <span className="mono">{number(p.priority)} / {number(p.order)}</span>],
     ['Observed snapshot', <time className="mono">{timestamp(p.observed_at)}</time>], ['Expiry', p.expires_at ? timestamp(p.expires_at) : 'No expiry recorded'], ['Counters', `${counterLabel(p)} · ${number(p.packets)} packets · ${bytes(p.bytes)}`],
   ]} /><h3>Policy provenance</h3><ol className="chain">
-    <li><p>{p.origin?.producer || 'Origin unavailable'}</p><small>Producer · {p.origin?.source_ref || 'Source reference unavailable'}</small></li>
+    <li><p>{producerLabel(p.origin?.producer)}</p><small>Producer · {p.origin?.source_ref || 'Source reference unavailable'}</small></li>
     <li><p className="mono">{p.origin?.policy_id || 'Logical policy ID unavailable'}</p><small>Revision · {p.origin?.revision || 'Unavailable'}</small></li>
     <li><p>{p.origin?.group_id || 'Group not recorded'}</p><small>{p.scope || 'Inherited scope unavailable'}</small></li>
     <li><p className="mono">{p.id}</p><small>{p.installed === true ? 'Installed in recorded snapshot' : p.installed === false ? 'Not installed in recorded snapshot' : 'Installation unknown'} · {timestamp(p.observed_at)}</small></li>

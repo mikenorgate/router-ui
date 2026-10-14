@@ -71,6 +71,30 @@ describe('investigation interactions', () => {
     const paths = document.querySelector('.chart-line')?.getAttribute('d'); expect(paths?.match(/M/g)).toHaveLength(2);
     expect(screen.getByText('Missing sample')).toBeInTheDocument(); expect(screen.getByText('Unavailable')).toBeInTheDocument();
   });
+  it('humanises chart axes and inspects samples on hover', () => {
+    render(<Chart series={[{ id: 'rx', unit: 'bit/s', points: [{ time: '2026-10-12T09:00:00Z', value: 1200000 }, { time: '2026-10-12T09:01:00Z', value: 2400000 }, { time: '2026-10-12T09:02:00Z', value: 1800000 }] }]} />);
+    expect(screen.getByText('Mbit/s · scale 0–3')).toBeInTheDocument();
+    fireEvent.pointerMove(document.querySelector('svg')!, { clientX: 0 });
+    expect(screen.getByRole('status')).toHaveTextContent('1.2 Mbit/s');
+  });
+  it('selects an interval by dragging across the chart', () => {
+    const onSelect = vi.fn();
+    render(<Chart series={[{ id: 'rx', unit: 'Mbit/s', points: [{ time: '2026-10-12T09:00:00Z', value: 12 }, { time: '2026-10-12T09:01:00Z', value: 20 }, { time: '2026-10-12T09:02:00Z', value: 4 }] }]} onSelect={onSelect} />);
+    const svg = document.querySelector('svg')!;
+    svg.getBoundingClientRect = () => ({ left: 0, top: 0, width: 800, height: 185, right: 800, bottom: 185, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect;
+    fireEvent.pointerDown(svg, { clientX: 60, pointerId: 1, button: 0 });
+    fireEvent.pointerMove(svg, { clientX: 410, pointerId: 1 });
+    fireEvent.pointerUp(svg, { clientX: 410, pointerId: 1 });
+    expect(onSelect).toHaveBeenCalledWith('2026-10-12T09:00:00Z', '2026-10-12T09:01:00Z');
+  });
+  it('keeps click selection for single samples', () => {
+    const onSelect = vi.fn();
+    render(<Chart series={[{ id: 'rx', unit: 'Mbit/s', points: [{ time: '2026-10-12T09:00:00Z', value: 12 }, { time: '2026-10-12T09:01:00Z', value: 20 }] }]} onSelect={onSelect} />);
+    const svg = document.querySelector('svg')!;
+    fireEvent.pointerDown(svg, { clientX: 10, pointerId: 1, button: 0 });
+    fireEvent.pointerUp(svg, { clientX: 10, pointerId: 1 });
+    expect(onSelect).toHaveBeenCalledWith('2026-10-12T09:00:00Z', '2026-10-12T09:01:00Z');
+  });
   it('closes an inspector on Escape/cancel', async () => {
     const onClose = vi.fn(); render(<Inspector title="Evidence" onClose={onClose}>Unknown</Inspector>);
     fireEvent(screen.getByRole('dialog'), new Event('cancel', { bubbles: true, cancelable: true }));

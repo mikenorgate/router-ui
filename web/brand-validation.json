@@ -1,0 +1,142 @@
+{
+  "date": "2026-10-14",
+  "status": "pass",
+  "runner": {
+    "actual": "Installed Codex runner",
+    "reason": "One-off fallback after repeated upstream HTTP 429 failures",
+    "documentedDefault": "Pi; openrouter/google/gemini-3.1-pro-preview:xhigh; catalog effective high",
+    "defaultPreserved": true
+  },
+  "canonicalExport": {
+    "registryId": "user:router-console-design-system",
+    "packageId": "router-console-design-system",
+    "verifiedFiles": 196,
+    "mismatches": [],
+    "sourceBrowserReport": "../design/context/browser-validation.json",
+    "sourceReportsConsumedWithoutRegeneration": true,
+    "independentPackageChecks": 774,
+    "independentContrastPairs": 86,
+    "independentBrowserViews": 52
+  },
+  "commands": {
+    "npm run typecheck": {
+      "exitCode": 0
+    },
+    "npm test": {
+      "exitCode": 0,
+      "tests": 67,
+      "testFiles": 7
+    },
+    "npm run build:preview": {
+      "exitCode": 0,
+      "productionBuild": true,
+      "previewBuild": true,
+      "aboutBlankSmokeTest": true,
+      "networkRequests": 0
+    },
+    "npm run build:storybook": {
+      "exitCode": 0,
+      "advisories": [
+        "Inherited npm environment-config warnings",
+        "Storybook bundle-size warning"
+      ]
+    }
+  },
+  "browser": {
+    "engine": "Chromium",
+    "fileUrl": {
+      "routeViews": 56,
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "report": "/tmp/lanrith-console-qa/results.json",
+      "failures": []
+    },
+    "opaqueSandboxedIframe": {
+      "routeViews": 28,
+      "authenticationViews": 4,
+      "widths": [
+        390,
+        1440
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "report": "/tmp/lanrith-console-embedded-qa/results.json",
+      "failures": []
+    },
+    "checks": [
+      "Local Manrope loaded",
+      "Exact primary/reverse visible logo images loaded",
+      "No horizontal page overflow",
+      "No external requests or runtime errors",
+      "Reduced motion respected",
+      "Search and mobile navigation",
+      "Theme and density controls",
+      "Keyboard route navigation and heading focus",
+      "Sign-in product title and one accessible logo name",
+      "Neutral charcoal and grey large surfaces in dark mode",
+      "Inset active-navigation marker in both themes"
+    ],
+    "nativeOpenDesignExport": "/tmp/lanrith-console-native-preview.png",
+    "capturesInspected": [
+      "/tmp/lanrith-console-qa/overview-1440-dark.png",
+      "/tmp/lanrith-console-qa/overview-1440-light.png",
+      "/tmp/lanrith-console-qa/firewall-1440-dark.png",
+      "/tmp/lanrith-console-embedded-qa/overview-390-dark.png",
+      "/tmp/lanrith-console-embedded-qa/sign-in-390-dark.png"
+    ]
+  },
+  "preservation": {
+    "protectedFilesVerified": 223,
+    "changes": [],
+    "apiAuthAndModeSelectionMatchBaseline": [
+      "web/src/lib/api.ts",
+      "web/src/main.tsx",
+      "web/src/auth.tsx",
+      "web/src/lib/demo.ts"
+    ],
+    "routerConfigurationChanged": false,
+    "baselineDiff": "/tmp/lanrith-console-before.diff",
+    "baselineHashInventory": "/tmp/lanrith-console-baseline-hashes.json"
+  },
+  "previewEntry": "../router-console-preview.html",
+  "activeMirror": "../artifacts/router-console.html",
+  "mirrorExact": true,
+  "limits": [
+    "Application checks use explicit fixtures; no new appliance qualification.",
+    "No publish, deployment, commit or additional agents."
+  ],
+  "darkThemeRefinement": {
+    "date": "2026-10-14",
+    "userFeedback": "The all green is a bit over the top.",
+    "openDesignRun": "4c3ebe33-5be8-4573-a83f-a0a4515f868a",
+    "palette": {
+      "bg": "#171B1E",
+      "surface": "#20262A",
+      "surface-raised": "#2A3236",
+      "muted": "#B9C0C5",
+      "border": "#495258",
+      "control-border": "#879399",
+      "accent-soft": "#20262A",
+      "unknown": "#B9C0C5",
+      "unknown-soft": "#394247",
+      "chart-secondary": "#B9C0C5",
+      "chart-fill": "#414B52"
+    },
+    "lightPaletteUnchanged": true,
+    "mintUsage": "Logo, chart lines, selection, primary controls and focus; large surfaces and fills remain neutral.",
+    "tokensCssSha256": "0d5cec61cb052e730b5f49d7e86c3111f3c99ea4e9458d8e782de89b597ccbb4",
+    "applicationStylesSha256": "ee79389f00f201435cac3604e16e81a8f3cd736dd8a256c886aff7cf70021a4a",
+    "browserRouteViews": 84,
+    "failures": []
+  }
+}

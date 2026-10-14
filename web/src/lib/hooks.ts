@@ -136,12 +136,12 @@ export function useRouteFocus() {
     const orient = () => {
       const heading = document.querySelector<HTMLElement>('main h1');
       if (!heading) return false;
-      document.title = `${heading.textContent || 'Router Console'} · Router Console`;
+      document.title = `${heading.textContent || 'Observations'} · Lanrith console`;
       if (changed) { heading.focus(); window.scrollTo({ top: 0, behavior: 'instant' }); }
       return true;
     };
     if (orient()) return;
-    document.title = 'Loading observations · Router Console';
+    document.title = 'Loading observations · Lanrith console';
     // Device headings arrive with the request. Orient once their content is ready.
     const observer = new MutationObserver(() => { if (orient()) observer.disconnect(); });
     const main = document.querySelector('main');

@@ -4,7 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { App } from '../App';
 import { AuthProvider } from '../auth';
-import { createDemo } from '../lib/demo';
+import { SourceCards } from '../components/SourceCards';
+import { createDemo, demoSources } from '../lib/demo';
 function fixtureAPI() {
   const demo = createDemo();
   const fetch = vi.fn(async (path: string, init?: RequestInit) => Response.json(await demo(path.slice('/api/v1'.length), init)));
@@ -27,7 +28,23 @@ describe('routed application contract', () => {
     await waitFor(() => {
       const calls = fetch.mock.calls.map(c => c[0]);
       expect(calls.some(url => url.startsWith(endpointPrefix))).toBe(true);
+      expect(document.title).toBe(`${title} · Lanrith console`);
     });
+    expect(screen.getByRole('link', { name: 'Lanrith console' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Lanrith' })).toBeInTheDocument();
+  });
+  it('presents collection evidence cards with status and observation detail', () => {
+    render(<SourceCards sources={demoSources} />);
+    const cards = screen.getByRole('list', { name: 'Collection evidence by source' });
+    expect(cards).toBeInTheDocument();
+    const policyCard = screen.getByText('Installed policy').closest('article')!;
+    expect(policyCard).toHaveTextContent('stale');
+    expect(policyCard).toHaveTextContent('Observed 34 min ago');
+    expect(policyCard).toHaveTextContent('Last observed installed revision; current removal not established');
+    expect(policyCard).not.toHaveTextContent('unavailable');
+    const wirelessCard = screen.getByText('Wireless metrics').closest('article')!;
+    expect(wirelessCard).toHaveTextContent('unsupported');
+    expect(wirelessCard).toHaveTextContent('No observations recorded');
   });
   it('shows initial login after 401, provider outage, then accepts local recovery', async () => {
     const user = userEvent.setup();
@@ -42,6 +59,8 @@ describe('routed application contract', () => {
     }); vi.stubGlobal('fetch', fetch);
     render(<MemoryRouter initialEntries={['/overview']}><AuthProvider><App /></AuthProvider></MemoryRouter>);
     expect(await screen.findByText('Identity provider unavailable')).toBeInTheDocument();
+    expect(document.title).toBe('Sign in · Lanrith console');
+    expect(screen.getByRole('img', { name: 'Lanrith' })).toBeInTheDocument();
     await user.type(screen.getByLabelText('Username'), 'local-account'); await user.type(screen.getByLabelText('Password'), 'example-input');
     await user.click(screen.getByRole('button', { name: 'Sign in locally' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Overview' })).toBeInTheDocument();

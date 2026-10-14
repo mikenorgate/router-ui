@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../auth';
 import type { AuthMethods, Session } from '../types';
 import { demoEnabled, request, sameOriginPath, validateSession } from '../lib/api';
 import { useResource } from '../lib/hooks';
 import { Badge } from './Badge';
-import { BrandMark } from './BrandMark';
+import { Brand } from './Brand';
 
 export function AuthPanel() {
+  useEffect(() => { document.title = 'Sign in · Lanrith console'; }, []);
   const auth = useAuth();
   const methods = useResource<AuthMethods>('/auth/methods');
   const [error, setError] = useState('');
@@ -16,7 +17,7 @@ export function AuthPanel() {
   const providerFailed = /oidc|provider/.test(params.get('error') || '');
   const provider = methods.data?.oidc;
   const loginPath = sameOriginPath(provider?.login_url);
-  return <main className="auth-main" id="main-content"><section className="panel auth-panel" data-od-id="login"><div className="auth-brand"><BrandMark size={32} /><span>Router Console</span></div><h1 tabIndex={-1}>Sign in to the console</h1><p className="muted">Investigate router observations and installed policy.</p>
+  return <main className="auth-main" id="main-content"><section className="panel auth-panel" data-od-id="login"><div className="auth-brand"><Brand id="auth-wordmark" /><span className="brand-caption">console</span></div><h1 tabIndex={-1}>Sign in to the console</h1><p className="muted">Investigate router observations and installed policy.</p>
     {demoEnabled && <p className="notice"><Badge tone="warn">Explicit demo mode</Badge> Credentials here are only an example interaction. Use arbitrary demonstration values.</p>}
     {auth.expired && <p className="notice" role="alert">Session expired. Sign in again to continue your investigation.</p>}
     {invalidLogin && <p className="notice error" role="alert">The sign-in response could not be verified. Try again or use local recovery.</p>}

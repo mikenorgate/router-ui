@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { request } from '../lib/api';
 import { useFilters } from '../lib/hooks';
-import { BrandMark } from './BrandMark';
+import { Brand } from './Brand';
 
 const paths: Record<string, string> = {
   Overview: 'M3 3h6v6H3zm12 0h6v6h-6zM3 15h6v6H3zm12 0h6v6h-6z',
@@ -21,7 +21,7 @@ export function Sidebar({ theme, onTheme }: { theme: string; onTheme: () => void
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => { setOpen(false); }, [location.pathname]);
-  return <aside className="sidebar" data-od-id="sidebar"><NavLink className="brand" to={href('/overview')}><BrandMark /><span>Router Console<span className="brand-caption">Local observatory</span></span></NavLink>
+  return <aside className="sidebar" data-od-id="sidebar"><NavLink className="brand" to={href('/overview')} aria-label="Lanrith console"><Brand id="sidebar-wordmark" /><span className="brand-caption">console</span></NavLink>
     <button className="btn mobile-nav-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="console-navigation">{open ? 'Close navigation' : 'Open navigation'}</button>
     <nav id="console-navigation" className={`navlinks ${open ? 'mobile-open' : ''}`} aria-label="Main navigation">{Object.entries(paths).map(([label, path]) => <NavLink key={label} className={({ isActive }) => `navitem ${isActive ? 'active' : ''}`} to={href(`/${label.toLowerCase()}`)} data-od-id={`nav-${label.toLowerCase()}`}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg><span>{label}</span></NavLink>)}</nav>
     <div className="sidebar-bottom"><div className="nav-meta"><span className="eyebrow">Evidence boundary</span><p>Router configuration is read-only.</p></div><button className="btn" onClick={onTheme}>{theme === 'dark' ? 'Use light theme' : 'Use dark theme'}</button><div className="account"><strong>{auth.session?.user.name}</strong><span>{auth.session?.user.role === 'admin' ? 'Administrator' : auth.session?.user.role === 'operator' ? 'Operator' : 'Viewer'}</span></div><button className="btn text" disabled={busy} onClick={async () => { setBusy(true); setError(''); try { await request('/auth/logout', { method: 'POST' }); auth.accept(null); } catch (e) { setError(e instanceof Error ? e.message : 'Sign-out failed.'); } finally { setBusy(false); } }}>{busy ? 'Signing out…' : 'Sign out'}</button>{error && <p className="error-text" role="alert">{error}</p>}</div>

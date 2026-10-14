@@ -6,6 +6,18 @@ import assert from 'node:assert/strict';
 const html = await readFile('../router-console-preview.html', 'utf8');
 const script = html.match(/<script type="module">([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script, 'Preview must embed the application bundle.');
+assert.match(html, /<title>Lanrith console · explicit demo preview<\/title>/);
+assert.match(html, /rel="icon"[^>]*href="data:image\/svg\+xml;base64,|href="data:image\/svg\+xml;base64,[^"]*"[^>]*rel="icon"/);
+const css = html.match(/<style>([\s\S]*?)<\/style>/)?.[1];
+assert.ok(css?.includes('Manrope'), 'Preview must include the canonical Manrope binding.');
+for (const [, url] of css.matchAll(/url\(([^)]+)\)/g)) {
+  assert.ok(url.replace(/["']/g, '').startsWith('data:'), 'All preview font/CSS assets must be embedded.');
+}
+for (const asset of ['lanrith-wordmark.svg', 'lanrith-wordmark-reverse.svg', 'lanrith-favicon.svg']) {
+  const bytes = await readFile(new URL(`../../design/assets/${asset}`, import.meta.url));
+  assert.ok(html.includes(`data:image/svg+xml;base64,${bytes.toString('base64')}`), `Preview must embed the exact ${asset}.`);
+}
+assert.ok(html.includes(await readFile(new URL('../public/licenses/OFL-manrope.txt', import.meta.url), 'utf8')), 'Preview must carry the Manrope licence.');
 const errors = [];
 const virtualConsole = new VirtualConsole();
 virtualConsole.on('jsdomError', error => errors.push(error.message));
@@ -40,6 +52,8 @@ for (const title of ['Devices', 'Traffic', 'Network', 'Firewall', 'Events', 'Sys
   await until(() => dom.window.document.querySelector('h1')?.textContent === title);
 }
 assert.equal(networkRequests, 0);
+assert.equal(dom.window.document.title, 'Overview · Lanrith console');
+assert.equal(dom.window.document.querySelectorAll('[role="img"][aria-label="Lanrith"]').length, 1);
 assert.deepEqual(errors, []);
 dom.window.close();
 console.log('Compiled Open Design preview boots at about:blank and navigates all seven pages without network requests.');

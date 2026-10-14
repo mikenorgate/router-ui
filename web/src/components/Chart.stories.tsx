@@ -7,3 +7,6 @@ type Story = StoryObj<typeof meta>;
 export const MissingSamples: Story = {};
 export const NoSeries: Story = { args: { series: [] } };
 export const SelectableInterval: Story = { args: { onSelect: () => undefined } };
+const at = (minutes: number) => new Date(Date.parse('2026-10-13T15:00:00Z') + minutes * 60_000).toISOString();
+export const RawBitsPerSecond: Story = { args: { series: [{ id: 'receive', label: 'Receive', unit: 'bit/s', points: Array.from({ length: 25 }, (_, i) => ({ time: at(i * 2), value: i === 14 ? null : Math.round(1.8e6 + Math.sin(i / 3) * 1.2e6 + i * 40_000) })) }] } };
+export const GigabitScale: Story = { args: { series: [{ id: 'uplink', label: 'Uplink receive', unit: 'bit/s', points: Array.from({ length: 25 }, (_, i) => ({ time: at(i * 2), value: Math.round(1.6e9 + Math.sin(i / 4) * 4e8) })) }] } };
