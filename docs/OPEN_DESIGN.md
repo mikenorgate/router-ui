@@ -11,7 +11,8 @@ The project is initialized with a working visual direction for review. Open Desi
 The product requirements remain in [PRODUCT_PLAN.md](PRODUCT_PLAN.md), with the design task in [DESIGN_BRIEF.md](DESIGN_BRIEF.md). The implementation uses React/TypeScript with Vite in `web/` and an independent Go service. Page creation and visual changes go through this existing Open Design project with its attached `user:router-console-design-system`. The exported design package supplies local tokens, fonts, licenses and evidence conventions.
 
 Page generation and refinement use the Pi harness with
-`openrouter/google/gemini-3.1-pro-preview:xhigh`. The installed model catalog
-normalises the requested `xhigh` reasoning to effective `high`; validation records
-both values. Verify the attached design system and resolved provider/model in
-local launch metadata. Keep raw sessions and credentials out of releases.
+`openrouter/moonshotai/kimi-k3`, requesting `xhigh` reasoning. Record both the
+requested and effective reasoning settings from the installed harness; do not
+assume the provider accepts the requested level unchanged. Verify the attached
+design system and resolved provider/model in local launch metadata. Keep raw
+sessions and credentials out of releases.
