@@ -564,8 +564,38 @@ func (s *Store) PolicyViews(ctx context.Context, q Query) ([]model.Policy, error
 	if len(q.Q) > 128 {
 		return nil, ErrCapacity
 	}
-	rows, err := s.read.QueryContext(ctx, `SELECT l.kind,l.body,COALESCE(r.body,'') FROM latest l LEFT JOIN latest r ON l.kind='application' AND r.kind='rule' AND r.source=l.source AND r.id=json_extract(l.body,'$.rule_id')
- WHERE l.kind IN ('policy','rule','application') AND (?='' OR json_extract(l.body,'$.device_id')=? OR (l.kind='policy' AND COALESCE(json_extract(l.body,'$.device_id'),'')='')) AND (?='' OR l.body LIKE ? ESCAPE '\') ORDER BY l.time DESC,l.kind,l.id LIMIT ? OFFSET ?`, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", q.Limit, q.Offset)
+	statement := `SELECT l.kind,l.body,COALESCE(r.body,'') FROM latest l LEFT JOIN latest r ON l.kind='application' AND r.kind='rule' AND r.source=l.source AND r.id=json_extract(l.body,'$.rule_id')
+ WHERE l.kind IN ('policy','rule','application') AND (?='' OR json_extract(l.body,'$.device_id')=? OR (l.kind='policy' AND COALESCE(json_extract(l.body,'$.device_id'),'')=''))`
+	arguments := []any{q.DeviceID, q.DeviceID}
+	if q.Q != "" {
+		// Applications inherit searchable names, conditions and provenance from
+		// their definition. Match both before applying the page boundary.
+		statement += ` AND (l.body LIKE ? ESCAPE '\' OR (l.kind='application' AND r.body LIKE ? ESCAPE '\'))`
+		literal := "%" + escape(q.Q) + "%"
+		arguments = append(arguments, literal, literal)
+	}
+	switch q.Evidence {
+	case "":
+	case "installed":
+		statement += ` AND json_extract(l.body,'$.installed')=1`
+	case "applicable", "observed":
+		// flattenRule clears applicability and matches on definitions and on
+		// legacy global policies viewed for a device. SQL must do the same.
+		statement += ` AND (l.kind='application' OR (l.kind='policy' AND (?='' OR COALESCE(json_extract(l.body,'$.device_id'),'')<>'')))`
+		arguments = append(arguments, q.DeviceID)
+		if q.Evidence == "applicable" {
+			statement += ` AND json_extract(l.body,'$.applicable')=1`
+		} else {
+			statement += ` AND json_extract(l.body,'$.observed_match')=1`
+		}
+	case "unknown":
+		statement += ` AND COALESCE(json_extract(CASE WHEN l.kind='application' THEN r.body ELSE l.body END,'$.origin.producer'),'') IN ('','unknown')`
+	default:
+		return nil, errors.New("unsupported policy evidence")
+	}
+	statement += ` ORDER BY l.time DESC,l.kind,l.id LIMIT ? OFFSET ?`
+	arguments = append(arguments, q.Limit, q.Offset)
+	rows, err := s.read.QueryContext(ctx, statement, arguments...)
 	if err != nil {
 		return nil, err
 	}

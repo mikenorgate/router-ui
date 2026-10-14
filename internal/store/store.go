@@ -44,7 +44,7 @@ type Result struct {
 }
 type Query struct {
 	DeviceID, Q                            string
-	RecordID                               string
+	RecordID, Evidence                     string
 	History                                bool
 	Verdict, Protocol, Family, Translation string
 	Limit, Offset                          int

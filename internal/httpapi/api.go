@@ -478,7 +478,7 @@ func (a *API) device(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Annotation unavailable")
 		return
 	}
-	body := map[string]any{"device": view, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")}
+	body := map[string]any{"device": view, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "policy_sources": policySources(sources), "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")}
 	if len(policies) == 100 {
 		body["policies_next_cursor"] = "100"
 	}
@@ -493,17 +493,48 @@ func (a *API) policies(w http.ResponseWriter, r *http.Request) {
 		problem(w, 400, "invalid_query", err.Error())
 		return
 	}
+	q.Evidence = r.URL.Query().Get("evidence")
+	switch q.Evidence {
+	case "", "installed", "applicable", "observed", "unknown":
+	default:
+		problem(w, 400, "invalid_query", "Unsupported policy evidence")
+		return
+	}
 	items, err := a.Store.PolicyViews(r.Context(), q)
 	if err != nil {
 		problem(w, 503, "unavailable", "Policy unavailable")
 		return
 	}
-	body := map[string]any{"items": items}
+	sources, err := a.sources(r.Context())
+	if err != nil {
+		problem(w, 503, "unavailable", "Policy sources unavailable")
+		return
+	}
+	body := map[string]any{"items": items, "sources": policySources(sources)}
 	if len(items) == q.Limit && q.Offset+q.Limit <= 10000 {
 		body["next_cursor"] = strconv.Itoa(q.Offset + q.Limit)
 	}
 	output(w, 200, body)
 }
+
+// policySources returns only sources that can supply policy evidence.
+func policySources(sources []model.Source) []model.Source {
+	out := []model.Source{}
+	for _, source := range sources {
+		if source.Scope == "policies" {
+			out = append(out, source)
+			continue
+		}
+		for _, kind := range strings.Split(source.Kind, ",") {
+			if kind == "policy" || kind == "rule" || kind == "application" {
+				out = append(out, source)
+				break
+			}
+		}
+	}
+	return out
+}
+
 func (a *API) annotation(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	devices, err := a.Store.Query(r.Context(), "device", store.Query{DeviceID: id, Limit: 1})
