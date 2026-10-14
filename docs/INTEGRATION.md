@@ -39,3 +39,23 @@ pin before extracting a package into the immutable image.
 Scrape console health from the protected ingest socket's `GET /metrics`, through a router-owned Unix-socket adapter or existing textfile pipeline. The application does not expose unauthenticated metrics on the browser listeners. Source lag/loss, storage pressure, rejected ingest and sampling are available; certificate/listener state is also in the authenticated System API. Remote export remains optional.
 
 The example unit's dependency direction is deliberate: routing, DHCP, DNS, firewall and boot activation must not `Require`, `BindTo` or wait for the console. Stopping it, corrupting its database or filling telemetry storage must leave forwarding working. Live rollout requires the router qualification checks in [VALIDATION.md](VALIDATION.md).
+
+
+## Activity adapters and rollback
+
+The application accepts additive interval, active-flow, DNS answer and network
+exposure metadata after UID-gated capability negotiation. The router owns the
+conntrack/dnstap sockets, local Alloy handoff, service privileges and bounded
+spools. The application does not start or reconfigure those services.
+
+New activity tables preserve history schema 2, account schema 1 and all legacy
+table columns. Returning to an older image must regenerate that image's legacy
+producer configuration through its runtime owner. An old parser rejects the
+new `traffic_interval` producer kind; the missing capabilities endpoint also
+disables extended delivery. Do not reset history to make rollback work.
+
+A local fixture ran the actual deployed rc.10 executable after candidate
+writes, authenticated to its APIs, read retained DNS, allowed its one-minute
+maintenance timer to run, then reopened the same files with the candidate.
+Interval totals and account access remained intact. This qualifies the tested
+storage/configuration path, not the router's deferred VM boot/update workflow.

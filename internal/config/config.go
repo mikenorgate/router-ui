@@ -130,7 +130,7 @@ func (c Config) Validate() error {
 		seen[p.ID] = true
 		for _, k := range p.Kinds {
 			switch k {
-			case "device", "flow", "policy", "dns", "event", "network", "rule", "application", "appliance":
+			case "device", "flow", "traffic_interval", "policy", "dns", "event", "network", "rule", "application", "appliance":
 			default:
 				return errors.New("unsupported producer kind")
 			}

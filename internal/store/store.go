@@ -43,12 +43,16 @@ type Result struct {
 	Sequence  uint64 `json:"sequence"`
 }
 type Query struct {
-	DeviceID, Q                            string
-	RecordID, Evidence                     string
-	History                                bool
-	Verdict, Protocol, Family, Translation string
-	Limit, Offset                          int
-	From, To                               time.Time
+	DeviceID, Q                                                  string
+	RecordID, Evidence                                           string
+	PublicEvents                                                 bool
+	PolicyDefinition                                             bool
+	PolicyRevision                                               string
+	History                                                      bool
+	Verdict, Protocol, Family, Translation                       string
+	State, EventKind, Severity, RCode, Resolver, Segment, RuleID string
+	Limit, Offset                                                int
+	From, To                                                     time.Time
 }
 type Annotation struct {
 	Alias string `json:"alias"`
@@ -148,6 +152,10 @@ func Open(stateDir, historyDir string, budget, stateBudget int64, rawDays, histo
 		s.Close()
 		return nil, err
 	}
+	if err = s.migrateActivity(ctx); err != nil {
+		s.Close()
+		return nil, err
+	}
 	if err = s.loadRetention(ctx); err != nil {
 		s.Close()
 		return nil, err
@@ -229,9 +237,57 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 	if err = tx.QueryRowContext(ctx, "SELECT value FROM settings WHERE key='sampling_rate'").Scan(&rate); err != nil {
 		return out, err
 	}
+	if boot != b.BootID {
+		for _, table := range []string{"traffic_cursors", "active_connections"} {
+			if _, err = tx.ExecContext(ctx, "DELETE FROM "+table+" WHERE source=? AND boot!=?", b.SourceID, b.BootID); err != nil {
+				return out, err
+			}
+		}
+	}
+	activity := false
 	for _, r := range b.Records {
+		if r.Kind == "traffic_interval" {
+			activity = true
+			changed, e := ingestInterval(ctx, tx, b.SourceID, b.BootID, r, now)
+			if e != nil {
+				return out, e
+			}
+			if changed {
+				out.Accepted++
+			}
+			continue
+		}
+		if r.Kind == "flow" {
+			var f model.Flow
+			if e := json.Unmarshal(r.Data, &f); e != nil {
+				return out, e
+			}
+			activity = true
+			if f.State == "active" {
+				// A later transport batch may replay an older active capture.
+				// Completion is immutable even if its detail was sampled out.
+				var completed int
+				e := tx.QueryRowContext(ctx, "SELECT 1 FROM seen_flows WHERE source=? AND boot=? AND id=?", b.SourceID, b.BootID, r.ID).Scan(&completed)
+				if e == nil {
+					continue
+				}
+				if !errors.Is(e, sql.ErrNoRows) {
+					return out, e
+				}
+				if _, err = tx.ExecContext(ctx, `INSERT INTO active_connections VALUES(?,?,?,?,?,?) ON CONFLICT(source,boot,id) DO UPDATE SET time=excluded.time,device=excluded.device,body=excluded.body WHERE excluded.time>=active_connections.time`, b.SourceID, b.BootID, r.ID, r.ObservedAt.UnixNano(), f.DeviceID, string(r.Data)); err != nil {
+					return out, err
+				}
+				out.Accepted++
+				continue
+			}
+			if f.State == "completed" || f.State == "" {
+				if _, err = tx.ExecContext(ctx, "DELETE FROM active_connections WHERE source=? AND boot=? AND id=?", b.SourceID, b.BootID, r.ID); err != nil {
+					return out, err
+				}
+			}
+		}
 		table := partition(r.ObservedAt)
-		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS `+table+`(source TEXT NOT NULL,boot TEXT NOT NULL,id TEXT NOT NULL,kind TEXT NOT NULL,time INTEGER NOT NULL,device TEXT NOT NULL,hash INTEGER NOT NULL,body TEXT NOT NULL,PRIMARY KEY(source,boot,id,kind,time)); CREATE INDEX IF NOT EXISTS `+table+`_time ON `+table+`(kind,time DESC);`); err != nil {
+		if _, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS `+table+`(source TEXT NOT NULL,boot TEXT NOT NULL,id TEXT NOT NULL,kind TEXT NOT NULL,time INTEGER NOT NULL,device TEXT NOT NULL,hash INTEGER NOT NULL,body TEXT NOT NULL,PRIMARY KEY(source,boot,id,kind,time)); CREATE INDEX IF NOT EXISTS `+table+`_time ON `+table+`(kind,time DESC); CREATE INDEX IF NOT EXISTS `+table+`_device ON `+table+`(kind,device,time DESC); CREATE INDEX IF NOT EXISTS `+table+`_verdict ON `+table+`(kind,json_extract(body,'$.verdict'),time DESC) WHERE kind='flow';`); err != nil {
 			return out, err
 		}
 		if _, err = tx.ExecContext(ctx, "INSERT OR IGNORE INTO partitions(day) VALUES(?)", table); err != nil {
@@ -250,7 +306,7 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 		}
 		// Completed flow IDs are immutable. Summaries are produced before local storage sampling.
 		sourceRate := b.SamplingRate
-		if r.Kind == "flow" {
+		if r.Kind == "flow" && data["state"] != "decision" {
 			var f model.Flow
 			if err = json.Unmarshal(r.Data, &f); err != nil {
 				return out, err
@@ -280,7 +336,7 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 			out.Sampled++
 			continue
 		}
-		if r.Kind == "flow" {
+		if r.Kind == "flow" || r.Kind == "dns" {
 			data["sampling_rate"] = sourceRate * effectiveRate
 			data["source_sampling_rate"] = sourceRate
 			data["storage_sampling_rate"] = effectiveRate
@@ -309,6 +365,11 @@ func (s *Store) Ingest(ctx context.Context, b model.Batch, now time.Time) (Resul
 			}
 		}
 		out.Accepted++
+	}
+	if activity {
+		if err = boundActivity(ctx, tx, now); err != nil {
+			return out, err
+		}
 	}
 	var deviceCount int
 	if err = tx.QueryRowContext(ctx, "SELECT COUNT(*) FROM latest WHERE kind='device'").Scan(&deviceCount); err != nil {
@@ -389,7 +450,7 @@ func (s *Store) tables(ctx context.Context, tx *sql.Tx) ([]string, error) {
 		if err = rows.Scan(&t); err != nil {
 			return nil, err
 		}
-		if len(t) != 16 || !strings.HasPrefix(t, "records_") {
+		if !validPartition(t) {
 			return nil, errors.New("invalid partition")
 		}
 		out = append(out, t)
@@ -422,53 +483,9 @@ func (s *Store) Query(ctx context.Context, kind string, q Query) ([]json.RawMess
 		}
 		return out, rows.Err()
 	}
-	// Pin the partition catalog and data to one read snapshot. Retention may
-	// drop an old partition between separate SQL statements otherwise.
-	tx, err := s.read.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-	ts, err := s.tables(ctx, tx)
-	if err != nil {
-		return nil, err
-	}
-	if len(ts) == 0 {
-		return out, nil
-	}
-	parts := []string{}
-	args := []any{}
-	for _, t := range ts {
-		parts = append(parts, `SELECT time,body FROM `+t+` WHERE kind=? AND (?='' OR device=?) AND (?='' OR body LIKE ? ESCAPE '\') AND time>=? AND time<=? AND (?='' OR id=?)
- AND (?='' OR json_extract(body,'$.verdict')=?)
- AND (?='' OR UPPER(json_extract(body,'$.protocol'))=?)
- AND (?='' OR CASE WHEN INSTR(json_extract(body,'$.source_ip'),':')>0 THEN '6' ELSE '4' END=?)
- AND (?='' OR CASE WHEN COALESCE(json_extract(body,'$.translated_source_ip'),'')!='' OR COALESCE(json_extract(body,'$.translated_destination_ip'),'')!='' THEN 'recorded' ELSE 'unrecorded' END=?)`)
-		from := q.From
-		if from.IsZero() {
-			from = time.Now().AddDate(0, 0, -int(s.historyDays.Load()))
-		}
-		to := q.To
-		if to.IsZero() {
-			to = time.Now().Add(5 * time.Minute)
-		}
-		args = append(args, kind, q.DeviceID, q.DeviceID, q.Q, "%"+escape(q.Q)+"%", from.UnixNano(), to.UnixNano(), q.RecordID, q.RecordID, q.Verdict, q.Verdict, q.Protocol, q.Protocol, q.Family, q.Family, q.Translation, q.Translation)
-	}
-	args = append(args, q.Limit, q.Offset)
-	rows, err := tx.QueryContext(ctx, "SELECT body FROM ("+strings.Join(parts, " UNION ALL ")+") ORDER BY time DESC LIMIT ? OFFSET ?", args...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var b string
-		if err = rows.Scan(&b); err != nil {
-			return nil, err
-		}
-		out = append(out, json.RawMessage(b))
-	}
-	return out, rows.Err()
+	return s.queryHistory(ctx, kind, q)
 }
+
 func escape(s string) string {
 	return strings.NewReplacer("\\", "\\\\", "%", "\\%", "_", "\\_").Replace(s)
 }
@@ -582,7 +599,7 @@ func (s *Store) Maintenance(ctx context.Context, now time.Time) error {
 			if _, err = tx.ExecContext(ctx, "DELETE FROM "+t+" WHERE kind IN ('flow','dns') AND hash>=?", int64(threshold*float64(1<<31))); err != nil {
 				return err
 			}
-			if _, err = tx.ExecContext(ctx, "UPDATE "+t+" SET body=json_set(body,'$.storage_sampling_rate',?,'$.sampling_rate',COALESCE(json_extract(body,'$.source_sampling_rate'),1)*?) WHERE kind='flow'", threshold, threshold); err != nil {
+			if _, err = tx.ExecContext(ctx, "UPDATE "+t+" SET body=json_set(body,'$.storage_sampling_rate',?,'$.sampling_rate',COALESCE(json_extract(body,'$.source_sampling_rate'),1)*?) WHERE kind IN ('flow','dns')", threshold, threshold); err != nil {
 				return err
 			}
 			if _, err = tx.ExecContext(ctx, "UPDATE partitions SET rate=? WHERE day=?", threshold, t); err != nil {
@@ -597,6 +614,9 @@ func (s *Store) Maintenance(ctx context.Context, now time.Time) error {
 		if _, err = tx.ExecContext(ctx, q.sql, q.args...); err != nil {
 			return err
 		}
+	}
+	if err = maintainActivity(ctx, tx, now, int(s.historyDays.Load())); err != nil {
+		return err
 	}
 	if err = tx.Commit(); err != nil {
 		return err

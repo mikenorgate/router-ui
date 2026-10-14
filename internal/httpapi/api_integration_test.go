@@ -86,10 +86,32 @@ func TestAuthorizationOriginAndCSRF(t *testing.T) {
 			}
 		})
 	}
+	flows := request("GET", "/api/v1/flows?limit=1", "", "", "", cookie)
+	var listing struct {
+		Items []struct {
+			Ref string `json:"observation_ref"`
+		} `json:"items"`
+	}
+	if err = json.Unmarshal(flows.Body.Bytes(), &listing); err != nil || len(listing.Items) != 1 || listing.Items[0].Ref == "" {
+		t.Fatalf("missing reference %s", flows.Body.String())
+	}
+	ref := listing.Items[0].Ref
+	for _, path := range []string{"/api/v1/observations/" + ref, "/api/v1/investigations/" + ref, "/api/v1/traffic/summary", "/api/v1/exposure"} {
+		w := request("GET", path, "", "", "", cookie)
+		if w.Code != 200 {
+			t.Fatalf("new API %s %d %s", path, w.Code, w.Body.String())
+		}
+		if strings.Contains(w.Body.String(), "predicted_outcome") {
+			t.Fatal("passive investigation returned simulation")
+		}
+	}
+	if w := request("GET", "/api/v1/traffic/summary?from=2026-01-01T00:00:00Z&to=2026-03-01T00:00:00Z", "", "", "", cookie); w.Code != 400 {
+		t.Fatal("unbounded activity query accepted")
+	}
 	if _, err = s.State.Exec("UPDATE sessions SET role='viewer'"); err != nil {
 		t.Fatal(err)
 	}
-	for _, path := range []string{"/api/v1/flows", "/api/v1/dns", "/api/v1/export?kind=flows", "/api/v1/admin/audit"} {
+	for _, path := range []string{"/api/v1/flows", "/api/v1/dns", "/api/v1/export?kind=flows", "/api/v1/admin/audit", "/api/v1/observations/invalid", "/api/v1/investigations/invalid"} {
 		w := request("GET", path, "", "", "", cookie)
 		if w.Code != 403 {
 			t.Fatalf("viewer access %s: %d", path, w.Code)

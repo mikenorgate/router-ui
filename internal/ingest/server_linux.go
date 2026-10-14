@@ -58,11 +58,27 @@ func PeerContext(ctx context.Context, c net.Conn) context.Context {
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /ingest/v1/batches", s.batch)
+	mux.HandleFunc("GET /ingest/v1/capabilities", s.capabilities)
 	mux.HandleFunc("GET /metrics", s.metrics)
 	mux.HandleFunc("POST /ingest/v2/snapshots/chunks", s.snapshotChunk)
 	mux.HandleFunc("POST /ingest/v2/snapshots/commit", s.snapshotCommit)
 	mux.HandleFunc("POST /ingest/v2/source-status", s.sourceStatus)
 	return mux
+}
+func (s *Server) capabilities(w http.ResponseWriter, r *http.Request) {
+	uid, ok := r.Context().Value(uidKey{}).(uint32)
+	producers := []config.Producer{}
+	for _, p := range s.Producers {
+		if ok && p.UID == uid {
+			producers = append(producers, p)
+		}
+	}
+	if len(producers) == 0 {
+		http.Error(w, "producer not authorized", http.StatusForbidden)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]any{"version": 1, "features": []string{"traffic_interval", "active_connections", "dns_answers", "observation_references", "network_exposure"}, "producers": producers, "interval_replay_seconds": 7200, "max_batch_records": 256, "max_batch_bytes": 1 << 20})
 }
 func (s *Server) batch(w http.ResponseWriter, r *http.Request) {
 	uid, ok := r.Context().Value(uidKey{}).(uint32)

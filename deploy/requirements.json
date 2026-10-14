@@ -1,13 +1,18 @@
 {
   "artifact_schema": 1,
-  "ingestion_contract": 1,
+  "ingestion_contract": 2,
   "state_schema": 1,
-  "history_schema": 1,
+  "history_schema": 2,
   "os": "linux",
-  "architectures": ["amd64", "arm64"],
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
   "root_filesystem": "read-only",
   "runtime_privileges": [],
-  "runtime_services": ["local Prometheus for metrics (optional for other screens)"],
+  "runtime_services": [
+    "local Prometheus for metrics (optional for other screens)"
+  ],
   "recommended_profile": {
     "telemetry_filesystem_bytes": 8589934592,
     "prometheus_retention_bytes": 3221225472,
@@ -19,5 +24,21 @@
     "flow_detail_days": 7,
     "summary_history_days": 90
   },
-  "router_owned": ["service users and producer UIDs", "hardened units and resource limits", "explicit IPv4/IPv6 management listeners and firewall admission", "TLS provisioning and renewal", "OIDC and recovery credentials", "encrypted state and hard telemetry capacity limit", "Prometheus binary/configuration/targets and recording rules", "existing exporter and journal extensions", "policy provenance and membership publisher", "DHCP/neighbour binding publisher", "qualified flow, NAT and DNS observations"]
+  "router_owned": [
+    "service users and producer UIDs",
+    "hardened units and resource limits",
+    "explicit IPv4/IPv6 management listeners and firewall admission",
+    "TLS provisioning and renewal",
+    "OIDC and recovery credentials",
+    "encrypted state and hard telemetry capacity limit",
+    "Prometheus binary/configuration/targets and recording rules",
+    "existing exporter and journal extensions",
+    "policy provenance and membership publisher",
+    "DHCP/neighbour binding publisher",
+    "qualified flow, NAT and DNS observations"
+  ],
+  "supported_ingestion_contracts": [
+    1,
+    2
+  ]
 }

@@ -1,0 +1,19 @@
+{
+  "project_id": "3f8d4985-55cb-4c6c-b1ab-f45d855a89ba",
+  "design_system_id": "user:router-console-design-system",
+  "design_system_digest": "75673f13e7b2729e0c4c549ea1653bb52a00299b8a7579c82151f470b8e0aae4",
+  "agent": "pi",
+  "model": "openrouter/moonshotai/kimi-k3",
+  "requested_reasoning": "xhigh",
+  "effective_reasoning": "max",
+  "run_id": "9d7bf60c-fe90-4fa1-99db-894dec60725e",
+  "studio_url": "http://127.0.0.1:44483/projects/3f8d4985-55cb-4c6c-b1ab-f45d855a89ba/conversations/9bde77bd-b8cd-4911-90f4-ab5f91b9002b",
+  "runtime_sources": "web/src",
+  "browser_verification": "pass: ten demo tasks and five actual-API tasks; no JavaScript errors; 390px layout",
+  "authoring_runs": [
+    "14c403d6-2c86-488b-be4c-328eeb1735cd",
+    "8da4b8cf-b377-4432-8197-eea346b1434b",
+    "01cdab23-c199-45a2-8761-3ef43e70935d",
+    "9d7bf60c-fe90-4fa1-99db-894dec60725e"
+  ]
+}

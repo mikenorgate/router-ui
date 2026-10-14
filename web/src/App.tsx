@@ -10,6 +10,8 @@ import { DevicesPage } from './pages/DevicesPage';
 import { DeviceDetailPage } from './pages/DeviceDetailPage';
 import { TrafficPage } from './pages/TrafficPage';
 import { NetworkPage } from './pages/NetworkPage';
+import { NetworkExposurePage } from './pages/NetworkExposurePage';
+import { AccessExplanationPage } from './pages/AccessExplanationPage';
 import { FirewallPage } from './pages/FirewallPage';
 import { EventsPage } from './pages/EventsPage';
 import { SystemPage } from './pages/SystemPage';
@@ -27,6 +29,8 @@ export function App() {
     <Route path="/devices/:id" element={<DeviceDetailPage />} />
     <Route path="/traffic" element={<TrafficPage />} />
     <Route path="/network" element={<NetworkPage />} />
+    <Route path="/network/exposure" element={<NetworkExposurePage />} />
+    <Route path="/investigations/:ref" element={<AccessExplanationPage />} />
     <Route path="/firewall" element={<FirewallPage />} />
     <Route path="/events" element={<EventsPage />} />
     <Route path="/system" element={<SystemPage />} />

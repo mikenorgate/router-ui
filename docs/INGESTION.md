@@ -45,6 +45,13 @@ schema 2 migrates history schema 1; account and annotation schema remains 1.
 An older binary rejects the newer history schema. Disposable history may be
 recreated by trusted router administration; durable account state stays intact.
 
+Phase 3 keeps history schema 2 and account schema 1. Its activity tables and
+indexes are additive. The immediately preceding schema-2 releases can still
+open the databases; they do not maintain the new activity tables. Roll back
+the whole router image so its previous runtime configuration and producers
+return together. An application-only downgrade with new producer kinds in
+its configuration is unsupported.
+
 ## Batches (v1)
 
 Send one JSON batch to `POST /ingest/v1/batches` over the configured Unix socket. TCP is not an ingestion transport. The server uses the connecting process's kernel UID; a header cannot substitute for it. Each configured source authorizes a set of `device`, `flow`, `policy`, `dns`, `event` or `network` records.
@@ -91,6 +98,68 @@ Policy observations include stable IDs, producer/policy/revision/source/group re
 The application currently renders producer-supplied policy evidence. It does not execute a general nftables interpreter, predict access through unsupported hooks, or infer the cause of a failure from a counter alone. Router adapters must qualify their semantics and make unsupported coverage explicit.
 
 Browser endpoints use `/api/v1`, JSON collection envelopes `{ "items": [] }`, bounded `limit`/`cursor`, `device_id`, literal text `q`, and optional RFC3339 `from`/`to` for history. Offset cursors are bounded to 10,000 and may move while new observations arrive; use an explicit end time for a stable investigation. Exports contain at most 500 records and require Operator. Traffic verdict, protocol, address-family and recorded-translation filters apply before pagination. No arbitrary SQL or PromQL reaches the stores.
+
+## Interval accounting and investigations
+
+UID-authorized producers can read `GET /ingest/v1/capabilities` on the ingestion
+socket. Inspect the advertised features and authorized source kinds before
+enabling an extension. A missing endpoint disables that feature; it does not
+authorize sending a new kind to an older application.
+
+`traffic_interval` is an additive v1 record. It contains a device ID (empty for
+unattributed traffic), segment, namespace, zone, observation point, family,
+`from`/`to`, sent/received byte deltas, active-connection count, sampling rate
+and counter status. Intervals last at most one minute. A producer sends
+nonoverlapping intervals in time order for each source/boot/device/point/family
+key. Retry immutable records. Baseline, reset and gap records contain no
+measured bytes; `partial` qualifies a measured subset without extrapolation.
+
+The store commits replay cursors and minute/hour rollups before sampling raw
+detail. Repeated or older intervals cannot add bytes again. Conflicting records
+at the same cursor and overlapping new intervals are rejected. The replay
+window is two hours; older exports are rejected rather than counted again
+after a cursor expires. Each capture belongs wholly to the minute/hour containing its start time.
+Queries include whole edge buckets; less than a full bucket of measured time
+is marked partial. No interpolation invents missing bytes. Each direction is
+capped at 4 TiB per accounting key/bucket so sums across the bounded retained
+row set remain exact integers. Excess accounting is rejected without an ACK.
+Minute rows last up to 24 hours, hourly rows up to the configured history limit. Row and filesystem budgets may shorten either span.
+
+Flows may have `state: active|completed|decision`. Active conntrack records have
+an unknown verdict and occupy a bounded current catalog, expiring after 90
+seconds without refresh. Completed flows retain the existing immutable-ID,
+completion-time accounting. Decision records never add connection totals.
+Interval totals and completed-flow totals are separate APIs and are never
+added together. Original/translated ports, namespace/zone, frozen bindings and
+the observation point are optional evidence fields.
+
+DNS records retain query/type/result, printable answer values and typed answer
+records with TTL. Optional `answer_count` and `answers_omitted` distinguish
+omitted values from a zero-answer result. `query_at` and `transaction_id` link
+qualified query/response metadata. A frozen client binding must cover the
+query time. An `UNOBSERVED_RESPONSE` result means no correlated response was
+observed at that check; it is not a proven timeout. Latency may be unavailable. Persist normalized metadata;
+the application has no packet or DNS-wire payload field.
+
+| Browser endpoint | Scope |
+| --- | --- |
+| `/traffic/summary` | Viewer-readable interval rankings/series, separate accounting points, gaps, sampling and truncation. |
+| `/observations/{ref}` | Operator-only exact envelope lookup, independent of page, filters and cursor. Expired, sampled or replaced active observations return 404. |
+| `/investigations/{ref}` | Operator-only passive recorded connection/decision context, historical rule provenance, binding, translation and nearby events. |
+| `/exposure` | Viewer-readable router listeners, configuration, admission context and source age; external reachability is never verified. |
+
+Traffic/DNS/events windows are bounded to seven days within retained history.
+Flow state, DNS result/resolver and event kind/severity filters run before
+pagination. Viewer event searches use public titles rather than private detail.
+Observation references encode source, boot, ID, kind and timestamp; producer
+body fields cannot replace transport identity. They are references, not access
+tokens: authentication and role checks apply to every lookup.
+
+An investigation reports an attributed verdict only for a qualified direct
+decision observation. It does not substitute today's policy for missing
+historical provenance, reconstruct a complete multi-hook evaluation, infer
+application success, run probes or simulate policy. Entry-hook metadata is
+reachable chain context, not a predicted path. Nearby events are correlation.
 
 Policy collections also accept `evidence=installed|applicable|observed|unknown`.
 Omitting the filter returns all evidence; unsupported values return HTTP 400.

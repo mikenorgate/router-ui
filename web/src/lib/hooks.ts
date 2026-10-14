@@ -110,22 +110,40 @@ export function useFilters() {
   const set = (key: string, value: string) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value); else next.delete(key);
-    if (key !== 'cursor' && key !== 'flow' && key !== 'rule' && key !== 'tab') next.delete('cursor');
+    // Opening a direct-link observation must not lose the list page it came
+    // from; cursor survives observation/flow/rule/tab selection changes.
+    if (key !== 'cursor' && key !== 'flow' && key !== 'rule' && key !== 'tab' && key !== 'observation') next.delete('cursor');
     if (key === 'range') { next.delete('from'); next.delete('to'); }
     if (value && key === 'flow') next.delete('rule');
     if (value && key === 'rule') next.delete('flow');
     if (demoEnabled) next.set('demo', '1');
     setParams(next);
   };
-  const clear = () => { const next = new URLSearchParams(); if (demoEnabled) next.set('demo', '1'); for (const key of ['range', 'demo_role']) if (params.has(key)) next.set(key, params.get(key)!); setParams(next); };
+  /** Atomic window selection: one navigation sets both bounds and drops the
+   * relative range and cursor. Two consecutive set() calls would read the
+   * same stale params and silently lose `from`. */
+  const setWindow = (from: string, to: string) => {
+    const next = new URLSearchParams(params);
+    next.set('from', from);
+    next.set('to', to);
+    next.delete('range');
+    next.delete('cursor');
+    if (demoEnabled) next.set('demo', '1');
+    setParams(next);
+  };
+  // Clearing filters keeps the explicit window (fixed from/to or range) and
+  // the current tab; only query predicates and pagination reset.
+  const clear = () => { const next = new URLSearchParams(); if (demoEnabled) next.set('demo', '1'); for (const key of ['range', 'from', 'to', 'tab', 'demo_role']) if (params.has(key)) next.set(key, params.get(key)!); setParams(next); };
   const href = (path: string, extra: Record<string, string> = {}) => {
-    const next = new URLSearchParams();
-    for (const key of ['demo', 'demo_role', 'range', 'from', 'to']) { const value = params.get(key); if (value) next.set(key, value); }
+    const target = new URL(path, window.location.origin);
+    const next = new URLSearchParams(target.search);
+    for (const key of ['demo', 'demo_role', 'range', 'from', 'to']) { const value = params.get(key); if (value && !next.has(key)) next.set(key, value); }
     if (demoEnabled) next.set('demo', '1');
     for (const [key, value] of Object.entries(extra)) if (value) next.set(key, value);
-    return `${path}${next.size ? `?${next}` : ''}`;
+    if (next.has('from') || next.has('to')) next.delete('range');
+    return target.pathname + (next.size ? '?' + next.toString() : '') + target.hash;
   };
-  return { params, set, clear, href, location };
+  return { params, set, setWindow, clear, href, location };
 }
 export function useRouteFocus() {
   const location = useLocation();

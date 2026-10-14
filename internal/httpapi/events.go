@@ -19,7 +19,7 @@ func summaryEvents(items []json.RawMessage, role string) ([]json.RawMessage, err
 		}
 		e.Detail = ""
 		switch strings.ToLower(e.Kind) {
-		case "flow", "dns", "connection", "security":
+		case "flow", "dns", "connection", "security", "firewall":
 			e.Title = "Restricted traffic event; Operator access required"
 		}
 		b, err := json.Marshal(e)

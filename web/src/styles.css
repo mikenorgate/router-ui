@@ -1,3 +1,7 @@
+/* Exact production imports, identical to web/src/styles.css when this overlay
+ * is installed at the repository root. From the overlay location these
+ * specifiers resolve through the normalize-design-css-paths Vite plugin in
+ * vite.config.ts (see INTEGRATION.md, “CSS path normalization”). */
 @import '../../design/colors_and_type.css';
 @import '../../design/build/reference.css';
 
@@ -257,3 +261,21 @@ textarea { resize: vertical; }
 .sources-block > h3 { font-size: var(--text-section); margin: 0 0 var(--space-1); }
 .sources-block > .sub { margin: 0 0 var(--space-3); }
 .sources-block > .callout { margin: 0; }
+
+/* Phase 3 integration — investigation surfaces. Additive only; the canonical
+   palette and component rules above stay untouched. */
+.chart-wrap { position: relative; overflow: visible; }
+.chart-hover-line { stroke: var(--control-border); stroke-width: 1; }
+.chart-dot { fill: var(--chart-primary); stroke: var(--surface); stroke-width: 1.5; }
+.chart-dot.secondary { fill: var(--chart-secondary); }
+.chart-selected { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; }
+.chart-tip[hidden] { display: none; }
+.chart-tip { position: absolute; z-index: 4; display: grid; gap: 2px; max-width: 280px; padding: 8px 12px; background: var(--surface-raised); border: 1px solid var(--control-border); border-radius: var(--radius-md); box-shadow: var(--shadow-overlay); font-size: var(--text-xs); line-height: 1.5; pointer-events: none; }
+.chart-tip strong { font-size: var(--text-sm); font-weight: 500; }
+.cell-num { white-space: nowrap; }
+.filter-note { margin: var(--space-2) 0 0; }
+.policy-path { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.policy-path > li { border-top: 1px solid var(--border); padding-top: var(--space-3); }
+.policy-path .badge-row { margin: var(--space-2) 0; }
+.unresolved-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.unresolved-list li { padding: var(--space-2) var(--space-3); background: var(--unknown-soft); border-radius: var(--radius-md); }

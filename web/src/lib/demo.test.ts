@@ -18,7 +18,8 @@ describe('explicit demo contract', () => {
   it('honors device/search filters and reports unknown endpoints', async () => {
     const demo = createDemo();
     expect(await demo('/devices?q=sensor')).toMatchObject({ items: [expect.objectContaining({ id: 'device-b' })] });
-    expect(await demo('/flows?device_id=device-b')).toEqual({ items: [] });
+    // Phase 3 /flows attaches evidence sources beside the bounded page.
+    expect(await demo('/flows?device_id=device-b')).toMatchObject({ items: [] });
     await expect(demo('/unsupported')).rejects.toMatchObject({ status: 404 });
   });
 });

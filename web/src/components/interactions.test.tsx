@@ -15,17 +15,25 @@ import { demoFlows, demoPolicies } from '../lib/demo';
 import { bytes, number } from '../lib/format';
 const session = { user: { id: 'user', name: 'Operator', role: 'operator' as const }, csrf_token: 'test-csrf', mode: 'production' as const };
 describe('investigation interactions', () => {
-  it('filters flows through URL state and opens/closes a real inspector', async () => {
+  it('sends flow filters to the server and renders the returned page as authoritative', async () => {
     const user = userEvent.setup();
+    // The stubbed server keeps returning the same page regardless of filters.
+    // The UI must render that page exactly as returned — the server, not the
+    // client, owns filtering — while still sending every predicate upstream.
     vi.stubGlobal('fetch', vi.fn().mockImplementation(async () => Response.json({ items: demoFlows })));
     function Location() { const [p] = useSearchParams(); return <output data-testid="url">{p.toString()}</output>; }
     render(<MemoryRouter initialEntries={['/traffic']}><AuthProvider initialSession={session}><TrafficPage /><Location /></AuthProvider></MemoryRouter>);
     await screen.findByRole('button', { name: 'Inspect flow flow-01' });
     await user.selectOptions(screen.getByLabelText('Verdict'), 'unknown');
-    expect(screen.queryByRole('button', { name: 'Inspect flow flow-01' })).not.toBeInTheDocument();
     expect(screen.getByTestId('url')).toHaveTextContent('verdict=unknown');
-    await user.click(await screen.findByRole('button', { name: 'Inspect flow flow-03' }));
+    await user.selectOptions(screen.getByLabelText('State'), 'active');
+    expect(screen.getByTestId('url')).toHaveTextContent('state=active');
     expect(globalThis.fetch).toHaveBeenLastCalledWith(expect.stringContaining('verdict=unknown'), expect.any(Object));
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(expect.stringContaining('state=active'), expect.any(Object));
+    // No client-side narrowing: the returned records stay rendered even
+    // though their verdict/state do not match the requested filters.
+    expect(await screen.findByRole('button', { name: 'Inspect flow flow-01' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Inspect flow flow-03' }));
     expect(screen.getByRole('dialog')).toHaveAttribute('open');
     expect(screen.getByRole('dialog')).toHaveTextContent('Hook path');
     expect(screen.getByRole('dialog')).toHaveTextContent('Not supplied by this API');

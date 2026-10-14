@@ -99,6 +99,10 @@ func (a *API) Handler() http.Handler {
 	mux.Handle("POST /api/v1/devices/{id}/annotation", a.protect("operator", http.HandlerFunc(a.annotation)))
 	mux.Handle("GET /api/v1/flows", a.protect("operator", a.collection("flow")))
 	mux.Handle("GET /api/v1/dns", a.protect("operator", a.collection("dns")))
+	mux.Handle("GET /api/v1/traffic/summary", a.protect("viewer", http.HandlerFunc(a.trafficSummary)))
+	mux.Handle("GET /api/v1/observations/{ref}", a.protect("operator", http.HandlerFunc(a.observation)))
+	mux.Handle("GET /api/v1/investigations/{ref}", a.protect("operator", http.HandlerFunc(a.investigation)))
+	mux.Handle("GET /api/v1/exposure", a.protect("viewer", http.HandlerFunc(a.exposure)))
 	mux.Handle("GET /api/v1/policies", a.protect("viewer", http.HandlerFunc(a.policies)))
 	mux.Handle("GET /api/v1/events", a.protect("viewer", a.collection("event")))
 	mux.Handle("GET /api/v1/summaries", a.protect("viewer", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -303,6 +307,20 @@ func query(r *http.Request) (store.Query, error) {
 	out.Protocol = strings.ToUpper(q.Get("protocol"))
 	out.Family = q.Get("family")
 	out.Translation = q.Get("translation")
+	out.State = q.Get("state")
+	out.EventKind = q.Get("kind")
+	out.Severity = q.Get("severity")
+	out.RCode = q.Get("rcode")
+	out.Resolver = q.Get("resolver")
+	out.Segment = q.Get("segment")
+	for _, value := range []string{out.EventKind, out.Severity, out.RCode, out.Resolver, out.Segment} {
+		if len(value) > 128 || strings.ContainsAny(value, "\x00\r\n") {
+			return out, errors.New("invalid filter bounds")
+		}
+	}
+	if out.State != "" && out.State != "active" && out.State != "completed" && out.State != "decision" {
+		return out, errors.New("unsupported connection state")
+	}
 	for key, allowed := range map[string][]string{"verdict": {"", "allowed", "blocked", "unknown"}, "protocol": {"", "TCP", "UDP", "ICMP", "ICMPV6", "SCTP"}, "family": {"", "4", "6"}, "translation": {"", "recorded", "unrecorded"}} {
 		value := q.Get(key)
 		if key == "protocol" {
@@ -354,6 +372,16 @@ func (a *API) collection(kind string) http.Handler {
 			problem(w, 400, "invalid_query", err.Error())
 			return
 		}
+		if kind == "flow" || kind == "dns" || kind == "event" {
+			q, err = activityWindow(r)
+			if err != nil {
+				problem(w, 400, "invalid_query", err.Error())
+				return
+			}
+		}
+		if kind == "event" && !auth.Can(session(r).User.Role, "operator") {
+			q.PublicEvents = true
+		}
 		items, err := a.Store.Query(r.Context(), kind, q)
 		if err != nil {
 			problem(w, 503, "unavailable", "History unavailable")
@@ -361,6 +389,8 @@ func (a *API) collection(kind string) http.Handler {
 		}
 		body := map[string]any{"items": items, "capabilities": a.capabilities()}
 		if kind == "event" {
+			// Viewer search is limited to public title/kind fields. Raw detail
+			// must not become a query oracle after response redaction.
 			redacted, err := summaryEvents(items, session(r).User.Role)
 			if err != nil {
 				problem(w, 503, "unavailable", "Events invalid")
@@ -407,6 +437,14 @@ func (a *API) device(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Device history unavailable")
 		return
 	}
+	currentInventory := len(items) > 0
+	if !currentInventory {
+		items, err = a.Store.Query(r.Context(), "device", store.Query{History: true, DeviceID: id, Limit: 1})
+		if err != nil {
+			problem(w, 503, "unavailable", "Historical identity unavailable")
+			return
+		}
+	}
 	if len(items) == 0 {
 		problem(w, 404, "not_found", "Device not observed")
 		return
@@ -415,6 +453,9 @@ func (a *API) device(w http.ResponseWriter, r *http.Request) {
 	if err = json.Unmarshal(items[0], &device); err != nil {
 		problem(w, 503, "unavailable", "Device record invalid")
 		return
+	}
+	if !currentInventory {
+		device.Status = "historical"
 	}
 	bindings := append([]model.Address{}, device.Addresses...)
 	snapshots, err := a.Store.Query(r.Context(), "device", store.Query{History: true, DeviceID: id, Limit: 100})
@@ -478,7 +519,7 @@ func (a *API) device(w http.ResponseWriter, r *http.Request) {
 		problem(w, 503, "unavailable", "Annotation unavailable")
 		return
 	}
-	body := map[string]any{"device": view, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "policy_sources": policySources(sources), "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")}
+	body := map[string]any{"device": view, "current_inventory": currentInventory, "bindings": bindings, "flows": flows, "events": events, "policies": policies, "policy_sources": policySources(sources), "annotation": note, "detail_restricted": !auth.Can(session(r).User.Role, "operator")}
 	if len(policies) == 100 {
 		body["policies_next_cursor"] = "100"
 	}
@@ -538,6 +579,9 @@ func policySources(sources []model.Source) []model.Source {
 func (a *API) annotation(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	devices, err := a.Store.Query(r.Context(), "device", store.Query{DeviceID: id, Limit: 1})
+	if err == nil && len(devices) == 0 {
+		devices, err = a.Store.Query(r.Context(), "device", store.Query{History: true, DeviceID: id, Limit: 1})
+	}
 	if err != nil {
 		problem(w, 503, "unavailable", "Inventory unavailable")
 		return
@@ -623,17 +667,17 @@ func (a *API) overview(w http.ResponseWriter, r *http.Request) {
 	output(w, 200, map[string]any{"metrics": m, "series": s, "devices_total": total, "active_devices": active, "flows_total": count, "capabilities": a.capabilities(), "events": events, "sources": sources})
 }
 func (a *API) network(w http.ResponseWriter, r *http.Request) {
-	items, err := a.Store.Query(r.Context(), "network", store.Query{Limit: 1})
+	n, observed, err := a.networkObservations(r.Context())
 	if err != nil {
-		problem(w, 503, "unavailable", "Network snapshot unavailable")
+		problem(w, 503, "unavailable", "Network observation unavailable")
 		return
 	}
-	if len(items) == 0 {
-		output(w, 200, model.Network{Interfaces: []map[string]any{}, Segments: []map[string]any{}, Routes: []map[string]any{}, CoverageNotes: []string{"No router-owned network source has supplied a snapshot. Physical switch ports and wireless topology are not inferred."}})
-		return
+	if !observed {
+		n.CoverageNotes = append(n.CoverageNotes, "No router-owned network source has supplied a snapshot. Physical topology is not inferred.")
 	}
-	output(w, 200, items[0])
+	output(w, 200, n)
 }
+
 func (a *API) sources(ctx context.Context) ([]model.Source, error) {
 	observed, err := a.Store.Sources(ctx, time.Now())
 	if err != nil {
@@ -693,11 +737,12 @@ func (a *API) export(w http.ResponseWriter, r *http.Request) {
 		problem(w, 400, "invalid_export", "Choose flows or dns")
 		return
 	}
-	q, err := query(r)
+	q, err := activityWindow(r)
 	if err != nil {
 		problem(w, 400, "invalid_query", err.Error())
 		return
 	}
+	q.EventKind, q.Severity = "", ""
 	q.Limit = 500
 	internalKind := "flow"
 	if kind == "dns" {
@@ -772,7 +817,7 @@ func (a *API) static(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) capabilities() []map[string]any {
 	caps := []map[string]any{}
-	for _, kind := range []string{"device", "flow", "dns", "policy", "network", "event"} {
+	for _, kind := range []string{"device", "flow", "traffic_interval", "dns", "policy", "network", "event"} {
 		supported := false
 		for _, p := range a.Config.Producers {
 			for _, k := range p.Kinds {

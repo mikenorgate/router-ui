@@ -44,7 +44,7 @@ chunks, conflicts, stale producer sequences, scope removal and the inventory
 ceiling. Device policy filtering happens before pagination; a fixture with more
 than 500 applications checks that boundary.
 
-The phase frontend has 36 passing tests, including foreground polling without
+The earlier snapshot-phase frontend had 36 passing tests, including foreground polling without
 overlapping requests, fixed intervals, draft preservation, refresh failures and
 policy disappearance. Its compiled Open Design preview navigates all seven
 pages without network requests. The Go race suite and static checks run against
@@ -56,3 +56,32 @@ individual package files and security reports. Repeat builds must compare byte
 for byte before publication. These checks qualify application artifacts; router
 boot, network isolation, storage failure and forwarding gates still require the
 router-owned candidate workflow.
+
+
+## Phase 3 local qualification
+
+Activity tests cover immutable completed identities, active expiry at read time,
+exact observation references across boots, filtered pagination, frozen DNS
+bindings, replay-safe intervals, missing buckets, bounded sums, retained counts
+and historical-device authorization. API tests commit actual v2 snapshots before
+investigating a recorded rule revision, and assert nonempty flow/DNS exports.
+The full race suite, vet and configured Go linter pass.
+
+The MCP-authored React pages use the existing design system through Pi with
+`openrouter/moonshotai/kimi-k3`, requested `xhigh` and effective `max` reasoning.
+Tests cover server-authoritative filters, direct references, TTLs, omitted DNS
+values, unavailable responses, historical devices, bounded exports, role checks,
+keyboard interaction and fixed windows. Local browser walkthroughs cover both
+themes and 390-pixel layouts. These are proxy checks, not a human usability study.
+
+See [performance measurements](PERFORMANCE.md) for the ten-minute mixed load,
+ten paired baseline/candidate samples and policy publication coexistence gate.
+Router-owned native fixtures additionally verify actual Unix ingestion and lost
+acknowledgements, rc.10 read/maintenance/reopen, packaged Unbound, kernel verdict
+preservation, Alloy queue/rotation/disk pressure and Suricata EVE reopening.
+
+The current phase excludes physical load/fault/forwarding benchmarks and live
+OIDC configuration. VM boot/update/rollback platform qualification remains
+explicitly deferred. Signed router candidate and production acceptance require
+the existing deployment workflow and fresh accepted-core audit; local fixture
+results do not constitute that acceptance.

@@ -55,3 +55,56 @@ Ten interleaved revision benchmarks against `rc.6`, using the same fixture, Go 1
 A packaged `rc.6` API run still timed out a shared revision at 8.01 seconds. After the writer change, one strict disk-backed run completed initial commit, shared revision and complete removal in 3.47, 5.87 and 5.01 seconds. Real post-WAL cancellation and replay also passed with writer settings checked after recovery. Retain the failed package result alongside these component measurements; they do not establish a stable deadline guarantee on the eventual router image.
 
 Component benchmarks do not qualify a signed router image, filesystem exhaustion behavior, physical forwarding or NIC/VPP performance. The deployment owner must perform those acceptance checks against the exact installed artifact.
+
+
+## Phase 3 activity qualification
+
+The opt-in `TestActivityCapacity` fixture contains 4,096 devices, 65,536 active
+connections, one million retained flows and 245,760 minute aggregate rows.
+Measured traffic uses the real `Store.Ingest`, query and retention owners;
+bulk SQL is limited to fixture construction. The final ten-minute workload
+mixes active snapshots, completed flows, DNS, events and interval accounting.
+It paces 1,000 records/second, adds a 2,000/second ten-second burst, bounds the
+queue to 128 batches and drains it before checking totals.
+
+At one CPU, 2 GiB and zero swap, all 610,048 produced records committed,
+including 19,968 burst records. Summary p95 was 0.694 seconds; device-flow,
+filtered-flow and direct-reference p95 were 0.031, 0.012 and 0.047 seconds.
+Peak backlog was three batches and maximum measured visibility delay was
+0.794 seconds. The local fixture reported no errors. A follow-up full-size
+measurement covers the final partial-bucket query qualifier.
+
+`TestActivityPolicyCoexistence` clones the closed synthetic fixture, verifies
+kernel cgroup limits and runs real ingestion and queries during 32,776-record
+policy publication. Initial commit, revision and removal took 7.892, 6.663 and
+7.998 seconds, within the unchanged eight-second gate. Query p95 was 1.342
+seconds. All 108,032 produced records committed; three cancelled attempts
+replayed without advancing an uncommitted cursor. Maximum visibility delay
+was 14.920 seconds. The removal result has almost no margin: this local pass
+does not establish a stable deadline guarantee on router hardware.
+
+Ten interleaved baseline/candidate samples against rc.10 used the same cached
+Go 1.26.9 toolchain, one CPU, 2 GiB and zero swap. Benchstat found no significant
+time difference in complete policy commit, current-device pages or device
+policy pages. Indexed historical device-policy lookup fell from a median
+35.469 ms to 0.241 ms (99.32% lower). Its allocated bytes fell 17.19%; allocation
+count rose from 122 to 263. Complete-commit timing intervals were wide (±77%).
+Keep raw samples and failed development experiments alongside these results.
+
+Run these qualifications only against owned disposable fixture directories:
+
+```sh
+ROUTER_ACTIVITY_QUALIFY=1 ROUTER_ACTIVITY_SECONDS=600 \
+  ROUTER_ACTIVITY_OUTPUT=/absolute/empty/fixture \
+  go test -tags=integration -run '^TestActivityCapacity$' -v ./internal/store
+ROUTER_ACTIVITY_COEXIST=/absolute/cloned/qualified/fixture \
+  go test -tags=integration,capacity -run '^TestActivityPolicyCoexistence$' -v ./internal/store
+go test -tags=integration -run '^$' -bench 'Benchmark(ActivityIntervalBatch|RecordedPolicyProvenanceCapacity)$' -benchmem -count=10 ./internal/store
+```
+
+The router repository separately qualifies conntrack parsing/accounting,
+Unbound dnstap, Alloy redaction/queue/rotation/disk pressure, firewall log-budget
+exhaustion and actual rc.10 executable rollback. These tests generate local
+metadata only. No physical load, fault, packet capture or forwarding benchmark
+is part of this phase. Candidate-image boot checks and production acceptance
+remain separate from application test results.

@@ -84,6 +84,58 @@
     "Flow": {
       "type": "object",
       "properties": {
+        "state": {
+          "enum": [
+            "active",
+            "completed",
+            "decision"
+          ]
+        },
+        "connection_id": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "integer"
+        },
+        "observation_point": {
+          "type": "string"
+        },
+        "decision_source": {
+          "type": "string"
+        },
+        "binding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Binding"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "translated_source_port": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "translated_destination_port": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "id": {
           "type": "string",
           "pattern": "^[A-Za-z0-9._:-]{1,128}$"
@@ -192,6 +244,12 @@
     "Policy": {
       "type": "object",
       "properties": {
+        "entry_hooks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "rule_id": {
           "type": "string"
         },
@@ -439,6 +497,27 @@
     "Network": {
       "type": "object",
       "properties": {
+        "truncated": {
+          "type": "boolean"
+        },
+        "listeners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExposureListener"
+          }
+        },
+        "forwards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExposureForward"
+          }
+        },
+        "inbound": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Policy"
+          }
+        },
         "interfaces": {
           "type": "array",
           "items": {
@@ -469,6 +548,68 @@
     "DNS": {
       "type": "object",
       "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "answer_count": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "answers_omitted": {
+          "type": "boolean"
+        },
+        "query_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "client_ip": {
+          "type": "string"
+        },
+        "resolver": {
+          "type": "string"
+        },
+        "latency_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "answer_records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DNSAnswer"
+          }
+        },
+        "binding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Binding"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
         "id": {
           "type": "string",
           "pattern": "^[A-Za-z0-9._:-]{1,128}$"
@@ -511,6 +652,7 @@
           "enum": [
             "device",
             "flow",
+            "traffic_interval",
             "policy",
             "dns",
             "event",
@@ -564,6 +706,22 @@
             "properties": {
               "data": {
                 "$ref": "#/$defs/Flow"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "traffic_interval"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/TrafficInterval"
               }
             }
           }
@@ -992,6 +1150,210 @@
           "items": {
             "$ref": "#/$defs/StorageObservation"
           }
+        }
+      },
+      "required": []
+    },
+    "TrafficInterval": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "segment": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "integer"
+        },
+        "observation_point": {
+          "type": "string"
+        },
+        "family": {
+          "enum": [
+            "4",
+            "6"
+          ]
+        },
+        "from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "to": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bytes_sent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427387904
+        },
+        "bytes_received": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427387904
+        },
+        "active_connections": {
+          "type": "integer"
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "counter_status": {
+          "enum": [
+            "measured",
+            "baseline",
+            "gap",
+            "reset"
+          ]
+        },
+        "sampling_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "id",
+        "namespace",
+        "zone",
+        "observation_point",
+        "family",
+        "from",
+        "to",
+        "bytes_sent",
+        "bytes_received",
+        "active_connections",
+        "counter_status",
+        "sampling_rate"
+      ]
+    },
+    "Binding": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "device_id",
+        "address",
+        "valid_from"
+      ]
+    },
+    "DNSAnswer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "ttl": {
+          "type": "integer"
+        }
+      },
+      "required": []
+    },
+    "ExposureListener": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "address": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "configured_label": {
+          "type": "string"
+        },
+        "source_restriction": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "ExposureForward": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        },
+        "listen": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "source_restriction": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
         }
       },
       "required": []

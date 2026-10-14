@@ -221,7 +221,8 @@ describe('Firewall policy client pagination (integration)', () => {
     expect(screen.getByText('Page 1 of 2')).toBeInTheDocument();
   });
 
-  it('clamps the client page when a refreshed snapshot shrinks the loaded set', async () => {
+  // Renders 300 rows across several page turns; allow more than the 5 s default.
+  it('clamps the client page when a refreshed snapshot shrinks the loaded set', { timeout: 20_000 }, async () => {
     const user = userEvent.setup();
     let current = makeRules(300);
     mockPolicies(() => current);

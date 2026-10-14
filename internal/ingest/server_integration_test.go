@@ -37,6 +37,14 @@ func TestRealUnixPeerAuthorization(t *testing.T) {
 	}}
 	defer transport.CloseIdleConnections()
 	client := http.Client{Transport: transport, Timeout: 2 * time.Second}
+	capabilities, err := client.Get("http://unix/ingest/v1/capabilities")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if capabilities.StatusCode != 200 {
+		t.Fatalf("capability UID authorization %d", capabilities.StatusCode)
+	}
+	capabilities.Body.Close()
 	for _, tc := range []struct {
 		name, source string
 		status       int

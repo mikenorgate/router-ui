@@ -32,27 +32,36 @@ type Device struct {
 	Sources    []string  `json:"sources"`
 }
 type Flow struct {
-	ID                      string    `json:"id"`
-	DeviceID                string    `json:"device_id"`
-	SourceIP                string    `json:"source_ip"`
-	DestinationIP           string    `json:"destination_ip"`
-	DestinationName         string    `json:"destination_name"`
-	SourcePort              uint16    `json:"source_port"`
-	DestinationPort         uint16    `json:"destination_port"`
-	Protocol                string    `json:"protocol"`
-	BytesSent               uint64    `json:"bytes_sent"`
-	BytesReceived           uint64    `json:"bytes_received"`
-	StartedAt               time.Time `json:"started_at"`
-	LastSeen                time.Time `json:"last_seen"`
-	Verdict                 string    `json:"verdict"`
-	RuleID                  string    `json:"rule_id"`
-	PolicyRevision          string    `json:"policy_revision,omitempty"`
-	BindingRef              string    `json:"binding_ref,omitempty"`
-	TranslatedSourceIP      string    `json:"translated_source_ip,omitempty"`
-	TranslatedDestinationIP string    `json:"translated_destination_ip,omitempty"`
-	SamplingRate            float64   `json:"sampling_rate"`
-	Evidence                string    `json:"evidence"`
-	SourceID                string    `json:"source_id"`
+	State                     string    `json:"state,omitempty"`
+	ConnectionID              string    `json:"connection_id,omitempty"`
+	Namespace                 string    `json:"namespace,omitempty"`
+	Zone                      uint16    `json:"zone,omitempty"`
+	ObservationPoint          string    `json:"observation_point,omitempty"`
+	DecisionSource            string    `json:"decision_source,omitempty"`
+	Binding                   *Binding  `json:"binding,omitempty"`
+	TranslatedSourcePort      *uint16   `json:"translated_source_port,omitempty"`
+	TranslatedDestinationPort *uint16   `json:"translated_destination_port,omitempty"`
+	ID                        string    `json:"id"`
+	DeviceID                  string    `json:"device_id"`
+	SourceIP                  string    `json:"source_ip"`
+	DestinationIP             string    `json:"destination_ip"`
+	DestinationName           string    `json:"destination_name"`
+	SourcePort                uint16    `json:"source_port"`
+	DestinationPort           uint16    `json:"destination_port"`
+	Protocol                  string    `json:"protocol"`
+	BytesSent                 uint64    `json:"bytes_sent"`
+	BytesReceived             uint64    `json:"bytes_received"`
+	StartedAt                 time.Time `json:"started_at"`
+	LastSeen                  time.Time `json:"last_seen"`
+	Verdict                   string    `json:"verdict"`
+	RuleID                    string    `json:"rule_id"`
+	PolicyRevision            string    `json:"policy_revision,omitempty"`
+	BindingRef                string    `json:"binding_ref,omitempty"`
+	TranslatedSourceIP        string    `json:"translated_source_ip,omitempty"`
+	TranslatedDestinationIP   string    `json:"translated_destination_ip,omitempty"`
+	SamplingRate              float64   `json:"sampling_rate"`
+	Evidence                  string    `json:"evidence"`
+	SourceID                  string    `json:"source_id"`
 }
 type Origin struct {
 	Producer  string `json:"producer"`
@@ -62,6 +71,7 @@ type Origin struct {
 	GroupID   string `json:"group_id"`
 }
 type Policy struct {
+	EntryHooks             []string   `json:"entry_hooks,omitempty"`
 	RuleID                 string     `json:"rule_id,omitempty"`
 	ApplicationID          string     `json:"application_id,omitempty"`
 	BindingRef             string     `json:"binding_ref,omitempty"`
@@ -118,19 +128,33 @@ type Source struct {
 	SequenceGaps uint64     `json:"sequence_gaps"`
 }
 type Network struct {
-	Interfaces    []map[string]any `json:"interfaces"`
-	Segments      []map[string]any `json:"segments"`
-	Routes        []map[string]any `json:"routes"`
-	CoverageNotes []string         `json:"coverage_notes"`
+	Truncated     bool               `json:"truncated,omitempty"`
+	Listeners     []ExposureListener `json:"listeners,omitempty"`
+	Forwards      []ExposureForward  `json:"forwards,omitempty"`
+	Inbound       []Policy           `json:"inbound,omitempty"`
+	Interfaces    []map[string]any   `json:"interfaces"`
+	Segments      []map[string]any   `json:"segments"`
+	Routes        []map[string]any   `json:"routes"`
+	CoverageNotes []string           `json:"coverage_notes"`
 }
 type DNS struct {
-	ID         string    `json:"id"`
-	DeviceID   string    `json:"device_id"`
-	Query      string    `json:"query"`
-	Type       string    `json:"type"`
-	Result     string    `json:"result"`
-	Answers    []string  `json:"answers"`
-	ObservedAt time.Time `json:"observed_at"`
+	TransactionID  string      `json:"transaction_id,omitempty"`
+	AnswerCount    *uint16     `json:"answer_count,omitempty"`
+	AnswersOmitted bool        `json:"answers_omitted,omitempty"`
+	QueryAt        *time.Time  `json:"query_at,omitempty"`
+	ClientIP       string      `json:"client_ip,omitempty"`
+	Resolver       string      `json:"resolver,omitempty"`
+	LatencyMS      *float64    `json:"latency_ms,omitempty"`
+	AnswerRecords  []DNSAnswer `json:"answer_records,omitempty"`
+	Binding        *Binding    `json:"binding,omitempty"`
+	Evidence       string      `json:"evidence,omitempty"`
+	ID             string      `json:"id"`
+	DeviceID       string      `json:"device_id"`
+	Query          string      `json:"query"`
+	Type           string      `json:"type"`
+	Result         string      `json:"result"`
+	Answers        []string    `json:"answers"`
+	ObservedAt     time.Time   `json:"observed_at"`
 }
 type Record struct {
 	ID         string          `json:"id"`
@@ -192,6 +216,8 @@ func (b Batch) Validate(now time.Time, allowed []string) error {
 }
 func (r Record) Validate() error {
 	switch r.Kind {
+	case "traffic_interval":
+		return r.validateInterval()
 	case "device":
 		var v Device
 		if err := json.Unmarshal(r.Data, &v); err != nil {
@@ -226,6 +252,22 @@ func (r Record) Validate() error {
 		}
 		if v.SamplingRate <= 0 || v.SamplingRate > 1 {
 			return errors.New("invalid flow sample rate")
+		}
+		if v.State == "active" && (v.Verdict != "unknown" || v.DecisionSource != "") {
+			return errors.New("active conntrack metadata cannot claim an attributed verdict")
+		}
+		if v.Binding != nil && (v.Binding.DeviceID != v.DeviceID || v.Binding.Address.Address != v.SourceIP) {
+			return errors.New("flow binding does not match its attributed source")
+		}
+		if !validBinding(v.Binding) || (v.State != "" && v.State != "active" && v.State != "completed" && v.State != "decision") || len(v.Namespace) > 128 || len(v.ObservationPoint) > 128 || len(v.ConnectionID) > 128 || len(v.DecisionSource) > 64 {
+			return errors.New("invalid flow evidence")
+		}
+		for _, ip := range []string{v.TranslatedSourceIP, v.TranslatedDestinationIP} {
+			if ip != "" {
+				if _, err := netip.ParseAddr(ip); err != nil {
+					return errors.New("invalid translated tuple")
+				}
+			}
 		}
 	case "policy", "rule":
 		var v Policy
@@ -291,15 +333,34 @@ func (r Record) Validate() error {
 		if err := json.Unmarshal(r.Data, &v); err != nil {
 			return err
 		}
-		if v.ID != r.ID || len(v.Query) > 253 || len(v.Answers) > 64 {
+		if v.ID != r.ID || len(v.Query) > 253 || len(v.Answers) > 64 || len(v.AnswerRecords) > 64 || len(v.Resolver) > 128 || !validBinding(v.Binding) || v.LatencyMS != nil && (*v.LatencyMS < 0 || *v.LatencyMS > 300000) {
 			return errors.New("invalid DNS record")
+		}
+		if v.TransactionID != "" && !Identifier(v.TransactionID) || v.AnswerCount != nil && (int(*v.AnswerCount) < max(len(v.AnswerRecords), len(v.Answers)) || int(*v.AnswerCount) > max(len(v.AnswerRecords), len(v.Answers)) && !v.AnswersOmitted) {
+			return errors.New("invalid DNS metadata")
+		}
+		observed := r.ObservedAt
+		if v.QueryAt != nil {
+			if v.QueryAt.IsZero() || v.QueryAt.After(observed) || observed.Sub(*v.QueryAt) > 5*time.Minute {
+				return errors.New("invalid DNS query time")
+			}
+			observed = *v.QueryAt
+		}
+		if v.Binding != nil && (v.Binding.DeviceID != v.DeviceID || v.Binding.Address.Address != v.ClientIP || observed.Before(v.Binding.ValidFrom) || v.Binding.ValidUntil != nil && !observed.Before(*v.Binding.ValidUntil)) {
+			return errors.New("DNS binding does not cover its query client and time")
+		}
+
+		for _, answer := range v.AnswerRecords {
+			if len(answer.Name) > 253 || len(answer.Type) > 16 || len(answer.Value) > 1024 {
+				return errors.New("invalid DNS answer")
+			}
 		}
 	case "network":
 		var v Network
 		if err := json.Unmarshal(r.Data, &v); err != nil {
 			return err
 		}
-		if len(v.Interfaces) > 128 || len(v.Segments) > 128 || len(v.Routes) > 512 {
+		if len(v.Interfaces) > 128 || len(v.Segments) > 128 || len(v.Routes) > 512 || len(v.Listeners) > 256 || len(v.Forwards) > 256 || len(v.Inbound) > 256 {
 			return errors.New("network snapshot too large")
 		}
 	default:

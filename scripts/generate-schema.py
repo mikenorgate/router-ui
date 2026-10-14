@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 root=Path(__file__).resolve().parent.parent
-source=(root/'internal/model/model.go').read_text()+'\n'+(root/'internal/model/snapshot.go').read_text()
+source=(root/'internal/model/model.go').read_text()+'\n'+(root/'internal/model/snapshot.go').read_text()+'\n'+(root/'internal/model/activity.go').read_text()
 definitions={}
 def field_type(value):
     if value.startswith('*'):
@@ -19,7 +19,7 @@ def field_type(value):
     if value=='time.Time':return {'type':'string','format':'date-time'}
     if value in {'json.RawMessage','map[string]any'}:return {'type':'object'}
     return {'$ref':'#/$defs/'+value}
-required={'Batch':['version','source_id','boot_id','sequence','sampling_rate','records'],'Record':['id','kind','observed_at','data'],'Device':['id'],'Flow':['id','source_ip','destination_ip','started_at','last_seen','verdict','sampling_rate'],'Policy':['id','counters_scope'],'Event':['id','time'],'DNS':['id']}
+required={'Batch':['version','source_id','boot_id','sequence','sampling_rate','records'],'Record':['id','kind','observed_at','data'],'Device':['id'],'Flow':['id','source_ip','destination_ip','started_at','last_seen','verdict','sampling_rate'],'Policy':['id','counters_scope'],'Event':['id','time'],'DNS':['id'],'TrafficInterval':['id','namespace','zone','observation_point','family','from','to','bytes_sent','bytes_received','active_connections','counter_status','sampling_rate']}
 for name,body in re.findall(r'type (\w+) struct \{(.*?)\n\}',source,re.S):
     fields={tag:field_type(kind) for _,kind,tag in re.findall(r'\s+(\w+)\s+(\S+)\s+`json:"([^",]+)[^"]*"`',body)}
     definitions[name]={'type':'object','properties':fields,'required':required.get(name,[])}
@@ -31,9 +31,16 @@ for name,definition in definitions.items():
 definitions['Batch']['additionalProperties']=False
 definitions['Batch']['properties'].update(version={'const':1},sequence={'type':'integer','minimum':1,'maximum':4611686018427387904},cursor={'type':'string','maxLength':2048},coverage={'type':'string','maxLength':1024},records={'type':'array','maxItems':256,'items':{'$ref':'#/$defs/Record'}})
 definitions['Record']['additionalProperties']=False
-definitions['Record']['properties']['kind']={'enum':['device','flow','policy','dns','event','network','rule','application','appliance']}
-definitions['Record']['allOf']=[{'if':{'properties':{'kind':{'const':kind}}},'then':{'properties':{'data':{'$ref':'#/$defs/'+name}}}} for kind,name in {'device':'Device','flow':'Flow','policy':'Policy','dns':'DNS','event':'Event','network':'Network','rule':'Policy','application':'Application','appliance':'Appliance'}.items()]
+definitions['Record']['properties']['kind']={'enum':['device','flow','traffic_interval','policy','dns','event','network','rule','application','appliance']}
+definitions['Record']['allOf']=[{'if':{'properties':{'kind':{'const':kind}}},'then':{'properties':{'data':{'$ref':'#/$defs/'+name}}}} for kind,name in {'device':'Device','flow':'Flow','traffic_interval':'TrafficInterval','policy':'Policy','dns':'DNS','event':'Event','network':'Network','rule':'Policy','application':'Application','appliance':'Appliance'}.items()]
 definitions['Flow']['properties']['verdict']={'enum':['allowed','blocked','unknown']}
+definitions['Binding']['properties']={**definitions['Address']['properties'],**definitions['Binding']['properties']}
+definitions['Binding']['required']=['device_id','address','valid_from']
+definitions['Flow']['properties']['state']={'enum':['active','completed','decision']}
+definitions['TrafficInterval']['properties']['counter_status']={'enum':['measured','baseline','gap','reset']}
+definitions['TrafficInterval']['properties']['family']={'enum':['4','6']}
+for key in ['bytes_sent','bytes_received']:definitions['TrafficInterval']['properties'][key]={'type':'integer','minimum':0,'maximum':4611686018427387904}
+
 definitions['Policy']['properties']['counters_scope']={'enum':['shared','device','unknown']}
 schema={'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:router-console:ingestion:v1','title':'Router Console observation batch v1','$ref':'#/$defs/Batch','$defs':definitions,'description':'Transport bounds, UID authorization, clock tolerance, shared-counter evidence and monotonic sequences are additionally enforced by the application.'}
 out=root/'schemas/ingestion-v1.json';out.parent.mkdir(exist_ok=True);out.write_text(json.dumps(schema,indent=2)+'\n')
