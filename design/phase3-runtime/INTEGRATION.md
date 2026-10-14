@@ -264,6 +264,42 @@ visible; passive copy with no /simulat/i text).
 | Tests | `npx vitest run` from disposable root `design/phase3-runtime/.testroot` (overlay configs, baseline node_modules symlink; deleted after) | **17 files, 138 tests, all passing** (132 prior + 6 new) |
 | Typecheck + build | `npm run build` from the same root | exit 0 — CSS byte-identical to rounds 2–3 (`index-_p_nrSAB.css`, 41.85 kB, canonical tokens verified `--bg:oklch(97.5% .005 95)`), JS 416.53 kB, 5 local Plex faces |
 
+## Review fixes — round 5 (2026-10-14): CI test scheduling
+
+**Failure (public log:** `…/router-console-policy-phase/phase3-release-ci-failure.log`,
+release `v0.2.0-rc.12`, step `npm test --prefix web` **):** 136 of 138 tests
+passed; the two heavy pagination interaction tests in
+`src/test/datatable-pagination.test.tsx` — "reaches and inspects rule-501…"
+(650 rules) and "returns to the first client page when the evidence filter
+changes" (300 rules) — timed out at 5191 ms and 5176 ms against their
+5000 ms gates. All 138 pass locally. Root cause is scheduling, not
+assertions or data: Vitest's default worker count scales with the runner's
+CPUs, so the small GitHub runner ran too many jsdom files concurrently and
+the CPU-bound interaction tests starved (log: "jsdom was created 17 times").
+
+**Correction (`web/vitest.config.ts`, the only file changed):** workers
+bounded to a small CI runner. `maxWorkers: 2` was tried first and still
+contended under a genuine 2-core constraint (`taskset -c 0,1`: rule-501 at
+5155 ms), so the suite runs on `maxWorkers: 1` with per-file isolation kept
+(`isolate: true`, the default, stated explicitly). No assertions, data
+sizes, timeout gates, product UI, or dependencies were changed; no tests
+skipped.
+
+### Evidence (round 5)
+
+| Check | Command (from `design/phase3-runtime/web`) | Result |
+| --- | --- | --- |
+| Full suite, bounded config | `npm test` | **17 files, 138 tests, all passing** — 32.69 s |
+| Constrained 2-core check | `taskset -c 0,1 npx vitest run --reporter=verbose` | **17 files, 138 tests, all passing** — 31.08 s; rule-501 **4100 ms** (gate 5000 ms), evidence-filter **1888 ms**, refreshed-snapshot **1794 ms** |
+| Focused rerun, 2-core | `taskset -c 0,1 npx vitest run src/test/datatable-pagination.test.tsx` | 9/9 passing; rule-501 **4049 ms** |
+| Failed intermediate | `taskset -c 0,1` with `maxWorkers: 2` | rule-501 5155 ms — motivated `maxWorkers: 1` |
+| Typecheck | `npm run typecheck` | exit 0 |
+
+**CI rerun pending.** These are local results under a simulated 2-vCPU
+constraint; the release pipeline has not been re-run and no CI success is
+claimed here. The next release run should confirm the gates hold on the
+actual runner.
+
 ## Scope
 
 `git status` shows only `design/phase3-runtime/` added by this run. Original
@@ -280,14 +316,3 @@ test files listed above under the same root. No runtime router was touched.
   passed jsdom + one visual render in the handoff.
 - Storybook build not re-run; handoff component stories are copied verbatim
   and typecheck under the repo's strict flags.
-
-
-## Independent application verification
-
-The integrated overlay passes 138 tests and the TypeScript/production build.
-A separate Chromium walkthrough passed ten demo tasks across both themes and
-a 390-pixel layout. Five tasks against the actual application, using synthetic
-metadata ingested over its authenticated Unix socket, cover login, an opaque
-reference outside the filtered list page, passive investigation, DNS values/TTL
-and binding, a nonempty DNS export and narrow layout. No JavaScript errors were
-observed. These are proxy walkthroughs, not a human usability study.
