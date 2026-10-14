@@ -1,0 +1,45 @@
+{
+  "status": "pass",
+  "renderer": "Native Open Design export image",
+  "image": "context/visual-review.png",
+  "surfaces": [
+    {
+      "name": "Device Firewall",
+      "theme": "light",
+      "width": 1280,
+      "horizontalOverflow": false,
+      "approvedWordmarkVisible": true
+    },
+    {
+      "name": "Device Firewall",
+      "theme": "dark",
+      "width": 1280,
+      "horizontalOverflow": false,
+      "approvedWordmarkVisible": true
+    },
+    {
+      "name": "Device Firewall",
+      "theme": "dark",
+      "width": 375,
+      "horizontalOverflow": false,
+      "approvedWordmarkVisible": true
+    },
+    {
+      "name": "AuthPanel",
+      "theme": "light",
+      "width": 375,
+      "horizontalOverflow": false,
+      "approvedWordmarkVisible": true
+    }
+  ],
+  "fontAxes": {
+    "Manrope": {
+      "wght": [
+        200,
+        800
+      ]
+    }
+  },
+  "correction": "Hidden mobile table headings were extending scroll bounds; constrain their hidden box while preserving labels. Responsive tables render as bounded records.",
+  "scope": "Visual check of rebuilt compositions and exact primary/reverse lockups; offline runtime coverage of all active HTML surfaces is recorded in validation.json. Assistive-technology testing is not claimed."
+}

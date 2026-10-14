@@ -1,6 +1,24 @@
 # Package provenance
-Source project: Router Console, `3f8d4985-55cb-4c6c-b1ab-f45d855a89ba`. Existing workspace: `a074a105-4b59-43a6-9a70-304651c57a48`. Existing design-system identity: `user:router-console-design-system`.
+Source project: Lanrith Console, `3f8d4985-55cb-4c6c-b1ab-f45d855a89ba`. Existing workspace: `a074a105-4b59-43a6-9a70-304651c57a48`. Existing design-system identity: `user:router-console-design-system`.
 
 The copied `docs/DESIGN_BRIEF.md`, `docs/PRODUCT_PLAN.md` and `context/source-context.md` are preserved byte-for-byte. Initial root README and AGENTS were application guidance; originals are preserved in `context/application-readme.md` and `context/application-agents.md` before replacement with package guidance. No source application was edited. No new project, registry ID or remote repository was created.
 
 Exact tokens and route-junction mark were authored from the provided written brief; no visual screenshot values were available. Generic fictional fixtures use documentation IPv4 ranges, `2001:db8::/32`, `.example` domains and locally administered example MACs. Measurements, times and counters are illustrative only. Plex fonts are redistributed locally under SIL OFL 1.1. Browser JavaScript is generated from TypeScript; Storybook is the editable reference workflow.
+
+## Accepted Lanrith brand decision — 2026-10-14
+
+The accepted brand package supersedes the first pass’s inferred palette, route-junction identity and Plex Sans UI typography. Authoritative source paths are `context/lanrith-brand/tokens/lanrith.css`, `context/lanrith-brand/tokens/lanrith.json`, `context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2`, `context/lanrith-brand/licenses/manrope-OFL.txt`, `context/lanrith-brand/assets/logo/lanrith-primary.svg`, `context/lanrith-brand/assets/logo/lanrith-reverse.svg`, `context/lanrith-brand/assets/logo/lanrith-mark-primary.svg`, `context/lanrith-brand/assets/logo/lanrith-mark-reverse.svg`, `context/lanrith-brand/assets/logo/favicon.svg` and `context/lanrith-brand/copy/brand-copy.txt`.
+
+Paper, Ink, Teal and Mint supply the brand anchors. Semantic state/surface derivatives remain implementation decisions; OKLCH itself does not guarantee contrast. Canonical `tokens.css` holds the accepted values and approved 16px body scale, while headings and metadata retain their compact scales. The structured export records exact resolved CSS values for both themes, their source paths and a CSS checksum. Typography is local variable Manrope (200–800, using 400/500/600) plus IBM Plex Mono (400/500). Exact outlined full wordmarks are required in Sidebar and AuthPanel; core primary/reverse SVGs and favicon are unchanged copies of the approved source assets.
+
+Brand reference: “Your homelab’s first hop.” Approved promise: “A homelab router with the hard parts already figured out.” These are launch messaging, not a certification of operational health or release readiness. Installed, applicable and observed match remain separate claims; fictional fixtures, unknowns, shared counters and simulations retain their original labels. Historical copied source documents remain intact.
+
+The unused original Plex Sans binaries are retained. Their upstream Fontsource 5.3.0 OFL is preserved as `fonts/OFL-plex-sans.txt` and `fonts/OFL-sans.txt`; Manrope has its own `fonts/OFL-manrope.txt`. No application integration, runner preference change, new registry ID or project creation is part of this continuation.
+
+Native registry compatibility correction: the package manifest `id` is the existing directory slug `router-console-design-system`, as required by the installed registry reader. `registryId` preserves `user:router-console-design-system`; registry metadata, source/workspace IDs and lifecycle are unchanged. This corrects asset-loader eligibility and does not create or import a new identity.
+
+## Latest user UI-theme refinement — 2026-10-14
+
+The user's feedback, "the all green is a bit over the top", supersedes the green dark UI surfaces from the accepted brand integration. Canonical `tokens.css` now uses neutral charcoal #171B1E, grey panels #20262A and raised grey #2A3236. Metadata and unknown text use #B9C0C5; dividers #495258, control boundaries #879399, unknown backing #394247 and chart fills #414B52. The dark accent backing is neutral #20262A. Exact OKLCH values are derived from these chosen hex values and exported through the existing `build:reference` / `export:tokens` workflow.
+
+Paper foreground, Mint accents, labelled success/warning/danger states and the exact approved reverse wordmark are retained. Active navigation keeps its canonical inset accent indicator. Light mode, typography, spacing, interactions, evidence semantics and the reduced-motion correction are unchanged. This is the user's latest UI-theme refinement of the original supplied brand kit; copied source evidence and `context/lanrith-brand/` tokens, fonts, logos and copy remain intact. `context/browser-validation.json` records checks and current token/CSS hashes for the neutral theme. The existing package/workspace identity and registry lifecycle remain unchanged.

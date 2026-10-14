@@ -1,0 +1,1 @@
+import{P as e,d as o,e as t}from"./PreviewCard-CO24-ohZ.js";const r={title:"Policy/PolicyTable",parameters:{layout:"padded"}},s={render:()=>e(o()+t())},d={render:()=>e(o([]))},i=["EvidenceRows","Empty"];export{d as Empty,s as EvidenceRows,i as __namedExportsOrder,r as default};

@@ -1,0 +1,60 @@
+{
+  "status": "pass",
+  "date": "2026-10-14",
+  "refinement": "Latest user UI-theme refinement of the supplied Lanrith brand kit: neutral charcoal/grey dark surfaces with restrained Mint/Teal accents.",
+  "method": "Chromium; local file URLs; all external HTTP requests blocked; prefers-reduced-motion: reduce",
+  "surfaces": 52,
+  "targetedCaptionRechecks": 4,
+  "widths": [
+    1440,
+    390
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "darkHex": {
+    "bg": "#171B1E",
+    "surface": "#20262A",
+    "surface-raised": "#2A3236",
+    "muted": "#B9C0C5",
+    "border": "#495258",
+    "control-border": "#879399",
+    "accent-soft": "#20262A",
+    "unknown": "#B9C0C5",
+    "unknown-soft": "#394247",
+    "chart-secondary": "#B9C0C5",
+    "chart-fill": "#414B52"
+  },
+  "checks": [
+    "Canonical light and neutral dark background colours",
+    "All eleven refined dark role colours match canonical values",
+    "Neutral badge backgrounds, unknown states and chart fills",
+    "Rendered dark status badge text contrast >= 4.5:1",
+    "Chart line and event-marker contrast >= 3:1 on panels and filled areas",
+    "Canonical inset active-navigation indicator retained",
+    "Correct primary/reverse outlined logo variants loaded",
+    "Local Manrope font loaded",
+    "No horizontal page overflow",
+    "Button transitions respect reduced motion",
+    "No external requests or runtime errors",
+    "Light tokens, component sources, original brand assets and colours/typography CSS unchanged"
+  ],
+  "darkBadgeInstancesChecked": 72,
+  "minimumDarkBadgeContrast": 8.315,
+  "minimumDarkTextTokenContrast": 7.095,
+  "minimumDarkGraphicTokenContrast": 4.849,
+  "visualReview": "Dark desktop/mobile overview and brand previews inspected: charcoal/grey large surfaces and fills; readable labelled badges and chart lines. Light overview retained.",
+  "screenshots": {
+    "darkOverview": "context/dark-theme-overview.png",
+    "darkBrand": "context/dark-theme-brand.png",
+    "darkMobile": "context/dark-theme-overview-mobile.png",
+    "lightOverview": "context/light-theme-overview.png"
+  },
+  "tokensCssSha256": "0d5cec61cb052e730b5f49d7e86c3111f3c99ea4e9458d8e782de89b597ccbb4",
+  "colorsAndTypeSha256": "3c3fb7cb7a074411cf98a76be8b30dc2ab6f1aa57f954caff842e848220693ec",
+  "referenceCssSha256": "fb521a490fe6e23ada902a4eca345dd60ca2ea7fa14fccbced894b33a36cd881",
+  "designTokensSha256": "3e22f277f9bf70ad7cad5572f75ede1044914acfb8b876bc3cadb2ecc102f204",
+  "protectedFilesVerifiedUnchanged": 60,
+  "failures": []
+}

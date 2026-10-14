@@ -7,3 +7,25 @@
 .toolbar .search-field{flex:1;min-width:200px}.toolbar .search-field .input{width:100%}
 
 .mobile-sort{display:none}@media(max-width:850px){.mobile-sort{display:grid;margin-bottom:14px}}
+
+/* Dark evidence badges and essential outlines use tested existing semantic pairs. */
+:root[data-theme="dark"] .badge:not(.plain) { background: var(--surface); }
+:root[data-theme="dark"] .btn:not(.primary), :root[data-theme="dark"] .input, :root[data-theme="dark"] .toast { border-color: var(--muted); }
+:root[data-theme="dark"] .table tbody tr.selected { outline-color: var(--muted); }
+:root[data-theme="dark"] .chart-event, :root[data-theme="dark"] .chart-gap-line { stroke: var(--muted); }
+
+/* Responsive records must not retain the table's intrinsic desktop width. */
+@media (max-width: 850px) {
+  .topbar > label, .devicehead > div, .toolbar > .control-label { min-width: 0; max-width: 100%; }
+  .table.responsive { display: block; width: 100%; max-width: 100%; }
+  .table.responsive caption { display: block; width: 100%; }
+  .table.responsive tbody { width: 100%; }
+  .table.responsive tr, .table.responsive td { min-width: 0; max-width: 100%; }
+  .toolbar .search-field { min-width: 0; flex-basis: 100%; }
+}
+
+/* Visually hidden table headings must not enlarge the page's scroll bounds. */
+@media (max-width: 850px) {
+  .table.responsive thead { overflow: hidden; left: 0; top: 0; }
+  .sr { left: 0; top: 0; }
+}

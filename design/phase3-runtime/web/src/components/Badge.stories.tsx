@@ -1,0 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Badge, Evidence, Status } from './Badge';
+const meta = { title: 'Evidence/Badge', component: Badge, args: { children: 'Unknown', tone: 'unknown' } } satisfies Meta<typeof Badge>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Unknown: Story = {};
+export const Stale: Story = { args: { children: 'Stale', tone: 'warn' } };
+export const Blocked: Story = { args: { children: 'Observed denial', tone: 'bad' } };
+export const AllStates: Story = { render: () => <div className="badge-row">{['current', 'stale', 'missing', 'unsupported', 'sampled', 'unknown', 'blocked'].map(value => <Status key={value} value={value} />)}</div> };
+export const SeparateClaims: Story = { render: () => <Evidence installed applicable observed={false} /> };

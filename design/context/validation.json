@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "checks": 774,
+  "contrastPairs": 86,
+  "localReferences": 232,
+  "componentsWithStories": 10,
+  "renderedSurfaces": 14,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "viewportBehaviorChecks": [
+    1280,
+    375
+  ],
+  "externalRuntimeRequests": [],
+  "structuredTokenDriftControls": 4,
+  "interactionChecks": "Theme persistence, filters/empty/sort, modal focus/return, keyboard tabs, labelled simulation, recovery validation/no storage, selected chart interval; every generated HTML hydrated offline in both themes",
+  "sourceEvidence": "Copied source document SHA-256 checksums unchanged.",
+  "limitations": "CSSOM consistency, static layout rules and jsdom behavior do not measure pixel overflow or replace assistive-technology review. Native OD visual-export evidence is recorded separately.",
+  "errors": []
+}

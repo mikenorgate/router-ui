@@ -1,0 +1,26 @@
+<a class="skip" href="#main-content">Skip to content</a>
+<div class="demo-banner" role="status" data-od-id="demo-banner"><span class="badge warn"><span aria-hidden="true">△</span>Explicit demo mode</span><span>Fictional observations · documentation addresses · no router API requests · Open Design authoring preview</span></div>
+<div class="shell">
+  <aside class="sidebar" data-od-id="sidebar">
+    <a class="brand" href="#/overview"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v6m0 6v6M3 12h6m6 0h6"/><circle cx="12" cy="12" r="2.4"/></svg><span>Router Console<span class="brand-caption">Local observatory</span></span></a>
+    <button class="btn mobile-nav-toggle" aria-expanded="false" aria-controls="console-navigation">Open navigation</button>
+    <nav id="console-navigation" class="navlinks" aria-label="Main navigation"></nav>
+    <div class="sidebar-bottom">
+      <div class="nav-meta"><span class="eyebrow">Evidence boundary</span><p>Router configuration is read-only.</p></div>
+      <button class="btn" id="theme-toggle">Use dark theme</button>
+      <div class="account"><strong>Example operator</strong><span>Fixture account</span></div>
+    </div>
+  </aside>
+  <div class="content">
+    <header class="topbar" data-od-id="global-controls">
+      <form class="global-search"><label class="sr" for="global-search">Search devices, traffic, rules and events</label><input id="global-search" class="input" name="search" type="search" maxlength="128" placeholder="Search name, address, rule…"><button class="btn" type="submit">Search</button></form>
+      <div class="toolbar">
+        <label class="control-label inline"><span>Interval</span><select class="input" id="interval-select"><option value="15m">Last 15 minutes</option><option value="1h" selected>Last hour</option><option value="24h">Last 24 hours</option></select></label>
+        <label class="control-label inline"><span>Fixture role</span><select class="input" id="role-select"><option value="operator" selected>Operator</option><option value="viewer">Viewer</option></select></label>
+        <label class="control-label inline density-control"><span>Density</span><select class="input" id="density-select"><option value="comfortable" selected>Comfortable</option><option value="compact">Compact</option></select></label>
+      </div>
+    </header>
+    <main class="main" id="main-content" tabindex="-1"></main>
+    <footer class="app-footer">Router-local evidence · Console access is separate from device network access. · Phase 3 design preview</footer>
+  </div>
+</div>

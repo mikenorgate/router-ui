@@ -1,0 +1,93 @@
+{
+  "brand": "Lanrith",
+  "version": "0.1",
+  "status": "working identity",
+  "pronunciation": "LAN-rith",
+  "tagline": "Your homelab\u2019s first hop.",
+  "descriptor": "Open-source router and edge OS",
+  "promise": "A homelab router with the hard parts already figured out.",
+  "palette": {
+    "paper": "#F5F2EA",
+    "ink": "#162D2B",
+    "teal": "#08685F",
+    "mint": "#B5DED1",
+    "mist": "#DDE5DF",
+    "muted": "#495B56",
+    "line": "#B0BBB5",
+    "line_strong": "#687D76",
+    "success": "#236247",
+    "warning": "#86531D",
+    "danger": "#A43738",
+    "info": "#285C8C",
+    "white": "#FFFFFF"
+  },
+  "themes": {
+    "light": {
+      "background": "#F5F2EA",
+      "surface": "#FFFFFF",
+      "foreground": "#162D2B",
+      "secondary_text": "#495B56",
+      "primary": "#08685F",
+      "on_primary": "#F5F2EA",
+      "border": "#B0BBB5",
+      "border_strong": "#687D76",
+      "success": "#236247",
+      "warning": "#86531D",
+      "danger": "#A43738",
+      "info": "#285C8C"
+    },
+    "dark": {
+      "background": "#162D2B",
+      "surface": "#1E3B36",
+      "foreground": "#F5F2EA",
+      "secondary_text": "#BDD0C8",
+      "primary": "#B5DED1",
+      "on_primary": "#162D2B",
+      "border": "#4C7066",
+      "border_strong": "#71998C",
+      "success": "#9CD9B9",
+      "warning": "#F0C685",
+      "danger": "#F0B4B3",
+      "info": "#B5D3EB"
+    }
+  },
+  "typography": {
+    "body": "Manrope",
+    "display": "Manrope",
+    "mono": "IBM Plex Mono",
+    "weights": [
+      400,
+      600,
+      700
+    ],
+    "body_size_px": 16,
+    "body_line_height": 1.6
+  },
+  "spacing_px": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    72
+  ],
+  "radii_px": [
+    4,
+    12
+  ],
+  "motion": {
+    "feedback_ms": 150,
+    "state_ms": 200,
+    "respect_reduced_motion": true
+  },
+  "logo": {
+    "grid": 64,
+    "clearspace_units": 12,
+    "mark_min_px": 16,
+    "lockup_min_px": 112,
+    "minimums_are_digital": true,
+    "wordmark_is_outlined": true
+  }
+}

@@ -1,0 +1,1 @@
+import{P as e,I as n,R as r,p as t}from"./PreviewCard-CO24-ohZ.js";const a={title:"Policy/Inspector",parameters:{layout:"padded"}},o={render:()=>e(n())},d={render:()=>e(r(t[2]))},i={render:()=>e(r(t[3]))},c=["ObservedPath","StaleGrant","UnknownOrigin"];export{o as ObservedPath,d as StaleGrant,i as UnknownOrigin,c as __namedExportsOrder,a as default};

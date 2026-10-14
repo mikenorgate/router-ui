@@ -1,0 +1,75 @@
+LANRITH / WORKING COPY v0.1
+
+NAME
+Lanrith
+Pronunciation: LAN-rith
+Use Lanrith in prose; lanrith in identifiers.
+Use Lanrith docs, Lanrith console, and Lanrith releases as plain labels.
+
+TAGLINE
+Your homelab’s first hop.
+
+PRIMARY PROMISE
+A homelab router with the hard parts already figured out.
+
+CATEGORY
+Open-source router and edge OS.
+
+SHORT PROJECT DESCRIPTION
+An open-source homelab router and edge OS with the hard networking parts
+already figured out.
+
+PROJECT INTRODUCTION
+Lanrith brings internet access, device discovery, and IPv4/IPv6 together
+in a ready-to-run homelab router. Shape it around your network with
+configuration in code, understand what is running, and keep a known-good
+release to return to.
+
+HOMEPAGE INTRODUCTION
+Start with a network that works. Lanrith brings the everyday pieces
+together, so your homelab starts with a dependable foundation.
+
+MESSAGE ORDER
+1. Works from the start.
+   Sensible defaults bring routing, DNS, discovery, and IPv4/IPv6 together
+   in the supported homelab setup.
+
+2. Fits your homelab.
+   Describe the networks and services you want to connect. Keep deliberate
+   changes in configuration you own.
+
+3. Stays dependable.
+   Understand what is running. Keep changes reviewable and a known-good
+   release available to return to.
+
+VOICE
+Calm, capable, welcoming. Explain the outcome first, then the useful
+technical detail. Sound like a maintainer who has done the integration
+work and can explain it. Keep instructions concrete and state-specific.
+
+OUTCOME AND EVIDENCE
+"Get your network connected."
+Then explain routing, NAT, DNS, and IPv4/IPv6 in the supported profile.
+
+"Devices find their services."
+Then explain discovery and the configured network boundaries.
+
+"The internet check failed. Local DNS is responding."
+State what is known, and point to a useful next check.
+
+"Observation expired."
+Say when the current state is unknown instead of showing stale success.
+
+"Tested on these configurations."
+Link to concrete support and test evidence when available.
+
+PRODUCT EMPHASIS
+The project owns the networking integration work. Immutable releases,
+configuration in code, signed updates, and recovery explain how that
+experience stays dependable. Lead with the working homelab, then show
+the architecture that supports it.
+
+PUBLICATION NOTE
+This is intended launch messaging, not a release-readiness certification.
+Match public copy to demonstrated support. “It just works” means that
+the project has figured out the integration for its supported setups.

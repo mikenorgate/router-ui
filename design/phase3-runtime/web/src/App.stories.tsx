@@ -1,0 +1,18 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { App } from './App';
+const meta = { title: 'Application/Router Console', component: App } satisfies Meta<typeof App>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Overview: Story = { parameters: { route: '/overview' } };
+export const Devices: Story = { parameters: { route: '/devices' } };
+export const DeviceSummary: Story = { parameters: { route: '/devices/device-a' } };
+export const DeviceTraffic: Story = { parameters: { route: '/devices/device-a?tab=traffic' } };
+export const DeviceFirewall: Story = { parameters: { route: '/devices/device-a?tab=firewall' } };
+export const DeviceAddresses: Story = { parameters: { route: '/devices/device-a?tab=addresses' } };
+export const DeviceHistory: Story = { parameters: { route: '/devices/device-a?tab=history' } };
+export const Traffic: Story = { parameters: { route: '/traffic' } };
+export const Network: Story = { parameters: { route: '/network' } };
+export const Firewall: Story = { parameters: { route: '/firewall' } };
+export const Events: Story = { parameters: { route: '/events' } };
+export const System: Story = { parameters: { route: '/system' } };
+export const GlobalSearch: Story = { parameters: { route: '/search?q=rule-042' } };

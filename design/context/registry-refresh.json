@@ -1,0 +1,725 @@
+{
+  "status": "pass",
+  "id": "user:router-console-design-system",
+  "projectId": "a074a105-4b59-43a6-9a70-304651c57a48",
+  "lifecyclePreserved": true,
+  "nativeMechanism": [
+    "updateUserDesignSystem",
+    "writeProjectFile"
+  ],
+  "filesVerified": 178,
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "50aeb926b5953a0b9e6b231ca59122c3f7691b480273f803e7fb393907b85d91"
+    },
+    {
+      "path": "README.md",
+      "sha256": "8865e5f6ff1d1dde4c5e3f8ac16d2c873de433a85f3ca7e6900a1c4e3e8b7179"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "06773379d553eaf851c11260c0c0ba948e9eea0daa2bdcabf23ced2b0e3be987"
+    },
+    {
+      "path": "assets/lanrith-favicon.svg",
+      "sha256": "2d4519c4414cc4120f7964bf9bff461d399fa283012b0659321cb7039ae7c674"
+    },
+    {
+      "path": "assets/lanrith-mark-reverse.svg",
+      "sha256": "347a28920a2bde7ed2661c99b5e1e6e9633ee209c45f608e0fbda22588259499"
+    },
+    {
+      "path": "assets/lanrith-mark.svg",
+      "sha256": "474950af76783652f8e7def0c86e316b1cefacf36a31bfcdf704327782f32e37"
+    },
+    {
+      "path": "assets/lanrith-wordmark-reverse.svg",
+      "sha256": "ffe1f9f759a17cf98aba1fe90c3dcfc9d114f21ae351cc81227c19f438d1578c"
+    },
+    {
+      "path": "assets/lanrith-wordmark.svg",
+      "sha256": "887f897e344cd02659d4a36e2fec12fb753cfd0781920f1b3a996832ac96ddcb"
+    },
+    {
+      "path": "assets/route-junction.svg",
+      "sha256": "801718dd43fad3ec287bbb16a2945a4ed6ab0094b768cef11395679007a4066f"
+    },
+    {
+      "path": "build/reference.css",
+      "sha256": "fb521a490fe6e23ada902a4eca345dd60ca2ea7fa14fccbced894b33a36cd881"
+    },
+    {
+      "path": "colors_and_type.css",
+      "sha256": "3c3fb7cb7a074411cf98a76be8b30dc2ab6f1aa57f954caff842e848220693ec"
+    },
+    {
+      "path": "components.html",
+      "sha256": "e06d105b70457896df8ecc8a9a07c53bdfefda21891e21572613ca17d3700abb"
+    },
+    {
+      "path": "components.manifest.json",
+      "sha256": "86f75935c24e1d77ea36267595ec93896581fb98290bc9058c793900b3d96f0b"
+    },
+    {
+      "path": "context/application-agents.md",
+      "sha256": "453a1e67a420b6586eee4ef1ed894013bd6501fb84f860e0434aa9793c2cce6e"
+    },
+    {
+      "path": "context/application-readme.md",
+      "sha256": "0cf3b7d20b9bd9bcfa967c18b54b921c9ec196ed6d4b0cec709b37400b6c1e16"
+    },
+    {
+      "path": "context/browser-validation.json",
+      "sha256": "e403bc785cbea31f26f2baaede26dd252f31ec43c788e0d33d6256af9a04c6d7"
+    },
+    {
+      "path": "context/contrast-report.json",
+      "sha256": "a25fd7e410f628a49edb826f4974bc40ef094f969f71d1fa09c150bce72a1685"
+    },
+    {
+      "path": "context/dark-theme-brand.png",
+      "sha256": "7bc68e004c5a1047d48c697e8732b21e50c2b6a3ea06554a1c822a1a733bff9c"
+    },
+    {
+      "path": "context/dark-theme-overview-mobile.png",
+      "sha256": "5b5266628617ac2b1dd2aff9c1b0a1568ca1907b2fcbbfd6b447525d554e179c"
+    },
+    {
+      "path": "context/dark-theme-overview.png",
+      "sha256": "9a5aa99b80d1402b8dc9efbee676e28041ffcab3ba2d758b371acd0c70472544"
+    },
+    {
+      "path": "context/evidence-checksums.json",
+      "sha256": "86b5976330236065d963adcccf6379f3ff9b9e1de89e493ab33e50c1aca0962d"
+    },
+    {
+      "path": "context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2",
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/favicon.svg",
+      "sha256": "2d4519c4414cc4120f7964bf9bff461d399fa283012b0659321cb7039ae7c674"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-avatar.svg",
+      "sha256": "d20b78cf145fd1d804977fe0118c4942950c908c5c510a6c1bd5ee1e3d74b213"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-ink.svg",
+      "sha256": "e41a538a6d2df397c71ae8e9578df35572c6fa7bfe5c6b71460c0f82e5b4155f"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-mark-primary.svg",
+      "sha256": "474950af76783652f8e7def0c86e316b1cefacf36a31bfcdf704327782f32e37"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-mark-reverse.svg",
+      "sha256": "347a28920a2bde7ed2661c99b5e1e6e9633ee209c45f608e0fbda22588259499"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-primary.svg",
+      "sha256": "887f897e344cd02659d4a36e2fec12fb753cfd0781920f1b3a996832ac96ddcb"
+    },
+    {
+      "path": "context/lanrith-brand/assets/logo/lanrith-reverse.svg",
+      "sha256": "ffe1f9f759a17cf98aba1fe90c3dcfc9d114f21ae351cc81227c19f438d1578c"
+    },
+    {
+      "path": "context/lanrith-brand/copy/brand-copy.txt",
+      "sha256": "f646c56b9ed265bbe855d93a78f747c31bca750e26b61b05c912c41b0a16beab"
+    },
+    {
+      "path": "context/lanrith-brand/exports/lanrith-brand-overview.png",
+      "sha256": "fb18845c585308392971fdbf65eef9c137438da9686180c3f000b9cbf1eb0390"
+    },
+    {
+      "path": "context/lanrith-brand/licenses/manrope-OFL.txt",
+      "sha256": "fef490d396c4375c53ce02428eb4ac91d304cb2855e53a32560b028e8046e75c"
+    },
+    {
+      "path": "context/lanrith-brand/tokens/contrast-report.json",
+      "sha256": "aa8508ad9b79f1a7d098c33aba655a961609b9bf0e78ea9b53db689d20541edf"
+    },
+    {
+      "path": "context/lanrith-brand/tokens/lanrith.css",
+      "sha256": "63b9e4cb651ccea51e09b6a66b9675dff4ca91f38a9ff7174d156292bcbec593"
+    },
+    {
+      "path": "context/lanrith-brand/tokens/lanrith.json",
+      "sha256": "0514f0b6e7abefecab25990cc7e6898c69b5ddcb52260c6dce537fafc46b1b05"
+    },
+    {
+      "path": "context/light-theme-overview.png",
+      "sha256": "e1fea412061a9087b6daa44b58de96ecf79e0001fc2d900376550f355dbe85fe"
+    },
+    {
+      "path": "context/package-audit.json",
+      "sha256": "1fe3fef0380f873fb4e77b34da33715a4530f3eb60b9e294bc92357e4000684e"
+    },
+    {
+      "path": "context/provenance.md",
+      "sha256": "fe43d5006c44b6a6a9902da6186afebc5e994bf3d2250fb77eef40fc4e907f6b"
+    },
+    {
+      "path": "context/source-context.md",
+      "sha256": "0aebbcc096813ca129e794c688389ed1339e4908d553807fa2ec6e6bf41d9098"
+    },
+    {
+      "path": "context/validation.json",
+      "sha256": "ec49f024efedc6efa40364e87c973e4048ac390b5d2e9e02d7c6fa98a1ed6885"
+    },
+    {
+      "path": "context/visual-review.png",
+      "sha256": "a2ee7a917f1d858e6bd05156247191b23b763e77c0754c487fe17dff4cd6d628"
+    },
+    {
+      "path": "context/visual-validation.json",
+      "sha256": "34dc78de5f9c19e8f16c2836cf9822cd7324392e224f87be2726db09b2c46cb9"
+    },
+    {
+      "path": "design-contract.md",
+      "sha256": "3109ef7030cb511d981f7972a62b645f3d835966de95c3d06cacdedf03c90b20"
+    },
+    {
+      "path": "design-tokens.json",
+      "sha256": "3e22f277f9bf70ad7cad5572f75ede1044914acfb8b876bc3cadb2ecc102f204"
+    },
+    {
+      "path": "docs/DESIGN_BRIEF.md",
+      "sha256": "984c99365c8dbc9ce69ba655a079877309223c43ee5cb23aaa2e9b07ff37e113"
+    },
+    {
+      "path": "docs/PRODUCT_PLAN.md",
+      "sha256": "51ee6037dac41f5b79b9dd0eb500e347b8050ed07a4e279c2f7135e7535544a3"
+    },
+    {
+      "path": "fonts/OFL-manrope.txt",
+      "sha256": "fef490d396c4375c53ce02428eb4ac91d304cb2855e53a32560b028e8046e75c"
+    },
+    {
+      "path": "fonts/OFL-mono.txt",
+      "sha256": "23b0a9d0c6d3f140a0b77e483c5cfa6bba574325ef5cb189ed9f2fec4884533f"
+    },
+    {
+      "path": "fonts/OFL-plex-sans.txt",
+      "sha256": "d0283623ef57e722fd0eb688a8041589670c608ab780cd3612d06ba6f153d3fd"
+    },
+    {
+      "path": "fonts/OFL-sans.txt",
+      "sha256": "d0283623ef57e722fd0eb688a8041589670c608ab780cd3612d06ba6f153d3fd"
+    },
+    {
+      "path": "fonts/README.md",
+      "sha256": "822b608985d91e78b5cd983d71aa9546a3e53a98a4aae1682fa92d67fe6f5326"
+    },
+    {
+      "path": "fonts/ibm-plex-mono-latin-400-normal.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "path": "fonts/ibm-plex-mono-latin-500-normal.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
+    },
+    {
+      "path": "fonts/ibm-plex-sans-latin-400-normal.woff2",
+      "sha256": "3b646991d30055a93a4ecc499713d4347953a74a947ecab435ab72070cbdab0e"
+    },
+    {
+      "path": "fonts/ibm-plex-sans-latin-500-normal.woff2",
+      "sha256": "0717336fb31fcdcde4b8deb3675bb4a0f7f6d484864afcd6751ac29975962203"
+    },
+    {
+      "path": "fonts/ibm-plex-sans-latin-600-normal.woff2",
+      "sha256": "8960851d691c054ed38e259bdcf1a6190d157b4203ed5bb32c632a863fb8ec2f"
+    },
+    {
+      "path": "fonts/manrope-variable.woff2",
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "path": "implementation-handoff.md",
+      "sha256": "b9837feca9dc38cad80cfa65c26f4f5b46666cd0add1977d216cc6a6ed214333"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "812947d388e95ca5e2c2b06f55347e1027bf34c2bfcf7212f976a77361f89488"
+    },
+    {
+      "path": "package.json",
+      "sha256": "68b99fa72a1db197be67961fdbc50d10cdb36d1c4671991c7d2378200715f1d7"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "64d6b84cb539e93bce95a54ee1dc9c148c55a53e2463d69c27c661b5469cac28"
+    },
+    {
+      "path": "preview/brand-assets.html",
+      "sha256": "d35c9c42092beaaa8852b5b4613ca99208ddd66e9ff1c3138b2c23722add305c"
+    },
+    {
+      "path": "preview/colors-foundations.html",
+      "sha256": "fb752cb3c1d103847148aa03b7e19bba8ca3bd3f5c311bcfde282dfab829089b"
+    },
+    {
+      "path": "preview/components-charts.html",
+      "sha256": "a9e2d94a69c5eddcc2763b3f5c4f85bb84fba53a7b2b2e6f1f0bf3105eb538e8"
+    },
+    {
+      "path": "preview/components-controls.html",
+      "sha256": "6f9b89ea8199d3c7ac22df887284ab76006a3127102c9797e5ecb4bb6ea5ce65"
+    },
+    {
+      "path": "preview/components-evidence.html",
+      "sha256": "026739c11607a51d119e97ccdcd1f03403082265008fde6e07ce1310cef48455"
+    },
+    {
+      "path": "preview/spacing-density.html",
+      "sha256": "fb566655bc9ff60af636e159aa3385841c6883ffef04c3351b6c2c98c3e5ef3a"
+    },
+    {
+      "path": "preview/typography-specimens.html",
+      "sha256": "abd2f0cb700c154f589fe25272f55c0bcbecd071dde8b080f7c07d5da3ab2bb2"
+    },
+    {
+      "path": "router-console-system.html",
+      "sha256": "b3a801527bf3719deee800d3a21bdf3c31416a3cf7eb42d70f8aa730d8db52f3"
+    },
+    {
+      "path": "scripts/build-storybook.ts",
+      "sha256": "729e0c51edf9f4b8108e0e70bdd57ece9918a6390cc16d432c78e3c15853557f"
+    },
+    {
+      "path": "scripts/build.ts",
+      "sha256": "2ebd6e98b946192fae341ccd224c194e68eac6f167f872481be2761b7a5b023f"
+    },
+    {
+      "path": "scripts/export-tokens.ts",
+      "sha256": "b8a2a18fa62749688619803e7da5834f735d25369bac74b47bf3dce353e2fd3c"
+    },
+    {
+      "path": "scripts/hex-to-oklch.js",
+      "sha256": "7b884045a1b25c4c745297e0545b5aa1e6afdf69bbe69f78726ab21bedbec80b"
+    },
+    {
+      "path": "scripts/hex-to-oklch.mjs",
+      "sha256": "91059b31f82c7f5baba026f9f60eba9cef3d9808fb9902bd8e74503c8f33d3ea"
+    },
+    {
+      "path": "scripts/refresh-registry.ts",
+      "sha256": "6b46bcf81e18976c6ab1e349c0c089bbbd3e6972c78a0b129f724c7be991b883"
+    },
+    {
+      "path": "scripts/validate.ts",
+      "sha256": "b1304c471749cfd7ec49d44f7a7160c8a1b132d7ae693225f496455c904d402b"
+    },
+    {
+      "path": "storybook-config/main.ts",
+      "sha256": "225a0b7933111019a50a02b859682122aaeb554f749bbccd048ab51613c4c9d4"
+    },
+    {
+      "path": "storybook-config/preview.ts",
+      "sha256": "992c51d149bb1c99019e4e3388271fd5c81880465ae97f5a9bf8cfc4b232ffc3"
+    },
+    {
+      "path": "storybook/assets/App.stories-pFa1estq.js",
+      "sha256": "f17c7fb503fa116808a4558aed8f6060392e0607a823fe7e64674df79d86de34"
+    },
+    {
+      "path": "storybook/assets/AuthPanel.stories-D9XfBHr7.js",
+      "sha256": "a7c8a1e757155a89c36a12b8fc8f76bb3f2b65d83de54f29753119105fbea97b"
+    },
+    {
+      "path": "storybook/assets/Badge.stories-Dhcbz8AS.js",
+      "sha256": "5c70f54bc5bc484647a03d9ae39aad32318691fcaa1bee82156924ad2deade2a"
+    },
+    {
+      "path": "storybook/assets/Brand.stories-WYKFlR9l.js",
+      "sha256": "9e46ef0a582ba64990bd52306eda987b404ad278c7b9f5c6e8b08cba504204ec"
+    },
+    {
+      "path": "storybook/assets/Chart.stories-CRXW3nGn.js",
+      "sha256": "d1490af6484e44fd8d17c863fd591b9f71c1e0e43c814a80cd51e7a363a768ba"
+    },
+    {
+      "path": "storybook/assets/Inspector.stories-BJ8dGOpG.js",
+      "sha256": "ec0a9c4d61c0b724772b2559c5cb2e471cd8c9e280bf61b8a61fa9f9276c9103"
+    },
+    {
+      "path": "storybook/assets/Metric.stories-DaYTCRD-.js",
+      "sha256": "08425be717d61a60961313e8baeb0a7bfbc284becc905b4c21dab0543d674d5d"
+    },
+    {
+      "path": "storybook/assets/PolicyTable.stories-CwMsppzx.js",
+      "sha256": "9026716ec7e7cde7fd7e08d9ef024a169b7f21af3386930dec53b48d83c8f13c"
+    },
+    {
+      "path": "storybook/assets/PreviewCard-CO24-ohZ.js",
+      "sha256": "3e44502eb6bfb73290efcff5627fe8de14510f508f8ed6b9b2788234dbad3c59"
+    },
+    {
+      "path": "storybook/assets/PreviewCard.stories-DiGsyAoX.js",
+      "sha256": "c133e32debca379bde485d500e902ff24da61fcb1ee7d5b049be742f765655bc"
+    },
+    {
+      "path": "storybook/assets/Sidebar.stories-ChPCG32S.js",
+      "sha256": "57bfcf230aff99c98a6aca56f5d4eb5db0264aa60e4ff9e2b6590d0a45059760"
+    },
+    {
+      "path": "storybook/assets/ibm-plex-mono-latin-400-normal-DMJ8VG8y.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "path": "storybook/assets/ibm-plex-mono-latin-500-normal-DSY6xOcd.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
+    },
+    {
+      "path": "storybook/assets/iframe-BzELQazN.js",
+      "sha256": "2d576fe3a3fddc1f1cbdc21a11fe141fae6fc7b736cc3d0e143f7872f15d54bb"
+    },
+    {
+      "path": "storybook/assets/iframe-Dpl7FcoO.css",
+      "sha256": "426dcf5bde9752f8eb4181954f4f802da34723af5420378904b43a1ae3486866"
+    },
+    {
+      "path": "storybook/assets/lanrith-favicon.svg",
+      "sha256": "2d4519c4414cc4120f7964bf9bff461d399fa283012b0659321cb7039ae7c674"
+    },
+    {
+      "path": "storybook/assets/lanrith-mark-reverse.svg",
+      "sha256": "347a28920a2bde7ed2661c99b5e1e6e9633ee209c45f608e0fbda22588259499"
+    },
+    {
+      "path": "storybook/assets/lanrith-mark.svg",
+      "sha256": "474950af76783652f8e7def0c86e316b1cefacf36a31bfcdf704327782f32e37"
+    },
+    {
+      "path": "storybook/assets/lanrith-wordmark-reverse.svg",
+      "sha256": "ffe1f9f759a17cf98aba1fe90c3dcfc9d114f21ae351cc81227c19f438d1578c"
+    },
+    {
+      "path": "storybook/assets/lanrith-wordmark.svg",
+      "sha256": "887f897e344cd02659d4a36e2fec12fb753cfd0781920f1b3a996832ac96ddcb"
+    },
+    {
+      "path": "storybook/assets/manrope-variable-DHIcAJRg.woff2",
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "path": "storybook/assets/preload-helper-PPVm8Dsz.js",
+      "sha256": "0bcb72f8ec0d95f592f3a84b3554b9ef5a5325ff5416a9114d6913e03c1c9eb4"
+    },
+    {
+      "path": "storybook/assets/route-junction.svg",
+      "sha256": "801718dd43fad3ec287bbb16a2945a4ed6ab0094b768cef11395679007a4066f"
+    },
+    {
+      "path": "storybook/favicon-wrapper.svg",
+      "sha256": "5311f921255509431fc978cd04fd497ae54c46cfd97b3578dc53d7f652667a71"
+    },
+    {
+      "path": "storybook/favicon.svg",
+      "sha256": "3a13ac7344753df5a7cd5b41a67e33966c1ae723f1e5e5128a6ed1bca1adc85a"
+    },
+    {
+      "path": "storybook/fonts/OFL-manrope.txt",
+      "sha256": "fef490d396c4375c53ce02428eb4ac91d304cb2855e53a32560b028e8046e75c"
+    },
+    {
+      "path": "storybook/fonts/OFL-mono.txt",
+      "sha256": "23b0a9d0c6d3f140a0b77e483c5cfa6bba574325ef5cb189ed9f2fec4884533f"
+    },
+    {
+      "path": "storybook/fonts/OFL-plex-sans.txt",
+      "sha256": "d0283623ef57e722fd0eb688a8041589670c608ab780cd3612d06ba6f153d3fd"
+    },
+    {
+      "path": "storybook/fonts/OFL-sans.txt",
+      "sha256": "d0283623ef57e722fd0eb688a8041589670c608ab780cd3612d06ba6f153d3fd"
+    },
+    {
+      "path": "storybook/fonts/README.md",
+      "sha256": "822b608985d91e78b5cd983d71aa9546a3e53a98a4aae1682fa92d67fe6f5326"
+    },
+    {
+      "path": "storybook/fonts/ibm-plex-mono-latin-400-normal.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "path": "storybook/fonts/ibm-plex-mono-latin-500-normal.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
+    },
+    {
+      "path": "storybook/fonts/ibm-plex-sans-latin-400-normal.woff2",
+      "sha256": "3b646991d30055a93a4ecc499713d4347953a74a947ecab435ab72070cbdab0e"
+    },
+    {
+      "path": "storybook/fonts/ibm-plex-sans-latin-500-normal.woff2",
+      "sha256": "0717336fb31fcdcde4b8deb3675bb4a0f7f6d484864afcd6751ac29975962203"
+    },
+    {
+      "path": "storybook/fonts/ibm-plex-sans-latin-600-normal.woff2",
+      "sha256": "8960851d691c054ed38e259bdcf1a6190d157b4203ed5bb32c632a863fb8ec2f"
+    },
+    {
+      "path": "storybook/fonts/manrope-variable.woff2",
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "path": "storybook/iframe.html",
+      "sha256": "dc8d3adb90320aaee3741e5d96207ba8d217fba6df5b201c278d79b890b2a08b"
+    },
+    {
+      "path": "storybook/index.html",
+      "sha256": "0c2d06556808e10d8db2bc84000a5610f08115226be17b757c28cf8ea7f3b915"
+    },
+    {
+      "path": "storybook/index.json",
+      "sha256": "9b2e9819005d9bcf6b6da1ca6f93df0d0ac14120993f05142059d0dd5335e37d"
+    },
+    {
+      "path": "storybook/nunito-sans-bold-italic.woff2",
+      "sha256": "36aadf15d24dfa97c0446c9ca713b9d004f0f5674d1043b2b51c75105962cab9"
+    },
+    {
+      "path": "storybook/nunito-sans-bold.woff2",
+      "sha256": "6bccbfaa70688e0348109160e90c771587866c21717bfd3adec38ea606362cf8"
+    },
+    {
+      "path": "storybook/nunito-sans-italic.woff2",
+      "sha256": "992f331636deda09193ac0453c274ac3fb7e66f70af98e1cbff119a7384f09ae"
+    },
+    {
+      "path": "storybook/nunito-sans-regular.woff2",
+      "sha256": "49fe05ec477bb0f2f815a7494c933070606b5c68e84f96e11374e07c59a64d61"
+    },
+    {
+      "path": "storybook/project.json",
+      "sha256": "8c2c9a8286c6ceaa90c736f96ab2b0831904136ab11489c14c33ee35c26cd7db"
+    },
+    {
+      "path": "storybook/sb-addons/common-manager-bundle.js",
+      "sha256": "f8f211ed32f60b2563ea4a6dce2840dd143322041b0186bcc71ddd6a5b3f5f3a"
+    },
+    {
+      "path": "storybook/sb-common-assets/favicon-wrapper.svg",
+      "sha256": "5311f921255509431fc978cd04fd497ae54c46cfd97b3578dc53d7f652667a71"
+    },
+    {
+      "path": "storybook/sb-common-assets/favicon.svg",
+      "sha256": "3a13ac7344753df5a7cd5b41a67e33966c1ae723f1e5e5128a6ed1bca1adc85a"
+    },
+    {
+      "path": "storybook/sb-common-assets/nunito-sans-bold-italic.woff2",
+      "sha256": "36aadf15d24dfa97c0446c9ca713b9d004f0f5674d1043b2b51c75105962cab9"
+    },
+    {
+      "path": "storybook/sb-common-assets/nunito-sans-bold.woff2",
+      "sha256": "6bccbfaa70688e0348109160e90c771587866c21717bfd3adec38ea606362cf8"
+    },
+    {
+      "path": "storybook/sb-common-assets/nunito-sans-italic.woff2",
+      "sha256": "992f331636deda09193ac0453c274ac3fb7e66f70af98e1cbff119a7384f09ae"
+    },
+    {
+      "path": "storybook/sb-common-assets/nunito-sans-regular.woff2",
+      "sha256": "49fe05ec477bb0f2f815a7494c933070606b5c68e84f96e11374e07c59a64d61"
+    },
+    {
+      "path": "storybook/sb-manager/globals-runtime.js",
+      "sha256": "76c7c24fc709a26297b586186c0cb270c9fa707c978e6b6b308b2f13df61cf09"
+    },
+    {
+      "path": "storybook/sb-manager/globals.js",
+      "sha256": "1db2f93c2487a0fe36b08c00b42fceb62378211016751d61eccbd19ead014d8c"
+    },
+    {
+      "path": "storybook/sb-manager/manager-stores.js",
+      "sha256": "7c1a133375036edc00df3e4e825659443a6de7af38ceebf5a38a5cc5ffdaa0f4"
+    },
+    {
+      "path": "storybook/sb-manager/runtime.js",
+      "sha256": "9ba6a48a5f9790a02021bc486889effe8e387e147bcca3cb4f92fba4d18d383c"
+    },
+    {
+      "path": "storybook/vite-inject-mocker-entry.js",
+      "sha256": "07456692f62e0df3ac263f34fdbba11a0ae3ad607af4335c6816ee29c4fb17ff"
+    },
+    {
+      "path": "tokens.css",
+      "sha256": "0d5cec61cb052e730b5f49d7e86c3111f3c99ea4e9458d8e782de89b597ccbb4"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "77b45cabf13f9849caff8a84e71a429356979532274c874e5bb141343d49d120"
+    },
+    {
+      "path": "ui_kits/app/README.md",
+      "sha256": "4ab241e3302f903550e5bb2df8303a64c541a949983742de377ac3bc860e52f0"
+    },
+    {
+      "path": "ui_kits/app/access-states.html",
+      "sha256": "c24bf05c1b121301cfa0ff8fa511cf8edddf8d50beba28ed33346b6c28807b76"
+    },
+    {
+      "path": "ui_kits/app/components/App.js",
+      "sha256": "7b88e47f2c84d2b4d71660dd4691d503f0f5a81db2eaa6342483c569738e422b"
+    },
+    {
+      "path": "ui_kits/app/components/App.jsx",
+      "sha256": "62addd554c86c2c02a53fa7ba1683ef066950efdf503e6a0fcfd44020a095ad4"
+    },
+    {
+      "path": "ui_kits/app/components/App.stories.ts",
+      "sha256": "dcc15a5edea4c05d80da6db52adf262c52cbb53fa442d4f1d76c5b473c1a8674"
+    },
+    {
+      "path": "ui_kits/app/components/App.ts",
+      "sha256": "f6f60365780b8a1f9a4b493835b5168da9ca5244c49e81bb3adb24f8df2f36e4"
+    },
+    {
+      "path": "ui_kits/app/components/AssistantsList.jsx",
+      "sha256": "f9a0040e991dbf4255bf44e30fd3e1362bc07a92acb86b302b6c2c0a08900642"
+    },
+    {
+      "path": "ui_kits/app/components/AuthPanel.js",
+      "sha256": "0bad3beea67271c881932f0990b6747921173807acb617fe2357a0c12ade5e4b"
+    },
+    {
+      "path": "ui_kits/app/components/AuthPanel.stories.ts",
+      "sha256": "d16a50e78e551a1b651062d54af1d6c2d815b899cb997674c67fce4f5ee76db1"
+    },
+    {
+      "path": "ui_kits/app/components/AuthPanel.ts",
+      "sha256": "35c9dced0566334576bf6d9b64b643cfdc23e070e1b00be0325a6f05e7566f70"
+    },
+    {
+      "path": "ui_kits/app/components/Badge.js",
+      "sha256": "eaf8ce7c0a7717c888ffab2f9f1052217c052e67698da1417d5b5b7006f7c35f"
+    },
+    {
+      "path": "ui_kits/app/components/Badge.stories.ts",
+      "sha256": "2233ddc5126b29569d58e6807ef8a52b070203b9176c573d8da23f73b057bddc"
+    },
+    {
+      "path": "ui_kits/app/components/Badge.ts",
+      "sha256": "63303900a79c20b7635145c0e5bde50321c2f09346a5a3a2c2411b4d25f66b1c"
+    },
+    {
+      "path": "ui_kits/app/components/Brand.js",
+      "sha256": "8b42c38b6481f9aaf91640619c255dbe1edc076fccab31a9e022e7f9bf5784e7"
+    },
+    {
+      "path": "ui_kits/app/components/Brand.stories.ts",
+      "sha256": "e1a118950a626417592adbbcda3e167ea1c0e3044f7c74a30cc898246b5bcb14"
+    },
+    {
+      "path": "ui_kits/app/components/Brand.ts",
+      "sha256": "847ca81bcda403bf0c8edcde5c8a3087af888b4abd7df99d671b341671f6ceb9"
+    },
+    {
+      "path": "ui_kits/app/components/Chart.js",
+      "sha256": "7690cb7e4bb791cda27fabebf84a561283ecdd94e4158872aacd3e5e5c2a811e"
+    },
+    {
+      "path": "ui_kits/app/components/Chart.stories.ts",
+      "sha256": "51fd79c8474c774fe7bdc2935d514f8425f44bc9e773d46912378ac03c205c64"
+    },
+    {
+      "path": "ui_kits/app/components/Chart.ts",
+      "sha256": "11e6bed5274ec7a4595c6f9b0196354d5035325c317229661182fec4f20e0909"
+    },
+    {
+      "path": "ui_kits/app/components/ChatArea.jsx",
+      "sha256": "6e2c72fb03bff576794923fddf7c7f98be1478fe44c3a1966ed39e92a3f461e2"
+    },
+    {
+      "path": "ui_kits/app/components/InputBar.jsx",
+      "sha256": "e6c8bece422edda1b20ede8465ee1dc4fa68680eb113319d29bfb2ce4f7ca1d0"
+    },
+    {
+      "path": "ui_kits/app/components/Inspector.js",
+      "sha256": "8ba54b7bbeef926be3482da09a73cc078dd3cfc1c3808dce8f1a6e7f089927ef"
+    },
+    {
+      "path": "ui_kits/app/components/Inspector.stories.ts",
+      "sha256": "027390ae6b99987639f007984ea4632620fc3a38112455ebee3afd444490525c"
+    },
+    {
+      "path": "ui_kits/app/components/Inspector.ts",
+      "sha256": "e23c81c69ef3334838ce18886a726ea43c040a55d1825169dca8d75dce28bb67"
+    },
+    {
+      "path": "ui_kits/app/components/MessageBubble.jsx",
+      "sha256": "683292105198a19eaf0c9d0a355ee585a003e6168808d87e538f50035b244545"
+    },
+    {
+      "path": "ui_kits/app/components/Metric.js",
+      "sha256": "2dcc24d7981e33098f3b17263df651c8dcae82f2e874013b8028771bc75a79d6"
+    },
+    {
+      "path": "ui_kits/app/components/Metric.stories.ts",
+      "sha256": "b9ceccd3392852e4bbbd661b4f0fdbbe39e6871aebf7d0552940816c70577e15"
+    },
+    {
+      "path": "ui_kits/app/components/Metric.ts",
+      "sha256": "4ed5839abd2ea518adad7befcbaee3c46426a41191f7c7d1517e8e094d4f6830"
+    },
+    {
+      "path": "ui_kits/app/components/PolicyTable.js",
+      "sha256": "7f8fef4787bebeb5a2055adb7d29ef2b7bd39e61d9de72c5af0474b43a5d67e7"
+    },
+    {
+      "path": "ui_kits/app/components/PolicyTable.stories.ts",
+      "sha256": "870d1c69224d46ee3f52b03a71147d8aad1a810561bc06d0afe21bb2b713fe24"
+    },
+    {
+      "path": "ui_kits/app/components/PolicyTable.ts",
+      "sha256": "3b1c73575de0f9fbb35d068e2152a5d9dc815c002cb588b300da9e63fc672e28"
+    },
+    {
+      "path": "ui_kits/app/components/PreviewCard.js",
+      "sha256": "a222700336b9cd02d4742fe17291fe517fd2f6f9832ddb6b349e001491317413"
+    },
+    {
+      "path": "ui_kits/app/components/PreviewCard.stories.ts",
+      "sha256": "70c6ebc15911e345580f3bdc6b889b0295b1cecad8c469fbb3df4d1ae3365120"
+    },
+    {
+      "path": "ui_kits/app/components/PreviewCard.ts",
+      "sha256": "dd198e4fb1dcb2f2f8521ebafbcfc58e380ccf916974704288d17c074ebe207e"
+    },
+    {
+      "path": "ui_kits/app/components/Sidebar.js",
+      "sha256": "bd3b2d9949419f933d68b642f69a4f44cdec6a232664e0bc6192e5e00bf3ace6"
+    },
+    {
+      "path": "ui_kits/app/components/Sidebar.jsx",
+      "sha256": "fa0ecb367a38dd8cf7bd23a3c8da4d2b35fa0208ffa44cd2e57380a13ad97518"
+    },
+    {
+      "path": "ui_kits/app/components/Sidebar.stories.ts",
+      "sha256": "f9b4e135a360e401bf6042556bf9ff57a394594f0bd1a5361dadc1cbeb30d251"
+    },
+    {
+      "path": "ui_kits/app/components/Sidebar.ts",
+      "sha256": "348dffd9f4d26d806e20acf30dd477b15cef4a6247028dad0cf994549bac9a8d"
+    },
+    {
+      "path": "ui_kits/app/device-firewall.html",
+      "sha256": "a0be9645e08509228272e17a7838e24f25c094084e05e796f85ab56adf50ca41"
+    },
+    {
+      "path": "ui_kits/app/flow-inspector.html",
+      "sha256": "571bc52037ee74b92c7ea5074005685b7517d0fa384db57b3a632c806268af96"
+    },
+    {
+      "path": "ui_kits/app/index.html",
+      "sha256": "99a48b0f0b74d6c811d31d57a8c248f8a1ca772c8e602d1ffb9c7643a3931f7f"
+    },
+    {
+      "path": "ui_kits/app/overview.html",
+      "sha256": "307d08b37ad75b99dd6fcff555ebb487399dd09df1b8f5eab38651ba2246693e"
+    }
+  ]
+}

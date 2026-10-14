@@ -1,0 +1,1 @@
+import{P as e,S as a}from"./PreviewCard-CO24-ohZ.js";const d={title:"Navigation/Sidebar",parameters:{layout:"padded"}},t={render:()=>e(a("Devices"))},s=["Labelled"];export{t as Labelled,s as __namedExportsOrder,d as default};

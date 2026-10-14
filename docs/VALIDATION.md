@@ -56,3 +56,26 @@ individual package files and security reports. Repeat builds must compare byte
 for byte before publication. These checks qualify application artifacts; router
 boot, network isolation, storage failure and forwarding gates still require the
 router-owned candidate workflow.
+
+## Lanrith frontend integration — 14 October 2026
+
+This Open Design application run used the installed **Codex runner** as a one-off fallback after repeated upstream HTTP 429 failures. It did not use Pi/Gemini. The documented default in [OPEN_DESIGN.md](OPEN_DESIGN.md) remains Pi with `openrouter/google/gemini-3.1-pro-preview:xhigh`, normalised by the catalog to effective `high`.
+
+The completed shared design package was consumed without regeneration: 196 exported files match their canonical source byte-for-byte and by SHA-256. Its existing native package slug and registry ID are unchanged. The export includes the reviewed CSS and matching `context/browser-validation.json`. The package's independent reports record 774 checks, 86 contrast pairs, a clean native audit and 52 Chromium views; those are shared-package results, separate from the application checks below. See [export provenance](../design/export-provenance.json).
+
+The reviewed dark theme uses charcoal #171B1E, grey panels #20262A and raised surfaces #2A3236. Metadata, borders, unknown states and chart fills are neutral, with Mint reserved for the logo, chart lines, selection, primary controls and focus. The light palette is unchanged. Active navigation retains the shared inset marker. The final application checks below were rerun after this refinement; the shared package passed all 86 contrast pairs and 52 browser views.
+
+All required commands from `web/` passed:
+
+| Command | Result |
+| --- | --- |
+| `npm run typecheck` | Passed with no TypeScript errors. |
+| `npm test` | 67 tests passed in 7 files. Existing route/auth tests now also check the product title and accessible wordmark. |
+| `npm run build:preview` | Production and explicit-demo builds passed; compiled `about:blank` smoke test visited all seven sections with zero network requests or runtime errors. Embedded assets, favicon and Manrope licence checks passed. |
+| `npm run build:storybook` | Passed with the local Lanrith wordmark, favicon and component stories. Vite reported the Storybook bundle-size advisory; npm also reported inherited environment-config advisories. |
+
+Chromium inspection covered 56 file-URL route views at 320, 390, 768 and 1440 pixels in light/dark themes, plus 28 opaque sandboxed iframe route views at 390 and 1440 pixels and four sign-in views. Checks found no page overflow, broken visible logos, missing Manrope, runtime errors or external requests. Reduced motion, search, mobile navigation, theme switching, density and keyboard route focus worked. Desktop/mobile captures were inspected for logo readability and compact layout. The native Open Design renderer also exported the application preview successfully.
+
+The real API, auth, preview-mode selection and demo adapter sources match the supplied pre-integration baseline. API failure still shows an error rather than enabling fixtures. SHA-256 comparison confirms all 223 protected backend, deployment and Phase 3 files are unchanged; pre-existing frontend investigation changes are retained. Router configuration was not modified. These are frontend checks using explicit fixtures, not new appliance qualification.
+
+Application preview: [router-console-preview.html](../router-console-preview.html), with an identical active mirror at [artifacts/router-console.html](../artifacts/router-console.html). Both are generated from `web/`; Phase 3 artifacts remain separate. [Application brand validation](../web/brand-validation.json) records the runner, checks and preservation results. No publish, deployment or commit was performed.

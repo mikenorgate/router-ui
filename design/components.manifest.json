@@ -13,6 +13,13 @@
       "contract": "Label and symbol; evidence claims stay separate."
     },
     {
+      "name": "Brand",
+      "source": "ui_kits/app/components/Brand.ts",
+      "story": "ui_kits/app/components/Brand.stories.ts",
+      "browser": "ui_kits/app/components/Brand.js",
+      "contract": "Exact approved outlined wordmark or junction mark; primary/reverse variants follow theme; one accessible name."
+    },
+    {
       "name": "Sidebar",
       "source": "ui_kits/app/components/Sidebar.ts",
       "story": "ui_kits/app/components/Sidebar.stories.ts",

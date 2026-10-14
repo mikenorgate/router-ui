@@ -1,0 +1,27 @@
+{
+  "name": "router-console-design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "build:reference": "tsx scripts/export-tokens.ts && tsx scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "guard": "tsx scripts/validate.ts",
+    "validate": "tsx scripts/validate.ts",
+    "storybook": "storybook dev -c storybook-config -p 6006 --disable-telemetry",
+    "build:storybook": "tsx scripts/build-storybook.ts",
+    "export:tokens": "tsx scripts/export-tokens.ts"
+  },
+  "devDependencies": {
+    "@storybook/html-vite": "10.6.1",
+    "storybook": "10.6.1",
+    "vite": "~7.3.0",
+    "typescript": "5.9.3",
+    "esbuild": "0.28.0",
+    "tsx": "^4.21.0",
+    "@types/node": "^24.0.0",
+    "jsdom": "^27.0.0",
+    "@types/jsdom": "^27.0.0"
+  }
+}

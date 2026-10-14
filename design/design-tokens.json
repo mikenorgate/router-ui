@@ -1,297 +1,326 @@
 {
-  "schemaVersion": 1,
   "format": "od-design-tokens/v1",
+  "schemaVersion": 1,
   "source": {
+    "evidence": "context/provenance.md",
     "tokensCss": "tokens.css",
-    "evidence": "context/provenance.md"
+    "tokensCssSha256": "0d5cec61cb052e730b5f49d7e86c3111f3c99ea4e9458d8e782de89b597ccbb4",
+    "brandTokens": "context/lanrith-brand/tokens/lanrith.css",
+    "brandCopy": "context/lanrith-brand/copy/brand-copy.txt"
   },
   "tokens": [
     {
       "name": "--bg",
-      "value": "oklch(0.975 0.005 95)",
+      "value": "oklch(0.961 0.011 89.7)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--surface",
-      "value": "oklch(0.995 0.002 95)",
+      "value": "oklch(1.000 0.000 89.9)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--surface-raised",
-      "value": "oklch(0.955 0.006 95)",
+      "value": "oklch(0.985 0.005 89.9)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--fg",
-      "value": "oklch(0.25 0.012 250)",
+      "value": "oklch(0.278 0.029 188.4)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--muted",
-      "value": "oklch(0.49 0.013 245)",
+      "value": "oklch(0.454 0.024 176.5)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--border",
-      "value": "oklch(0.85 0.010 245)",
+      "value": "oklch(0.782 0.015 162.4)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--control-border",
-      "value": "oklch(0.57 0.012 245)",
+      "value": "oklch(0.571 0.027 173.1)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--accent",
-      "value": "oklch(0.42 0.075 185)",
+      "value": "oklch(0.466 0.080 184.4)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--accent-soft",
-      "value": "oklch(0.93 0.025 185)",
+      "value": "oklch(0.868 0.046 173.9)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--on-accent",
-      "value": "oklch(0.99 0.002 185)",
+      "value": "oklch(1.000 0.000 89.9)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--success",
-      "value": "oklch(0.41 0.095 155)",
+      "value": "oklch(0.447 0.079 162.1)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--success-soft",
-      "value": "oklch(0.95 0.022 155)",
+      "value": "oklch(0.914 0.012 153.7)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--warn",
-      "value": "oklch(0.44 0.090 75)",
+      "value": "oklch(0.490 0.096 63.2)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--warn-soft",
-      "value": "oklch(0.96 0.025 85)",
+      "value": "oklch(0.944 0.022 76.5)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--danger",
-      "value": "oklch(0.45 0.135 25)",
+      "value": "oklch(0.495 0.144 23.5)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--danger-soft",
-      "value": "oklch(0.96 0.018 25)",
+      "value": "oklch(0.917 0.022 17.6)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--unknown",
-      "value": "oklch(0.49 0.013 245)",
+      "value": "oklch(0.454 0.024 176.5)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--unknown-soft",
-      "value": "oklch(0.94 0.008 245)",
+      "value": "oklch(0.914 0.012 153.7)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-primary",
-      "value": "oklch(0.40 0.035 245)",
+      "value": "oklch(0.466 0.080 184.4)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-secondary",
-      "value": "oklch(0.54 0.035 245)",
+      "value": "oklch(0.454 0.024 176.5)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-fill",
-      "value": "oklch(0.90 0.013 245)",
+      "value": "oklch(0.914 0.012 153.7)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--scrim",
-      "value": "rgb(12 18 24 / 0.55)",
+      "value": "rgb(22 45 43 / 0.55)",
       "type": "color",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--font-display",
-      "value": "\"IBM Plex Sans\", \"Segoe UI\", system-ui, sans-serif",
+      "value": "\"Manrope\", system-ui, sans-serif",
       "type": "fontFamily",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "manifest.json",
+        "context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2"
       ]
     },
     {
       "name": "--font-body",
-      "value": "\"IBM Plex Sans\", \"Segoe UI\", system-ui, sans-serif",
+      "value": "\"Manrope\", system-ui, sans-serif",
       "type": "fontFamily",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "manifest.json",
+        "context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2"
       ]
     },
     {
@@ -299,587 +328,637 @@
       "value": "\"IBM Plex Mono\", \"SFMono-Regular\", Consolas, monospace",
       "type": "fontFamily",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "manifest.json",
+        "fonts/ibm-plex-mono-latin-400-normal.woff2"
       ]
     },
     {
       "name": "--text-xs",
       "value": "0.75rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-sm",
       "value": "0.8125rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-body",
-      "value": "0.9375rem",
-      "type": "dimension",
+      "value": "1rem",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-label",
       "value": "0.875rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-section",
       "value": "1.125rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-title",
       "value": "1.625rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--text-metric",
       "value": "1.875rem",
-      "type": "dimension",
+      "type": "fontSize",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--leading-body",
       "value": "1.5",
-      "type": "string",
+      "type": "lineHeight",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-1",
       "value": "4px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-2",
       "value": "8px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-3",
       "value": "12px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-4",
       "value": "16px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-5",
       "value": "24px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-6",
       "value": "32px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--space-7",
       "value": "48px",
-      "type": "dimension",
+      "type": "spacing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--radius-sm",
       "value": "4px",
-      "type": "dimension",
+      "type": "borderRadius",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--radius-md",
       "value": "6px",
-      "type": "dimension",
+      "type": "borderRadius",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--radius-lg",
       "value": "8px",
-      "type": "dimension",
+      "type": "borderRadius",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--sidebar-width",
       "value": "208px",
-      "type": "string",
+      "type": "sizing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--content-max",
       "value": "1480px",
-      "type": "string",
+      "type": "sizing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--row-height",
       "value": "52px",
-      "type": "string",
+      "type": "sizing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--control-height",
       "value": "44px",
-      "type": "string",
+      "type": "sizing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--ease-out",
       "value": "cubic-bezier(0.23, 1, 0.32, 1)",
-      "type": "string",
+      "type": "easing",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--duration-enter",
       "value": "200ms",
-      "type": "string",
+      "type": "duration",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--duration-exit",
       "value": "140ms",
-      "type": "string",
+      "type": "duration",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--shadow-control",
       "value": "0 1px 2px rgb(0 0 0 / 0.12)",
-      "type": "string",
+      "type": "shadow",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--shadow-overlay",
       "value": "0 16px 48px rgb(0 0 0 / 0.22)",
-      "type": "string",
+      "type": "shadow",
       "theme": "light",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     },
     {
       "name": "--bg",
-      "value": "oklch(0.205 0.009 250)",
+      "value": "oklch(0.219245 0.008444 240.2883)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--surface",
-      "value": "oklch(0.245 0.011 250)",
+      "value": "oklch(0.264354 0.011422 237.0978)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--surface-raised",
-      "value": "oklch(0.285 0.013 250)",
+      "value": "oklch(0.311172 0.013137 229.3799)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--fg",
-      "value": "oklch(0.925 0.005 95)",
+      "value": "oklch(0.961 0.011 89.7)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--muted",
-      "value": "oklch(0.73 0.012 245)",
+      "value": "oklch(0.803806 0.010506 238.5483)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--border",
-      "value": "oklch(0.365 0.014 245)",
+      "value": "oklch(0.432820 0.015193 236.9636)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--control-border",
-      "value": "oklch(0.60 0.012 245)",
+      "value": "oklch(0.655497 0.016521 229.1009)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--accent",
-      "value": "oklch(0.78 0.090 185)",
+      "value": "oklch(0.868 0.046 173.9)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--accent-soft",
-      "value": "oklch(0.315 0.026 185)",
+      "value": "oklch(0.264354 0.011422 237.0978)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--on-accent",
-      "value": "oklch(0.20 0.014 185)",
+      "value": "oklch(0.278 0.029 188.4)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--success",
-      "value": "oklch(0.79 0.11 155)",
+      "value": "oklch(0.835 0.077 161.3)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--success-soft",
-      "value": "oklch(0.29 0.025 155)",
+      "value": "oklch(0.447 0.079 162.1)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--warn",
-      "value": "oklch(0.83 0.10 85)",
+      "value": "oklch(0.849 0.095 77.8)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--warn-soft",
-      "value": "oklch(0.30 0.022 85)",
+      "value": "oklch(0.490 0.096 63.2)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--danger",
-      "value": "oklch(0.79 0.11 25)",
+      "value": "oklch(0.825 0.070 19.8)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--danger-soft",
-      "value": "oklch(0.30 0.025 25)",
+      "value": "oklch(0.495 0.144 23.5)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--unknown",
-      "value": "oklch(0.73 0.012 245)",
+      "value": "oklch(0.803806 0.010506 238.5483)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--unknown-soft",
-      "value": "oklch(0.30 0.013 245)",
+      "value": "oklch(0.372807 0.014653 232.0820)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-primary",
-      "value": "oklch(0.85 0.025 245)",
+      "value": "oklch(0.868 0.046 173.9)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-secondary",
-      "value": "oklch(0.66 0.028 245)",
+      "value": "oklch(0.803806 0.010506 238.5483)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
       "name": "--chart-fill",
-      "value": "oklch(0.33 0.018 245)",
+      "value": "oklch(0.406563 0.017478 238.4425)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
       ]
     },
     {
@@ -887,11 +966,405 @@
       "value": "rgb(8 12 16 / 0.72)",
       "type": "color",
       "theme": "dark",
-      "confidence": "inferred",
-      "reason": "Original design value derived from the supplied visual direction.",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
       "sources": [
         "tokens.css",
-        "docs/DESIGN_BRIEF.md"
+        "context/provenance.md",
+        "context/lanrith-brand/tokens/lanrith.css"
+      ]
+    },
+    {
+      "name": "--font-display",
+      "value": "\"Manrope\", system-ui, sans-serif",
+      "type": "fontFamily",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "manifest.json",
+        "context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2"
+      ]
+    },
+    {
+      "name": "--font-body",
+      "value": "\"Manrope\", system-ui, sans-serif",
+      "type": "fontFamily",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "manifest.json",
+        "context/lanrith-brand/assets/fonts/manrope-latin-variable.woff2"
+      ]
+    },
+    {
+      "name": "--font-mono",
+      "value": "\"IBM Plex Mono\", \"SFMono-Regular\", Consolas, monospace",
+      "type": "fontFamily",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "manifest.json",
+        "fonts/ibm-plex-mono-latin-400-normal.woff2"
+      ]
+    },
+    {
+      "name": "--text-xs",
+      "value": "0.75rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-sm",
+      "value": "0.8125rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-body",
+      "value": "1rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-label",
+      "value": "0.875rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-section",
+      "value": "1.125rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-title",
+      "value": "1.625rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--text-metric",
+      "value": "1.875rem",
+      "type": "fontSize",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--leading-body",
+      "value": "1.5",
+      "type": "lineHeight",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-1",
+      "value": "4px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-2",
+      "value": "8px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-3",
+      "value": "12px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-4",
+      "value": "16px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-5",
+      "value": "24px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-6",
+      "value": "32px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--space-7",
+      "value": "48px",
+      "type": "spacing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--radius-sm",
+      "value": "4px",
+      "type": "borderRadius",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--radius-md",
+      "value": "6px",
+      "type": "borderRadius",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--radius-lg",
+      "value": "8px",
+      "type": "borderRadius",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--sidebar-width",
+      "value": "208px",
+      "type": "sizing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--content-max",
+      "value": "1480px",
+      "type": "sizing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--row-height",
+      "value": "52px",
+      "type": "sizing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--control-height",
+      "value": "44px",
+      "type": "sizing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--ease-out",
+      "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "type": "easing",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--duration-enter",
+      "value": "200ms",
+      "type": "duration",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--duration-exit",
+      "value": "140ms",
+      "type": "duration",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--shadow-control",
+      "value": "0 1px 2px rgb(0 0 0 / 0.12)",
+      "type": "shadow",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
+      ]
+    },
+    {
+      "name": "--shadow-overlay",
+      "value": "0 16px 48px rgb(0 0 0 / 0.22)",
+      "type": "shadow",
+      "theme": "dark",
+      "confidence": "observed",
+      "reason": "Exact resolved value from canonical tokens.css. Brand anchors are provided; semantic derivatives and compact scales are documented in context/provenance.md.",
+      "sources": [
+        "tokens.css",
+        "context/provenance.md",
+        "DESIGN.md"
       ]
     }
   ]

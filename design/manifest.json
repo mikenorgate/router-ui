@@ -1,9 +1,9 @@
 {
   "schemaVersion": "od-design-system-project/v1",
-  "id": "user:router-console-design-system",
-  "name": "Router Console",
+  "id": "router-console-design-system",
+  "name": "Lanrith Console",
   "category": "Project Design System",
-  "description": "Draft standalone router observatory system with policy provenance and explicit evidence states.",
+  "description": "Lanrith Console: Paper light and neutral charcoal dark, exact outlined Lanrith identity, local Manrope and Plex Mono, and evidence-qualified router investigations. Your homelab’s first hop.",
   "status": "draft",
   "files": {
     "design": "DESIGN.md",
@@ -18,34 +18,26 @@
   "importMode": "normalized",
   "fonts": [
     {
-      "family": "IBM Plex Sans",
-      "file": "fonts/ibm-plex-sans-latin-400-normal.woff2",
-      "weight": 400,
-      "style": "normal"
-    },
-    {
-      "family": "IBM Plex Sans",
-      "file": "fonts/ibm-plex-sans-latin-500-normal.woff2",
-      "weight": 500,
-      "style": "normal"
-    },
-    {
-      "family": "IBM Plex Sans",
-      "file": "fonts/ibm-plex-sans-latin-600-normal.woff2",
-      "weight": 600,
-      "style": "normal"
+      "family": "Manrope",
+      "file": "fonts/manrope-variable.woff2",
+      "weight": "200 800",
+      "style": "normal",
+      "variable": true,
+      "license": "fonts/OFL-manrope.txt"
     },
     {
       "family": "IBM Plex Mono",
       "file": "fonts/ibm-plex-mono-latin-400-normal.woff2",
       "weight": 400,
-      "style": "normal"
+      "style": "normal",
+      "license": "fonts/OFL-mono.txt"
     },
     {
       "family": "IBM Plex Mono",
       "file": "fonts/ibm-plex-mono-latin-500-normal.woff2",
       "weight": 500,
-      "style": "normal"
+      "style": "normal",
+      "license": "fonts/OFL-mono.txt"
     }
   ],
   "preview": {
@@ -58,7 +50,7 @@
       },
       {
         "path": "preview/typography-specimens.html",
-        "title": "Plex typography and identifiers",
+        "title": "Manrope and Plex Mono typography",
         "role": "typography"
       },
       {
@@ -83,7 +75,7 @@
       },
       {
         "path": "preview/brand-assets.html",
-        "title": "Route-junction identity",
+        "title": "Lanrith outlined identity",
         "role": "brand"
       }
     ]
@@ -108,5 +100,6 @@
         "reason": "Explicit source brief requires warm off-white."
       }
     ]
-  }
+  },
+  "registryId": "user:router-console-design-system"
 }

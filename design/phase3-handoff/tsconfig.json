@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "rootDirs": ["./src", "../../web/src"],
+    "paths": {
+      "react": ["../../web/node_modules/@types/react"],
+      "react/jsx-runtime": ["../../web/node_modules/@types/react/jsx-runtime"],
+      "react-dom": ["../../web/node_modules/@types/react-dom"],
+      "react-router-dom": ["../../web/node_modules/react-router-dom/dist/index.d.ts"],
+      "@storybook/react-vite": ["../../web/node_modules/@storybook/react-vite/dist/index.d.ts"]
+    },
+    "types": []
+  },
+  "include": ["src", "handoff-env.d.ts"]
+}

@@ -1,0 +1,1 @@
+import{P as e,B as r}from"./PreviewCard-CO24-ohZ.js";const s={title:"Reference/PreviewCard"},t={render:()=>e(`<section class="panel"><h2>Evidence specimen</h2><p class="callout">Fictional records keep their observation time.</p>${r("Stale evidence","warn")}</section>`)},a=["Evidence"];export{t as Evidence,a as __namedExportsOrder,s as default};

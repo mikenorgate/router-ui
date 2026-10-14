@@ -5,7 +5,7 @@ This design-system workspace was created from an existing Open Design project. T
 ## Source project
 
 - Source project id: 3f8d4985-55cb-4c6c-b1ab-f45d855a89ba
-- Source project name: Router Console
+- Source project name: Lanrith Console
 - New design-system project id: a074a105-4b59-43a6-9a70-304651c57a48
 - New design-system id: user:router-console-design-system
 - Source skill id: (none)
@@ -16,7 +16,7 @@ This design-system workspace was created from an existing Open Design project. T
 ```json
 {
   "kind": "prototype",
-  "baseDir": "<project-directory>",
+  "baseDir": "/home/michael/source/github.com/mikenorgate/router-ui",
   "importedFrom": "folder",
   "entryFile": null,
   "fromTrustedPicker": true
